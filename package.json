@@ -27,8 +27,7 @@
     "@types/react": "^18.2.14",
     "@types/react-dom": "^18.2.6",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "axios": "^1.4.0"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@types/jest": "^25.1.4",
@@ -56,5 +55,10 @@
   },
   "files": [
     "dist"
-  ]
+  ],
+  "dependencies": {
+    "common": "file:../common",
+    "engine.io-client": "^6.5.1",
+    "socket.io-client": "^4.7.1"
+  }
 }
