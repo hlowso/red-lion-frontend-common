@@ -1,15 +1,12 @@
-import { AxiosInstance } from "axios";
-import { ActivityGetParams } from "common";
+import { ActivityGetParams } from 'common'
 
-const Activities = (instance: AxiosInstance) => {
-    const getActivities = async (params: ActivityGetParams) =>
-        instance
-            .get("/activities", { params })
-            .then(res => res.data);
+const Activities = ({ GET }) => {
+  const getActivities = (params: ActivityGetParams) =>
+    GET('/activities', params)
 
-    return {
-        getActivities
-    };
+  return {
+    getActivities
+  }
 }
 
-export default Activities;
+export default Activities

@@ -1,15 +1,9 @@
-import { AxiosInstance } from "axios";
+const Users = ({ GET }) => {
+  const getCurrentUser = (username?: string) => GET('/user', { username })
 
-const Users = (instance: AxiosInstance) => {
-    const getCurrentUser = async (username?: string) => {
-        return instance.get("/user", { params: { username } }).then(res => {
-            return res.data;
-        });
-    };
+  return {
+    getCurrentUser
+  }
+}
 
-    return {
-        getCurrentUser
-    };
-};
-
-export default Users;
+export default Users

@@ -1,15 +1,11 @@
-import { AxiosInstance } from "axios";
-import { GameGetParams } from "common";
+import { GameGetParams } from 'common'
 
-const Games = (instance: AxiosInstance) => {
-    const getGames = async (params: GameGetParams) =>
-        instance
-            .get("/games", { params })
-            .then(res => res.data);
+const Games = ({ GET }) => {
+  const getGames = (params: GameGetParams) => GET('/games', params)
 
-    return {
-        getGames
-    };
-};
+  return {
+    getGames
+  }
+}
 
-export default Games;
+export default Games

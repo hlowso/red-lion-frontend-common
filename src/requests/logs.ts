@@ -1,13 +1,11 @@
-import { AxiosInstance } from "axios";
-import { LogGetParams } from "common";
+import { LogGetParams } from 'common'
 
-const Logs = (instance: AxiosInstance) => {
-  const getLogs = async (params: LogGetParams) =>
-    instance.get("/logs", { params }).then((res) => res.data);
+const Logs = ({ GET }) => {
+  const getLogs = (params: LogGetParams) => GET('/logs', params)
 
   return {
-    getLogs,
-  };
-};
+    getLogs
+  }
+}
 
-export default Logs;
+export default Logs

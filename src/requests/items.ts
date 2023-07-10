@@ -1,15 +1,11 @@
-import { AxiosInstance } from "axios";
-import { ItemGetQuery } from "common";
+import { ItemGetQuery } from 'common'
 
-const Items = (instance: AxiosInstance) => {
-    const getItems = async (params: ItemGetQuery) =>
-        instance
-            .get("/items", { params })
-            .then(res => res.data);
+const Items = ({ GET }) => {
+  const getItems = async (params: ItemGetQuery) => GET('/items', params)
 
-    return {
-        getItems
-    };
-};
+  return {
+    getItems
+  }
+}
 
-export default Items;
+export default Items

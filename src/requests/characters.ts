@@ -1,54 +1,44 @@
-import { AxiosInstance } from "axios";
 import {
   CharacterGetParams,
   CharacterActivityRequestParams,
   CharacterItemRequestParams,
-  PurchaseItemAsCharacterRequestBody,
-} from "common";
+  PurchaseItemAsCharacterRequestBody
+} from 'common'
 
-const Characters = (instance: AxiosInstance) => {
+const Characters = ({ GET, PATCH }) => {
   const getCharacters = async (params: CharacterGetParams) =>
-    instance.get("/characters", { params }).then((res) => res.data);
+    GET('/characters', params)
 
   const getCharacterActivityCountToday = async ({
     characterId,
-    activityId,
+    activityId
   }: CharacterActivityRequestParams): Promise<number> =>
-    instance
-      .get(`/characters/${characterId}/activities/${activityId}/count-today`)
-      .then((res) => res.data);
+    GET(`/characters/${characterId}/activities/${activityId}/count-today`)
 
   const completeActivityAsCharacter = async ({
     characterId,
-    activityId,
+    activityId
   }: CharacterActivityRequestParams) =>
-    instance
-      .patch(`/characters/${characterId}/activities/${activityId}/complete`)
-      .then((res) => res.data);
+    PATCH(`/characters/${characterId}/activities/${activityId}/complete`)
 
   const purchaseItemAsCharacter = async (
     { characterId, itemId }: CharacterItemRequestParams,
     body: PurchaseItemAsCharacterRequestBody
-  ) =>
-    instance
-      .patch(`/characters/${characterId}/items/${itemId}/purchase`, body)
-      .then((res) => res.data);
+  ) => PATCH(`/characters/${characterId}/items/${itemId}/purchase`, body)
 
   const utilizeItemAsCharacter = async ({
     characterId,
-    itemId,
+    itemId
   }: CharacterItemRequestParams) =>
-    instance
-      .patch(`/characters/${characterId}/items/${itemId}/use`)
-      .then((res) => res.data);
+    PATCH(`/characters/${characterId}/items/${itemId}/use`)
 
   return {
     getCharacters,
     getCharacterActivityCountToday,
     completeActivityAsCharacter,
     purchaseItemAsCharacter,
-    utilizeItemAsCharacter,
-  };
-};
+    utilizeItemAsCharacter
+  }
+}
 
-export default Characters;
+export default Characters

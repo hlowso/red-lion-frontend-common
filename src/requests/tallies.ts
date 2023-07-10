@@ -1,15 +1,11 @@
-import { AxiosInstance } from "axios";
-import { TallyGetParams } from "common";
+import { TallyGetParams } from 'common'
 
-const Tallies = (instance: AxiosInstance) => {
-    const getTallies = async (params: TallyGetParams) =>
-        instance
-            .get("/tallies", { params })
-            .then(res => res.data);
+const Tallies = ({ GET }) => {
+  const getTallies = (params: TallyGetParams) => GET('/tallies', params)
 
-    return {
-        getTallies
-    };
-};
+  return {
+    getTallies
+  }
+}
 
-export default Tallies;
+export default Tallies
