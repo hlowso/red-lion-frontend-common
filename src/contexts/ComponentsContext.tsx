@@ -11,7 +11,7 @@ interface Props {
   components: Context
 }
 
-export const ComponentContext = createContext<Context>({
+export const ComponentsContext = createContext<Context>({
   Div: () => null,
   Span: () => null,
   Fark: () => null
@@ -19,8 +19,8 @@ export const ComponentContext = createContext<Context>({
 
 export const ComponentProvider = ({ children, components }: Props) => {
   return (
-    <ComponentContext.Provider value={components}>
+    <ComponentsContext.Provider value={components}>
       {children}
-    </ComponentContext.Provider>
+    </ComponentsContext.Provider>
   )
 }
