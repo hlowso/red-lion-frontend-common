@@ -1,17 +1,17 @@
 import React from 'react'
-import Icon, { IconName } from '../Icon'
 import { usePlayContext, useUIContext } from '../../contexts'
 import useTallies from '../../hooks/useTallies'
 
 interface TallyProps {
-  icon: IconName
+  icon: string
   count: number
 }
 
 const Tally = ({ icon, count }: TallyProps) => {
+  const { Icon } = useUIContext()
   return (
     <span>
-      <Icon iconName={icon} /> {count}
+      <Icon name={icon} /> {count}
     </span>
   )
 }
@@ -37,7 +37,7 @@ const Tallies = () => {
         tallies?.map((tally) => (
           <Tally
             key={tally.id}
-            icon={tally.icon as IconName}
+            icon={tally.icon}
             count={(characterTallies || {})[tally.key] || 0}
           />
         ))
