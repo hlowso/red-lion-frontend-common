@@ -8,7 +8,12 @@ import useItems from '../../hooks/useItems'
 const Loading = () => {
   const { Div, Spinner } = useUIContext()
   return (
-    <Div className='loading'>
+    <Div
+      style={{
+        margin: '25px auto',
+        width: 'fit-content'
+      }}
+    >
       <Spinner />
     </Div>
   )
