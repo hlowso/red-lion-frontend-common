@@ -1,4 +1,3 @@
-// import axios, { CreateAxiosDefaults } from 'axios'
 import Users from './users'
 import Games from './games'
 import Characters from './characters'
