@@ -5,7 +5,6 @@ import Possessions from './components/Possessions'
 import { useEffect } from 'react'
 import Notifications from './components/Notifications'
 import Vendor from './components/Vendor'
-import './App.css'
 import { usePlayContext, useSocket, useUIContext } from './contexts'
 
 const LandscapeApp = () => {
