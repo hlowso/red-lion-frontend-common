@@ -8,7 +8,7 @@ interface Props {
 }
 
 const ActivityListItem = ({ activity, open }: Props) => {
-  const { Div, Spinner, ListGroupItem } = useUIContext()
+  const { Div, Spinner, ListGroupItem, Span } = useUIContext()
   const Requests = useContext(RequestsContext)
   const { characterId } = usePlayContext()
   const [countToday, setCountToday] = useState<number>()
@@ -22,9 +22,17 @@ const ActivityListItem = ({ activity, open }: Props) => {
   }, [characterId])
 
   return (
-    <ListGroupItem onClick={open}>
+    <ListGroupItem onClick={open} style={{ cursor: 'pointer' }}>
       <Div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <span className='activity-name'>{activity.name}</span>
+        <Span
+          style={{
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap'
+          }}
+        >
+          {activity.name}
+        </Span>
         {Number.isInteger(countToday) ? (
           `${countToday}/${activity.count || 1}`
         ) : (
