@@ -1,6 +1,5 @@
 import React from 'react'
 import { SocketPayload } from 'common'
-import Marked from './Marked'
 import { useSocket, useUIContext } from '../contexts'
 
 interface NotificationProps extends SocketPayload.Notify {
@@ -8,12 +7,12 @@ interface NotificationProps extends SocketPayload.Notify {
 }
 
 const Notification = ({ clear, header, body, variant }: NotificationProps) => {
-  const { Toast, Span, Div } = useUIContext()
+  const { Toast, Span, Div, Marked } = useUIContext()
   return (
     <Toast onClose={clear} bg={variant}>
       <Span>{header}</Span>
       <Div style={{ color: 'white' }}>
-        <Marked markdown={body} />
+        <Marked>{body}</Marked>
       </Div>
     </Toast>
   )

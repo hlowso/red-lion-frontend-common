@@ -1,6 +1,5 @@
 import React from 'react'
 import { Item } from 'common'
-import Marked from '../Marked'
 import ItemImage from './ItemImage'
 import { useUIContext } from '../../contexts'
 
@@ -12,7 +11,7 @@ interface Props {
 }
 
 const ItemModal = ({ item, close, use }: Props) => {
-  const { Modal, ModalHeader, Div, Button, Strong } = useUIContext()
+  const { Modal, ModalHeader, Div, Button, Strong, Marked } = useUIContext()
   return !!item ? (
     <Modal show={!!item} onHide={close}>
       <ModalHeader>
@@ -34,7 +33,7 @@ const ItemModal = ({ item, close, use }: Props) => {
         </Div>
       </ModalHeader>
       <Div>
-        <Marked markdown={item?.description || ''} />
+        <Marked>{item?.description || ''}</Marked>
       </Div>
       <Div>
         <Button onClick={close} variant='secondary'>

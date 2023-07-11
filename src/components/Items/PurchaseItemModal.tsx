@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { Delta, Item, Possessions, TallyRow, Util } from 'common'
-import Marked from '../Marked'
 import ItemImage from './ItemImage'
 import Tallies from '../Possessions/Tallies'
 import { usePlayContext, useUIContext } from '../../contexts'
@@ -129,7 +128,7 @@ const Footer = ({
 }
 
 const PurchaseItemModal = ({ item, purchase, close }: Props) => {
-  const { Modal, ModalHeader, Div, Spinner } = useUIContext()
+  const { Modal, ModalHeader, Div, Spinner, Marked } = useUIContext()
   const { gameId, possessions, isLoading: contextIsLoading } = usePlayContext()
   const { data: tallies, isLoading: talliesAreLoading } = useTallies(
     { gameId },
@@ -173,7 +172,7 @@ const PurchaseItemModal = ({ item, purchase, close }: Props) => {
         </Div>
       </ModalHeader>
       <Div>
-        <Marked markdown={item?.description || ''} />
+        <Marked>{item?.description || ''}</Marked>
         {contextIsLoading || talliesAreLoading || itemsAreLoading ? (
           <Spinner />
         ) : (
