@@ -14,7 +14,7 @@ const ItemImage = ({ src, scale = 1 }: Props) => {
     width: `${scale * RATIO.W}px`,
     height: `${scale * RATIO.H}px`
   }
-  return <Image src={src} style={style} />
+  return <Image src={src} style={style} rounded />
 }
 
 export default ItemImage
