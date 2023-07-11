@@ -8,11 +8,11 @@ interface Props {
   markdown: string
 }
 
-marked.use(mangle())
-marked.use(gfmHeadingId({ prefix: 'markdown-heading-' }))
-
 const Marked = ({ markdown }: Props) => {
   const { Div } = useUIContext()
+  marked.use(mangle())
+  marked.use(gfmHeadingId({ prefix: 'markdown-heading-' }))
+
   return <Div dangerouslySetInnerHTML={{ __html: marked.parse(markdown) }} />
 }
 
