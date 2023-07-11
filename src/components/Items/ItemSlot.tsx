@@ -86,12 +86,15 @@ const SlotContents = (
 
 const ItemSlot = ({ item }: Props) => {
   const { Div } = useUIContext()
+  const style: React.CSSProperties = {
+    cursor: !!item?.open ? 'pointer' : undefined,
+    position: 'relative',
+    height: '70px',
+    margin: '2px',
+    border: 'solid 1px #ddd'
+  }
   return item ? (
-    <Div
-      className='item-slot rounded'
-      onClick={item.open}
-      style={{ cursor: !!item.open ? 'pointer' : undefined }}
-    >
+    <Div className='rounded' onClick={item.open} style={style}>
       <SlotContents {...item} />
     </Div>
   ) : (
