@@ -5,7 +5,16 @@ import Possessions from './components/Possessions'
 import { useEffect } from 'react'
 import Notifications from './components/Notifications'
 import Vendor from './components/Vendor'
-import { usePlayContext, useSocket, useUIContext } from './contexts'
+import {
+  PlayProvider,
+  VendorProvider,
+  usePlayContext,
+  useSocket,
+  useUIContext
+} from './contexts'
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
+
+const queryClient = new QueryClient()
 
 const LandscapeApp = () => {
   const { Div } = useUIContext()
@@ -19,15 +28,21 @@ const LandscapeApp = () => {
   }, [userId, socketEvents])
 
   return (
-    <Div className='LandscapeApp'>
-      <Nav />
-      <Div>
-        <Lists />
-        <Possessions />
-      </Div>
-      <Vendor />
-      <Notifications />
-    </Div>
+    <QueryClientProvider client={queryClient}>
+      <PlayProvider>
+        <VendorProvider>
+          <Div className='LandscapeApp'>
+            <Nav />
+            <Div>
+              <Lists />
+              <Possessions />
+            </Div>
+            <Vendor />
+            <Notifications />
+          </Div>
+        </VendorProvider>
+      </PlayProvider>
+    </QueryClientProvider>
   )
 }
 
