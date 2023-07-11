@@ -61,7 +61,7 @@ const Lists = () => {
   }
 
   return (
-    <>
+    <Div>
       {isLoading ? (
         <Loading />
       ) : (
@@ -92,7 +92,7 @@ const Lists = () => {
         log={onLog}
         close={() => setOpenActivityId(undefined)}
       />
-    </>
+    </Div>
   )
 }
 

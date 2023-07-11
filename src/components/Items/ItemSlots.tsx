@@ -15,10 +15,10 @@ interface Props {
 }
 
 const ItemSlots = ({ rows, columns, itemSlots }: Props) => {
-  const { Row, Col } = useUIContext()
+  const { Div, Row, Col } = useUIContext()
   const idx = (i: number, j: number) => i * columns + j
   return (
-    <>
+    <Div>
       {Array(rows)
         .fill(0)
         .map((_, i) => (
@@ -32,7 +32,7 @@ const ItemSlots = ({ rows, columns, itemSlots }: Props) => {
               ))}
           </Row>
         ))}
-    </>
+    </Div>
   )
 }
 

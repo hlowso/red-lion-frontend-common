@@ -69,7 +69,7 @@ const Inventory = () => {
   return isLoading || contextLoading ? (
     <Loading />
   ) : (
-    <>
+    <Div>
       <Div className='inventory'>
         <ItemSlots rows={4} columns={5} itemSlots={itemSlots} />
       </Div>
@@ -79,7 +79,7 @@ const Inventory = () => {
         close={() => setOpenItemId(undefined)}
         quantity={characterItems![openItem?.key || ''] || 0}
       />
-    </>
+    </Div>
   )
 }
 

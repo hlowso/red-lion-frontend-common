@@ -53,16 +53,14 @@ const Vendor = () => {
   }
 
   return shopping ? (
-    <>
+    <Div>
       <Card className='vendor'>
         <Span>Vendor</Span>
-        <Div>
-          {contextLoading || itemsLoading || isPurchasing ? (
-            <Spinner />
-          ) : (
-            <ItemSlots rows={6} columns={5} itemSlots={itemSlots} />
-          )}
-        </Div>
+        {contextLoading || itemsLoading || isPurchasing ? (
+          <Spinner />
+        ) : (
+          <ItemSlots rows={6} columns={5} itemSlots={itemSlots} />
+        )}
       </Card>
       <PurchaseItemModal
         item={openItem}
@@ -70,7 +68,7 @@ const Vendor = () => {
         close={() => setOpenItemId(undefined)}
       />
       <Backdrop onClick={toggleShopping} />
-    </>
+    </Div>
   ) : null
 }
 
