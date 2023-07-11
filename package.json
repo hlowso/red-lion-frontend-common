@@ -55,6 +55,7 @@
     "dist"
   ],
   "dependencies": {
+    "@tanstack/react-query": "^4.29.19",
     "common": "file:../common",
     "engine.io-client": "^6.5.1",
     "socket.io-client": "^4.7.1"
