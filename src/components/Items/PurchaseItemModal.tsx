@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { Delta, Item, Possessions, TallyRow, Util } from 'common'
 import Marked from '../Marked'
-import Icon, { IconName } from '../Icon'
 import ItemImage from './ItemImage'
 import Tallies from '../Possessions/Tallies'
 import { usePlayContext, useUIContext } from '../../contexts'
@@ -38,7 +37,7 @@ const Cost = ({
   quantity,
   costDelta
 }: CostProps) => {
-  const { Div, Card } = useUIContext()
+  const { Div, Card, Icon } = useUIContext()
   const cost = Util.Delta.applyFactorToDelta(quantity, costDelta)
   return (
     <Div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -54,10 +53,7 @@ const Cost = ({
               -1 * count > possessions.tallies[key] || 0 ? '0.5' : 'unset'
           }}
         >
-          <Icon
-            iconName={Util.Tally.byKey(tallies, key)?.icon as IconName}
-            size={30}
-          />
+          <Icon name={Util.Tally.byKey(tallies, key)?.icon} size={30} />
           <span style={{ marginTop: '5px' }}>
             <strong>{-1 * count}</strong> {Util.Tally.byKey(tallies, key)?.name}
           </span>
@@ -91,7 +87,8 @@ const Footer = ({
   affordable,
   purchase
 }: FooterProps) => {
-  const { Div, ButtonGroup, Button, InputGroup, FormControl } = useUIContext()
+  const { Div, ButtonGroup, Button, InputGroup, FormControl, Icon } =
+    useUIContext()
   const height = 50
   return (
     <Div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -108,14 +105,14 @@ const Footer = ({
             onClick={() => setQuantity(quantity + 1)}
             style={{ height: `${height / 2}px`, padding: '0 10px' }}
           >
-            <Icon iconName='ChevronUp' size={10} />
+            <Icon name='ChevronUp' size={10} />
           </Button>
           <Button
             className='rounded-0'
             onClick={() => setQuantity(Math.max(1, quantity - 1))}
             style={{ height: `${height / 2}px`, padding: '0 10px' }}
           >
-            <Icon iconName='ChevronDown' size={10} />
+            <Icon name='ChevronDown' size={10} />
           </Button>
         </ButtonGroup>
         <Button
