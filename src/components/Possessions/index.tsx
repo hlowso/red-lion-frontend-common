@@ -19,12 +19,13 @@ const Possessions = () => {
 
   return (
     <Accordion style={style} open={shopping}>
-      <AccordionHeader style={{ borderBottom: 'solid 1px #ddd' }}>
+      <AccordionHeader>
         <Div
           style={{
             display: 'flex',
             justifyContent: 'space-between',
-            width: '100%'
+            width: '100%',
+            padding: '0 10px 0 0'
           }}
         >
           <Span>Inventory</Span>
