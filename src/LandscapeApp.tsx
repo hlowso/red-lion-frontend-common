@@ -1,48 +1,58 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Nav from './components/Nav'
 import Lists from './components/Lists'
 import Possessions from './components/Possessions'
-import { useEffect } from 'react'
 import Notifications from './components/Notifications'
 import Vendor from './components/Vendor'
-import {
-  PlayProvider,
-  VendorProvider,
-  usePlayContext,
-  useSocket,
-  useUIContext
-} from './contexts'
-import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
-
-const queryClient = new QueryClient()
+import ListNav from './components/ListNav'
+import { useUIContext, usePlayContext } from './contexts'
+import { interfaceLists } from 'common/selectors'
+import useLists from './hooks/useLists'
 
 const LandscapeApp = () => {
   const { Div } = useUIContext()
-  const { userId } = usePlayContext()
-  const socketEvents = useSocket()
-
-  useEffect(() => {
-    if (userId) {
-      socketEvents?.identify({ userId })
-    }
-  }, [userId, socketEvents])
+  const {
+    gameId,
+    characterId,
+    isLoading: playContextLoading
+  } = usePlayContext()
+  const { data: lists } = useLists({ gameId, characterId }, !playContextLoading)
+  const [openListId, setOpenListId] = useState<number>(-1)
+  const listNavItems = [
+    { id: -1, name: 'Today', icon: 'BrightnessLowFill' },
+    ...interfaceLists(lists || []).map(({ id, name }) => ({
+      id,
+      name,
+      icon: 'ListCheck'
+    }))
+  ]
+  const [unplannedModalOpen, setUnplannedModalOpen] = useState(false)
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <PlayProvider>
-        <VendorProvider>
-          <Div className='LandscapeApp'>
-            <Nav />
-            <Div>
-              <Lists />
-              <Possessions />
-            </Div>
-            <Vendor />
-            <Notifications />
-          </Div>
-        </VendorProvider>
-      </PlayProvider>
-    </QueryClientProvider>
+    <Div className='LandscapeApp'>
+      <Nav />
+      <Div
+        style={{
+          position: 'fixed',
+          height: '100vh',
+          width: '100vw',
+          display: 'flex',
+          padding: '85px 20px 20px',
+          top: 0
+        }}
+      >
+        <ListNav
+          lists={listNavItems}
+          openListId={openListId}
+          openList={setOpenListId}
+          openUnplannedModal={() => setUnplannedModalOpen(true)}
+        />
+        <Lists lists={lists || []} openListId={openListId} />
+      </Div>
+      <Possessions />
+      <Vendor />
+      <Notifications />
+    </Div>
   )
 }
 

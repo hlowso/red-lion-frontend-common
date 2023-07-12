@@ -1,12 +1,16 @@
 import React, { useContext, useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
-import { dueToday, interfaceLists } from 'common/selectors'
 import { RequestsContext, usePlayContext, useUIContext } from '../../contexts'
-import useLists from '../../hooks/useLists'
 import useActivities from '../../hooks/useActivities'
 import ActivityModal from './ActivityModal'
 import ActivityList from './ActivityList'
-import ListNav from './ListNav'
+import { ListRow } from 'common'
+import { dueToday } from 'common/selectors'
+
+interface Props {
+  lists: ListRow[]
+  openListId: number
+}
 
 const Loading = () => {
   const { Div, Spinner } = useUIContext()
@@ -17,7 +21,7 @@ const Loading = () => {
   )
 }
 
-const Lists = () => {
+const Lists = ({ lists, openListId }: Props) => {
   const queryClient = useQueryClient()
   const { Div } = useUIContext()
   const Requests = useContext(RequestsContext)
@@ -26,27 +30,14 @@ const Lists = () => {
     characterId,
     isLoading: playContextLoading
   } = usePlayContext()
-  const [isLogging, setIsLogging] = useState(false)
-  const { data: lists, isLoading: isLoadingLists } = useLists(
-    { gameId, characterId },
-    !!gameId && !!characterId
-  )
   const { data: activities } = useActivities(
     { gameId, characterId },
     !!gameId && !!characterId
   )
-  const [openListId, setOpenListId] = useState<number>(-1)
+  const [isLogging, setIsLogging] = useState(false)
   const [openActivityId, setOpenActivityId] = useState<number>()
   const openActivity = activities?.find((a) => a.id === openActivityId)
-  const isLoading = playContextLoading || isLoadingLists || isLogging
-  const listNavItems = [
-    { id: -1, name: 'Today', icon: 'BrightnessLowFill' },
-    ...interfaceLists(lists || []).map(({ id, name }) => ({
-      id,
-      name,
-      icon: 'ListCheck'
-    }))
-  ]
+  const isLoading = playContextLoading || isLogging
   const openListName =
     lists?.find((list) => list.id === openListId)?.name || 'Today'
   const openListActivities =
@@ -75,20 +66,7 @@ const Lists = () => {
   }
 
   return (
-    <Div
-      style={{
-        position: 'fixed',
-        height: '100vh',
-        width: '100vw',
-        display: 'flex',
-        padding: '0 20px'
-      }}
-    >
-      <ListNav
-        lists={listNavItems}
-        openListId={openListId}
-        openList={setOpenListId}
-      />
+    <Div style={{ flexGrow: 1 }}>
       {isLoading ? (
         <Loading />
       ) : (
