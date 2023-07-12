@@ -1,4 +1,4 @@
-import React, { createContext, PropsWithChildren, useContext } from 'react'
+import React, { createContext, useContext } from 'react'
 import { UI } from '../types/ui-components'
 
 interface Props {
