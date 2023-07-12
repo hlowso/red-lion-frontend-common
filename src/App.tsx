@@ -6,8 +6,8 @@ import {
   useSocket
 } from './contexts'
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
-import LandscapeApp from './LandscapeApp'
-import PortraitApp from './PortraitApp'
+import LandscapeApp from './Apps/LandscapeApp'
+import PortraitApp from './Apps/PortraitApp'
 
 interface Props {
   version: 'landscape' | 'portrait'

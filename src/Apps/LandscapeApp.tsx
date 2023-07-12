@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
-import Nav from './components/Nav'
-import Lists from './components/Lists'
-import Possessions from './components/Possessions'
-import Notifications from './components/Notifications'
-import Vendor from './components/Vendor'
-import ListNav from './components/ListNav'
-import { useUIContext, usePlayContext } from './contexts'
+import Nav from '../components/Nav'
+import Lists from '../components/Lists'
+import Possessions from '../components/Possessions'
+import Notifications from '../components/Notifications'
+import Vendor from '../components/Vendor'
+import ListNav from '../components/ListNav'
+import { useUIContext, usePlayContext } from '../contexts'
 import { interfaceLists } from 'common/selectors'
-import useLists from './hooks/useLists'
+import useLists from '../hooks/useLists'
 
 const LandscapeApp = () => {
   const { Div } = useUIContext()
