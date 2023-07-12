@@ -48,7 +48,7 @@ const ListNav = ({
               }}
             >
               <Icon name={icon} style={{ marginRight: '10px' }} />
-              <Strong>{name}</Strong>
+              <Strong style={{ cursor: 'default' }}>{name}</Strong>
             </ListGroupItem>
           )),
           <Div key='divider' style={{ width: '100%', height: '2px' }} />,
