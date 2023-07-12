@@ -47,6 +47,7 @@ export namespace UI {
     bg?: string
     text?: string
   }
+  export interface CardHeaderProps extends PropsWithChildren<BaseProps> {}
 
   export interface ListGroupProps extends PropsWithChildren<BaseProps> {}
   export interface ListGroupItemProps extends PropsWithChildren<BaseProps> {}
