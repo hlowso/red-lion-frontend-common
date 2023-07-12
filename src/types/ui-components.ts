@@ -85,6 +85,8 @@ export namespace UI {
   }
 
   export interface ModalHeaderProps extends PropsWithChildren<BaseProps> {}
+  export interface ModalBodyProps extends PropsWithChildren<BaseProps> {}
+  export interface ModalFooterProps extends PropsWithChildren<BaseProps> {}
 
   export interface StrongProps extends PropsWithChildren<BaseProps> {}
 

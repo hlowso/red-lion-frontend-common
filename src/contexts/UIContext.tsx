@@ -32,6 +32,8 @@ interface Context {
   Badge: (props: UI.BadgeProps) => JSX.Element | null
   Modal: (props: UI.ModalProps) => JSX.Element | null
   ModalHeader: (props: UI.ModalHeaderProps) => JSX.Element | null
+  ModalBody: (props: UI.ModalBodyProps) => JSX.Element | null
+  ModalFooter: (props: UI.ModalFooterProps) => JSX.Element | null
   Strong: (props: UI.StrongProps) => JSX.Element | null
   InputGroup: (props: UI.InputGroupProps) => JSX.Element | null
   FormControl: (props: UI.FormControlProps) => JSX.Element | null
@@ -67,6 +69,8 @@ const UIContext = createContext<Context>({
   Badge: () => null,
   Modal: () => null,
   ModalHeader: () => null,
+  ModalBody: () => null,
+  ModalFooter: () => null,
   Strong: () => null,
   InputGroup: () => null,
   FormControl: () => null,
