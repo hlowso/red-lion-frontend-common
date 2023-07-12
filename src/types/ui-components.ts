@@ -69,6 +69,8 @@ export namespace UI {
   export interface AccordionProps extends PropsWithChildren<BaseProps> {
     open?: boolean
   }
+  export interface AccordionHeaderProps extends PropsWithChildren<BaseProps> {}
+  export interface AccordionBodyProps extends PropsWithChildren<BaseProps> {}
 
   export interface BadgeProps extends PropsWithChildren<BaseProps> {
     bg: string
@@ -101,5 +103,9 @@ export namespace UI {
 
   export interface TooltipProps extends PropsWithChildren<{}> {
     id: string
+  }
+
+  export interface MarkedProps {
+    children: string
   }
 }

@@ -24,6 +24,8 @@ interface Context {
   ListGroup: (props: UI.ListGroupProps) => JSX.Element | null
   ListGroupItem: (props: UI.ListGroupItemProps) => JSX.Element | null
   Accordion: (props: UI.AccordionProps) => JSX.Element | null
+  AccordionHeader: (props: UI.AccordionHeaderProps) => JSX.Element | null
+  AccordionBody: (props: UI.AccordionBodyProps) => JSX.Element | null
   Badge: (props: UI.BadgeProps) => JSX.Element | null
   Modal: (props: UI.ModalProps) => JSX.Element | null
   ModalHeader: (props: UI.ModalHeaderProps) => JSX.Element | null
@@ -33,6 +35,7 @@ interface Context {
   Icon: (props: UI.IconProps) => JSX.Element | null
   OverlayTrigger: (props: UI.OverlayTriggerProps) => JSX.Element | null
   Tooltip: (props: UI.TooltipProps) => JSX.Element | null
+  Marked: (props: UI.MarkedProps) => JSX.Element | null
 }
 
 const UIContext = createContext<Context>({
@@ -53,6 +56,8 @@ const UIContext = createContext<Context>({
   ListGroup: () => null,
   ListGroupItem: () => null,
   Accordion: () => null,
+  AccordionHeader: () => null,
+  AccordionBody: () => null,
   Badge: () => null,
   Modal: () => null,
   ModalHeader: () => null,
@@ -61,7 +66,8 @@ const UIContext = createContext<Context>({
   FormControl: () => null,
   Icon: () => null,
   OverlayTrigger: () => null,
-  Tooltip: () => null
+  Tooltip: () => null,
+  Marked: () => null
 })
 
 export const useUIContext = () => useContext(UIContext)
