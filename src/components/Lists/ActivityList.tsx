@@ -10,18 +10,20 @@ interface Props {
 }
 
 const ActivityList = ({ listName, activities, openActivityModal }: Props) => {
-  const { Card, ListGroup, CardHeader, Div } = useUIContext()
+  const ui = useUIContext()
   return (
-    <Card
+    <ui.Card
       style={{
         flexGrow: 1,
         margin: '0 0 0 15px',
         height: 'fit-content'
       }}
     >
-      <CardHeader>{listName}</CardHeader>
-      <Div>
-        <ListGroup>
+      <ui.CardHeader>
+        <ui.Strong>{listName}</ui.Strong>
+      </ui.CardHeader>
+      <ui.Div>
+        <ui.ListGroup>
           {activities.map((activity) => (
             <ActivityListItem
               key={activity.id}
@@ -29,9 +31,9 @@ const ActivityList = ({ listName, activities, openActivityModal }: Props) => {
               open={() => openActivityModal(activity.id)}
             />
           ))}
-        </ListGroup>
-      </Div>
-    </Card>
+        </ui.ListGroup>
+      </ui.Div>
+    </ui.Card>
   )
 }
 
