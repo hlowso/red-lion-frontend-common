@@ -10,7 +10,7 @@ interface Props {
 }
 
 const ActivityList = ({ listName, activities, openActivityModal }: Props) => {
-  const { Card, ListGroup, Span, Div } = useUIContext()
+  const { Card, ListGroup, CardHeader, Div } = useUIContext()
   return (
     <Card
       style={{
@@ -19,7 +19,7 @@ const ActivityList = ({ listName, activities, openActivityModal }: Props) => {
         height: 'fit-content'
       }}
     >
-      <Span>{listName}</Span>
+      <CardHeader>{listName}</CardHeader>
       <Div>
         <ListGroup>
           {activities.map((activity) => (
