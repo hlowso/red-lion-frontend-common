@@ -7,14 +7,14 @@ interface NotificationProps extends SocketPayload.Notify {
 }
 
 const Notification = ({ clear, header, body, variant }: NotificationProps) => {
-  const { Toast, Span, Div, Marked } = useUIContext()
+  const ui = useUIContext()
   return (
-    <Toast onClose={clear} bg={variant}>
-      <Span>{header}</Span>
-      <Div style={{ color: 'white' }}>
-        <Marked>{body}</Marked>
-      </Div>
-    </Toast>
+    <ui.Toast onClose={clear} bg={variant} style={{ padding: '10px' }}>
+      <ui.Span style={{ color: 'white', fontSize: 'large' }}>{header}</ui.Span>
+      <ui.Div style={{ color: 'white', margin: '10px 0 0' }}>
+        <ui.Marked>{body}</ui.Marked>
+      </ui.Div>
+    </ui.Toast>
   )
 }
 
