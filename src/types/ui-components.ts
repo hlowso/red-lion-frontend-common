@@ -23,6 +23,7 @@ export namespace UI {
 
   export interface ButtonProps extends PropsWithChildren<BaseProps> {
     variant?: string
+    size?: 'sm' | 'lg'
     disabled?: boolean
   }
 
@@ -91,9 +92,17 @@ export namespace UI {
   export interface StrongProps extends PropsWithChildren<BaseProps> {}
 
   export interface InputGroupProps extends PropsWithChildren<BaseProps> {}
+  export interface InputGroupTextProps extends PropsWithChildren<BaseProps> {}
   export interface FormControlProps extends PropsWithChildren<BaseProps> {
     value: any
-    onChange: (ev: React.ChangeEvent) => void
+    as?: 'textarea'
+    onChange: (ev: React.ChangeEvent<any>) => void
+  }
+  export interface FormSelectProps extends PropsWithChildren<BaseProps> {
+    onChange: (ev: React.ChangeEvent<any>) => void
+  }
+  export interface FormSelectOptionProps extends PropsWithChildren<BaseProps> {
+    value: string
   }
 
   export interface IconProps extends BaseProps {
