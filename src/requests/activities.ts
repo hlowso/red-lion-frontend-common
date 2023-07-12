@@ -1,11 +1,15 @@
-import { ActivityGetParams } from 'common'
+import { ActivityGetParams, ActivityPostParams } from 'common'
 
-const Activities = ({ GET }) => {
+const Activities = ({ GET, POST }) => {
   const getActivities = (params: ActivityGetParams) =>
     GET('/activities', params)
 
+  const createActivity = (params: ActivityPostParams) =>
+    POST('/activities', params)
+
   return {
-    getActivities
+    getActivities,
+    createActivity
   }
 }
 
