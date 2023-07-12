@@ -10,7 +10,7 @@ const Possessions = () => {
   const style: React.CSSProperties = {
     position: 'fixed',
     bottom: 0,
-    right: '30px',
+    right: '20px',
     minWidth: '520px',
     border: 'solid 1px #aaa',
     borderBottom: 'unset',
