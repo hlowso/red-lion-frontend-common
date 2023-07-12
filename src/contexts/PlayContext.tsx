@@ -1,8 +1,14 @@
-import React, { PropsWithChildren, createContext, useContext } from 'react'
+import React, {
+  PropsWithChildren,
+  createContext,
+  useContext,
+  useEffect
+} from 'react'
 import useCurrentUser from '../hooks/useCurrentUser'
 import useGames from '../hooks/useGames'
 import useCharacters from '../hooks/useCharacters'
 import { Character, Possessions } from 'common'
+import { useSocket } from './SocketContext'
 
 interface Context extends Omit<Character, 'id'> {
   isLoading: boolean
@@ -16,6 +22,7 @@ const PlayContext = createContext<Partial<Context>>({})
 
 export const usePlayContext = () => useContext(PlayContext)
 export const PlayProvider = ({ children }: PropsWithChildren) => {
+  const socketEvents = useSocket()
   const query = new URLSearchParams(document.location.search)
   const { data: user } = useCurrentUser(query.get('username') as string)
   const { data: games } = useGames({ userId: user?.id }, !!user)
@@ -25,6 +32,12 @@ export const PlayProvider = ({ children }: PropsWithChildren) => {
     !!user && !!game
   )
   const [character] = Array.isArray(characters) ? characters : []
+
+  useEffect(() => {
+    if (user?.id) {
+      socketEvents?.identify({ userId: user.id })
+    }
+  }, [user?.id, socketEvents])
 
   const possessions = {
     items: character?.items || {},
