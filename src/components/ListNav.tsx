@@ -38,6 +38,7 @@ const ListNav = ({
         [
           ...lists.map(({ id, icon, name }) => (
             <ListGroupItem
+              key={id}
               className='list'
               onClick={() => openList(id)}
               style={{
@@ -50,8 +51,9 @@ const ListNav = ({
               <Strong>{name}</Strong>
             </ListGroupItem>
           )),
-          <Div style={{ width: '100%', height: '2px' }} />,
+          <Div key='divider' style={{ width: '100%', height: '2px' }} />,
           <ListGroupItem
+            key={'unplanned'}
             onClick={openUnplannedModal}
             style={{ backgroundColor: '#eee', cursor: 'pointer' }}
           >
