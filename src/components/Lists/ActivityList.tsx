@@ -12,7 +12,13 @@ interface Props {
 const ActivityList = ({ listName, activities, openActivityModal }: Props) => {
   const { Card, ListGroup, Span, Div } = useUIContext()
   return (
-    <Card style={{ width: '95vw', maxWidth: '600px', margin: '30px 10px' }}>
+    <Card
+      style={{
+        flexGrow: 1,
+        margin: '0 0 0 15px',
+        height: 'fit-content'
+      }}
+    >
       <Span>{listName}</Span>
       <Div>
         <ListGroup>
