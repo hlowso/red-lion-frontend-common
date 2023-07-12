@@ -11,7 +11,16 @@ interface Props {
 }
 
 const ItemModal = ({ item, close, use }: Props) => {
-  const { Modal, ModalHeader, Div, Button, Strong, Marked } = useUIContext()
+  const {
+    Modal,
+    ModalHeader,
+    ModalBody,
+    ModalFooter,
+    Div,
+    Button,
+    Strong,
+    Marked
+  } = useUIContext()
   return !!item ? (
     <Modal show={!!item} onHide={close}>
       <ModalHeader>
@@ -32,17 +41,17 @@ const ItemModal = ({ item, close, use }: Props) => {
           </Div>
         </Div>
       </ModalHeader>
-      <Div>
+      <ModalBody>
         <Marked>{item?.description || ''}</Marked>
-      </Div>
-      <Div>
+      </ModalBody>
+      <ModalFooter>
         <Button onClick={close} variant='secondary'>
           Close
         </Button>
         <Button onClick={use} variant='primary'>
           Use
         </Button>
-      </Div>
+      </ModalFooter>
     </Modal>
   ) : null
 }

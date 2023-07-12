@@ -10,21 +10,22 @@ interface Props {
 }
 
 const ActivityModal = ({ show, activity, log, close }: Props) => {
-  const { Modal, ModalHeader, Div, Button, P } = useUIContext()
+  const { Modal, ModalHeader, ModalFooter, ModalBody, Button, P } =
+    useUIContext()
   return (
     <Modal show={show} onHide={close}>
       <ModalHeader>{activity?.name}</ModalHeader>
-      <Div>
+      <ModalBody>
         <P>{activity?.description}</P>
-      </Div>
-      <Div>
+      </ModalBody>
+      <ModalFooter>
         <Button onClick={close} variant='secondary'>
           Close
         </Button>
         <Button onClick={log} variant='primary'>
           Log
         </Button>
-      </Div>
+      </ModalFooter>
     </Modal>
   )
 }

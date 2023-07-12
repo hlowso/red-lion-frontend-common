@@ -36,7 +36,7 @@ const Cost = ({
   quantity,
   costDelta
 }: CostProps) => {
-  const { Div, Card, Icon } = useUIContext()
+  const { Div, Card, Icon, Span, Strong } = useUIContext()
   const cost = Util.Delta.applyFactorToDelta(quantity, costDelta)
   return (
     <Div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -53,9 +53,10 @@ const Cost = ({
           }}
         >
           <Icon name={Util.Tally.byKey(tallies, key)?.icon} size={30} />
-          <span style={{ marginTop: '5px' }}>
-            <strong>{-1 * count}</strong> {Util.Tally.byKey(tallies, key)?.name}
-          </span>
+          <Span style={{ marginTop: '5px' }}>
+            <Strong>{-1 * count}</Strong>{' '}
+            <Span>{Util.Tally.byKey(tallies, key)?.name}</Span>
+          </Span>
         </Card>
       ))}
       {Object.entries(cost.items || {}).map(([key, count]) => (
@@ -70,9 +71,10 @@ const Cost = ({
           }}
         >
           <ItemImage src={Util.Item.byKey(items, key)?.imageUrl} scale={0.75} />
-          <span style={{ marginTop: '5px' }}>
-            <strong>{-1 * count}</strong> {Util.Item.byKey(items, key)?.name}
-          </span>
+          <Span style={{ marginTop: '5px' }}>
+            <Strong>{-1 * count}</Strong>{' '}
+            <Span>{Util.Item.byKey(items, key)?.name}</Span>
+          </Span>
         </Card>
       ))}
     </Div>
@@ -86,11 +88,11 @@ const Footer = ({
   affordable,
   purchase
 }: FooterProps) => {
-  const { Div, ButtonGroup, Button, InputGroup, FormControl, Icon } =
+  const { ModalFooter, ButtonGroup, Button, InputGroup, FormControl, Icon } =
     useUIContext()
   const height = 50
   return (
-    <Div style={{ display: 'flex', justifyContent: 'space-between' }}>
+    <ModalFooter style={{ display: 'flex', justifyContent: 'space-between' }}>
       <Tallies />
       <InputGroup style={{ width: 'unset' }}>
         <FormControl
@@ -123,12 +125,13 @@ const Footer = ({
           Buy
         </Button>
       </InputGroup>
-    </Div>
+    </ModalFooter>
   )
 }
 
 const PurchaseItemModal = ({ item, purchase, close }: Props) => {
-  const { Modal, ModalHeader, Div, Spinner, Marked } = useUIContext()
+  const { Modal, ModalHeader, ModalBody, Div, Spinner, Marked, Strong } =
+    useUIContext()
   const { gameId, possessions, isLoading: contextIsLoading } = usePlayContext()
   const { data: tallies, isLoading: talliesAreLoading } = useTallies(
     { gameId },
@@ -156,22 +159,22 @@ const PurchaseItemModal = ({ item, purchase, close }: Props) => {
       <ModalHeader>
         <Div style={{ display: 'flex' }}>
           <ItemImage src={item.imageUrl} scale={1.25} />
-          <div
+          <Div
             style={{
               paddingLeft: '8px',
               display: 'flex',
               alignItems: 'center'
             }}
           >
-            <strong
+            <Strong
               style={{ display: 'inline-block', verticalAlign: 'middle' }}
             >
               {item.name}
-            </strong>
-          </div>
+            </Strong>
+          </Div>
         </Div>
       </ModalHeader>
-      <Div>
+      <ModalBody>
         <Marked>{item?.description || ''}</Marked>
         {contextIsLoading || talliesAreLoading || itemsAreLoading ? (
           <Spinner />
@@ -184,7 +187,7 @@ const PurchaseItemModal = ({ item, purchase, close }: Props) => {
             costDelta={item.costDelta}
           />
         )}
-      </Div>
+      </ModalBody>
       <Footer
         quantity={quantity}
         setQuantity={setQuantity}
