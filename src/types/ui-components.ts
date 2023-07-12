@@ -55,6 +55,8 @@ export namespace UI {
     fixed?: 'top' | 'bottom'
     bg?: string
   }
+  export interface NavbarCollapseProps extends PropsWithChildren<BaseProps> {}
+  export interface NavbarBrandProps extends PropsWithChildren<BaseProps> {}
 
   export interface ToastContainerProps extends PropsWithChildren<BaseProps> {
     position: 'top-end'

@@ -22,7 +22,8 @@ const Profile = ({
 }
 
 const Nav = () => {
-  const { Div, Button, Link, Spinner, Span, Navbar } = useUIContext()
+  const { Button, Spinner, Span, Navbar, NavbarCollapse, NavbarBrand } =
+    useUIContext()
   const {
     username,
     imageUrl: profileImageUrl,
@@ -33,16 +34,16 @@ const Nav = () => {
   const vendorButtonVariant = shopping ? 'secondary' : 'outline-secondary'
 
   return (
-    <Navbar fixed='top' bg='dark'>
-      <Div className='justify-content-start'>
-        <Link href='#home'>{`${APP_NAME} / ${
+    <Navbar fixed='top' bg='dark' style={{ padding: '10px 20px' }}>
+      <NavbarCollapse className='justify-content-start'>
+        <NavbarBrand style={{ color: 'white' }}>{`${APP_NAME} / ${
           isLoading ? '...' : gameName
-        }`}</Link>
+        }`}</NavbarBrand>
         <Button variant={vendorButtonVariant} onClick={toggleShopping}>
           Vendor
         </Button>
-      </Div>
-      <Div className='justify-content-end'>
+      </NavbarCollapse>
+      <NavbarCollapse className='justify-content-end'>
         <Span>
           {isLoading ? (
             <Spinner />
@@ -50,7 +51,7 @@ const Nav = () => {
             <Profile username={username!} imageUrl={profileImageUrl!} />
           )}
         </Span>
-      </Div>
+      </NavbarCollapse>
     </Navbar>
   )
 }

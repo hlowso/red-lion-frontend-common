@@ -18,6 +18,8 @@ interface Context {
   Link: (props: UI.LinkProps) => JSX.Element | null
   Spinner: (props: UI.SpinnerProps) => JSX.Element | null
   Navbar: (props: UI.NavbarProps) => JSX.Element | null
+  NavbarCollapse: (props: UI.NavbarProps) => JSX.Element | null
+  NavbarBrand: (props: UI.NavbarProps) => JSX.Element | null
   ToastContainer: (props: UI.ToastContainerProps) => JSX.Element | null
   Toast: (props: UI.ToastProps) => JSX.Element | null
   Card: (props: UI.CardProps) => JSX.Element | null
@@ -50,6 +52,8 @@ const UIContext = createContext<Context>({
   Link: () => null,
   Spinner: () => null,
   Navbar: () => null,
+  NavbarCollapse: () => null,
+  NavbarBrand: () => null,
   ToastContainer: () => null,
   Toast: () => null,
   Card: () => null,
