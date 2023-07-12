@@ -37,7 +37,7 @@ const RequestHelpers = (apiBaseUrl: string) => {
     ...Users({ GET }),
     ...Games({ GET }),
     ...Characters({ GET, PATCH }),
-    ...Activities({ GET }),
+    ...Activities({ GET, POST }),
     ...Logs({ GET }),
     ...Tallies({ GET }),
     ...Items({ GET }),
