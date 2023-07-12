@@ -1,14 +1,14 @@
 import React, { useContext, useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { RequestsContext, usePlayContext, useUIContext } from '../../contexts'
-import useActivities from '../../hooks/useActivities'
 import ActivityModal from './ActivityModal'
 import ActivityList from './ActivityList'
-import { ListRow } from 'common'
+import { ListRow, ActivityRow } from 'common'
 import { dueToday } from 'common/selectors'
 
 interface Props {
   lists: ListRow[]
+  activities: ActivityRow[]
   openListId: number
 }
 
@@ -21,7 +21,7 @@ const Loading = () => {
   )
 }
 
-const Lists = ({ lists, openListId }: Props) => {
+const Lists = ({ lists, activities, openListId }: Props) => {
   const queryClient = useQueryClient()
   const { Div } = useUIContext()
   const Requests = useContext(RequestsContext)
@@ -30,10 +30,7 @@ const Lists = ({ lists, openListId }: Props) => {
     characterId,
     isLoading: playContextLoading
   } = usePlayContext()
-  const { data: activities } = useActivities(
-    { gameId, characterId },
-    !!gameId && !!characterId
-  )
+
   const [isLogging, setIsLogging] = useState(false)
   const [openActivityId, setOpenActivityId] = useState<number>()
   const openActivity = activities?.find((a) => a.id === openActivityId)
