@@ -1,5 +1,5 @@
 import React from 'react'
-import { useUIContext } from './contexts'
+import { useUIContext } from '../contexts'
 
 const PortraitApp = () => {
   const { Div } = useUIContext()
