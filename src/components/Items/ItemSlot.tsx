@@ -98,7 +98,7 @@ const ItemSlot = ({ item }: Props) => {
       <SlotOverlayTrigger {...item} />
     </Div>
   ) : (
-    <Div className='item-slot empty rounded' />
+    <Div style={style} />
   )
 }
 
