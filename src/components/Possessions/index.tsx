@@ -4,7 +4,8 @@ import Tallies from './Tallies'
 import { useUIContext, useVendorContext } from '../../contexts'
 
 const Possessions = () => {
-  const { Div, Accordion, Span } = useUIContext()
+  const { Div, Accordion, AccordionHeader, AccordionBody, Span } =
+    useUIContext()
   const { shopping } = useVendorContext()
   const style: React.CSSProperties = {
     position: 'fixed',
@@ -18,15 +19,21 @@ const Possessions = () => {
 
   return (
     <Accordion style={style} open={shopping}>
-      <Span style={{ borderBottom: 'solid 1px #ddd' }}>
-        <Div style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <AccordionHeader style={{ borderBottom: 'solid 1px #ddd' }}>
+        <Div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            width: '100%'
+          }}
+        >
           <Span>Inventory</Span>
           <Tallies />
         </Div>
-      </Span>
-      <Div>
+      </AccordionHeader>
+      <AccordionBody>
         <Inventory />
-      </Div>
+      </AccordionBody>
     </Accordion>
   )
 }
