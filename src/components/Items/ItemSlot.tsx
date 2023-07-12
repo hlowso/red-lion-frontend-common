@@ -1,7 +1,6 @@
 import React from 'react'
 import ItemImage from './ItemImage'
 import { Item } from 'common'
-import Marked from '../Marked'
 import { useUIContext } from '../../contexts'
 
 interface Props {
@@ -13,15 +12,50 @@ interface Props {
 
 type TooltipItemProps = Pick<Item, 'key' | 'name' | 'description' | 'imageUrl'>
 
-const tooltip = ({
-  key,
-  name,
-  description,
+const Contents = ({
   imageUrl,
-  ...props
-}: TooltipItemProps & any) => {
-  const { Card, Div, Strong, Tooltip } = useUIContext()
+  count
+}: {
+  imageUrl: string
+  count?: number
+}) => {
+  const { Div, Badge } = useUIContext()
   return (
+    <Div className='contents'>
+      <ItemImage src={imageUrl} />
+      {count && (
+        <Badge
+          bg='secondary'
+          style={{
+            position: 'absolute',
+            bottom: '1px',
+            left: '1px',
+            zIndex: 3
+          }}
+        >
+          {count}
+        </Badge>
+      )}
+    </Div>
+  )
+}
+
+const SlotOverlayTrigger = (
+  item: Item & {
+    count?: number
+    open?: () => void
+  }
+) => {
+  const { OverlayTrigger, Card, Div, Strong, Tooltip, Marked } = useUIContext()
+  const { key, name, description, imageUrl, count } = item
+
+  const tooltip = ({
+    key,
+    name,
+    description,
+    imageUrl,
+    ...props
+  }: TooltipItemProps & any) => (
     <Tooltip id={`item-tooltip-${key}`} {...props}>
       <Card bg='dark' text='white'>
         <Div style={{ padding: '6px 0px' }}>
@@ -43,43 +77,19 @@ const tooltip = ({
           </Div>
         </Div>
         <Div>
-          <Marked markdown={description} />
+          <Marked>{description}</Marked>
         </Div>
       </Card>
     </Tooltip>
   )
-}
 
-const SlotContents = (
-  item: Item & {
-    count?: number
-    open?: () => void
-  }
-) => {
-  const { Div, Badge, OverlayTrigger } = useUIContext()
-  const { key, name, description, imageUrl } = item
   return (
     <OverlayTrigger
       overlay={(props) =>
         tooltip({ key, name, description, imageUrl, ...props })
       }
     >
-      <Div className='contents'>
-        <ItemImage src={item.imageUrl} />
-        {item.count && (
-          <Badge
-            bg='secondary'
-            style={{
-              position: 'absolute',
-              bottom: '1px',
-              left: '1px',
-              zIndex: 3
-            }}
-          >
-            {item.count}
-          </Badge>
-        )}
-      </Div>
+      <Contents imageUrl={imageUrl} count={count} />
     </OverlayTrigger>
   )
 }
@@ -95,7 +105,7 @@ const ItemSlot = ({ item }: Props) => {
   }
   return item ? (
     <Div className='rounded' onClick={item.open} style={style}>
-      <SlotContents {...item} />
+      <SlotOverlayTrigger {...item} />
     </Div>
   ) : (
     <Div className='item-slot empty rounded' />
