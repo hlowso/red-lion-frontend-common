@@ -47,16 +47,10 @@ const SlotOverlayTrigger = (
   }
 ) => {
   const { OverlayTrigger, Card, Div, Strong, Tooltip, Marked } = useUIContext()
-  const { key, name, description, imageUrl, count } = item
+  const { id, name, description, imageUrl, count } = item
 
-  const tooltip = ({
-    key,
-    name,
-    description,
-    imageUrl,
-    ...props
-  }: TooltipItemProps & any) => (
-    <Tooltip id={`item-tooltip-${key}`} {...props}>
+  const tooltip = (props: TooltipItemProps & any) => (
+    <Tooltip id={`item-tooltip-${id}`} {...props}>
       <Card bg='dark' text='white'>
         <Div style={{ padding: '6px 0px' }}>
           <Div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -84,11 +78,7 @@ const SlotOverlayTrigger = (
   )
 
   return (
-    <OverlayTrigger
-      overlay={(props) =>
-        tooltip({ key, name, description, imageUrl, ...props })
-      }
-    >
+    <OverlayTrigger overlay={tooltip}>
       <Contents imageUrl={imageUrl} count={count} />
     </OverlayTrigger>
   )
