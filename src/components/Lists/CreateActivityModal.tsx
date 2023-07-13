@@ -22,10 +22,8 @@ const CreateActivityModal = ({
   const [tallyKey, setTallyKey] = useState('')
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
-  const [direction, setDirection] = useState<'good' | 'bad'>('good')
-  const [significance, setSignificance] = useState<
-    'trivial' | 'minor' | 'major'
-  >('trivial')
+  const [direction, setDirection] = useState<1 | -1>(1)
+  const [significance, setSignificance] = useState<1 | 2 | 3>(1)
 
   useEffect(() => setTallyKey(tallies[0]?.key), [tallies.length])
 
@@ -47,13 +45,22 @@ const CreateActivityModal = ({
   }
 
   const onCreate = () => {
-    const completionDelta: Delta = { tallies: {} }
+    const expression = `${direction} * randomInt(${significance}, ${significance} ^ 3)`
+    const completionDelta: Delta = {
+      tallies: {
+        [tallyKey]: {
+          expression,
+          variables: []
+        }
+      }
+    }
     createActivity({
       name,
       description,
       schedule: null,
       fields: null,
       count: null,
+      fieldValues: null,
       completionDelta
     })
   }
@@ -94,15 +101,15 @@ const CreateActivityModal = ({
             <ui.Div style={groupStyle}>
               <ui.Button
                 style={selectButtonStyle}
-                onClick={() => setDirection('good')}
-                variant={direction === 'good' ? 'success' : 'outline-success'}
+                onClick={() => setDirection(1)}
+                variant={direction === 1 ? 'success' : 'outline-success'}
               >
                 Good
               </ui.Button>
               <ui.Button
                 style={selectButtonStyle}
-                onClick={() => setDirection('bad')}
-                variant={direction === 'bad' ? 'danger' : 'outline-danger'}
+                onClick={() => setDirection(-1)}
+                variant={direction === -1 ? 'danger' : 'outline-danger'}
               >
                 Bad
               </ui.Button>
@@ -110,28 +117,22 @@ const CreateActivityModal = ({
             <ui.Div style={groupStyle}>
               <ui.Button
                 style={selectButtonStyle}
-                onClick={() => setSignificance('trivial')}
-                variant={
-                  significance === 'trivial' ? 'primary' : 'outline-primary'
-                }
+                onClick={() => setSignificance(1)}
+                variant={significance === 1 ? 'primary' : 'outline-primary'}
               >
                 Trivial
               </ui.Button>
               <ui.Button
                 style={selectButtonStyle}
-                onClick={() => setSignificance('minor')}
-                variant={
-                  significance === 'minor' ? 'primary' : 'outline-primary'
-                }
+                onClick={() => setSignificance(2)}
+                variant={significance === 2 ? 'primary' : 'outline-primary'}
               >
                 Minor
               </ui.Button>
               <ui.Button
                 style={selectButtonStyle}
-                onClick={() => setSignificance('major')}
-                variant={
-                  significance === 'major' ? 'primary' : 'outline-primary'
-                }
+                onClick={() => setSignificance(3)}
+                variant={significance === 3 ? 'primary' : 'outline-primary'}
               >
                 Major
               </ui.Button>
