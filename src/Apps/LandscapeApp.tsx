@@ -46,17 +46,6 @@ const LandscapeApp = () => {
     useState(false)
   const [isLogging, setIsLogging] = useState(false)
 
-  const onLogUnplanned = async (activityId: number) => {
-    setIsLogging(true)
-    setSelectUnplannedModalOpen(false)
-    await Requests.completeActivityAsCharacter({
-      characterId: characterId!,
-      activityId: activityId!
-    })
-    setIsLogging(false)
-    await queryClient.invalidateQueries({ queryKey: ['games', gameId] })
-  }
-
   const onCreateUnplanned = async (
     params: Omit<ActivityPostParams, 'listId'>
   ) => {
@@ -107,7 +96,6 @@ const LandscapeApp = () => {
         show={selectUnplannedModalOpen}
         close={() => setSelectUnplannedModalOpen(false)}
         activities={unplannedActivites(L || [], A || [])}
-        logCompletion={onLogUnplanned}
         createNewActivity={() => {
           setSelectUnplannedModalOpen(false)
           setCreateUnplannedModalOpen(true)
