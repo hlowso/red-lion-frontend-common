@@ -22,7 +22,7 @@ const Loading = () => {
 }
 
 const Lists = ({ lists, activities, openListId }: Props) => {
-  const { Div } = useUIContext()
+  const ui = useUIContext()
   const [openActivityId, setOpenActivityId] = useState<number>()
   const openActivity = activities?.find((a) => a.id === openActivityId)
   const openListName =
@@ -33,7 +33,7 @@ const Lists = ({ lists, activities, openListId }: Props) => {
       : activities?.filter((a) => a.listId === openListId)
 
   return (
-    <Div style={{ flexGrow: 1 }}>
+    <ui.Div style={{ flexGrow: 1 }}>
       <ActivityList
         listName={openListName}
         activities={openListActivities || []}
@@ -44,7 +44,7 @@ const Lists = ({ lists, activities, openListId }: Props) => {
         activity={openActivity!}
         close={() => setOpenActivityId(undefined)}
       />
-    </Div>
+    </ui.Div>
   )
 }
 
