@@ -2,7 +2,8 @@ import {
   CharacterGetParams,
   CharacterActivityRequestParams,
   CharacterItemRequestParams,
-  PurchaseItemAsCharacterRequestBody
+  PurchaseItemAsCharacterRequestBody,
+  FormulaContextValue
 } from 'common'
 
 const Characters = ({ GET, PATCH }) => {
@@ -15,11 +16,11 @@ const Characters = ({ GET, PATCH }) => {
   }: CharacterActivityRequestParams): Promise<number> =>
     GET(`/characters/${characterId}/activities/${activityId}/count-today`)
 
-  const completeActivityAsCharacter = async ({
-    characterId,
-    activityId
-  }: CharacterActivityRequestParams) =>
-    PATCH(`/characters/${characterId}/activities/${activityId}/complete`)
+  const completeActivityAsCharacter = async (
+    { characterId, activityId }: CharacterActivityRequestParams,
+    body?: { fieldValues: FormulaContextValue[] }
+  ) =>
+    PATCH(`/characters/${characterId}/activities/${activityId}/complete`, body)
 
   const purchaseItemAsCharacter = async (
     { characterId, itemId }: CharacterItemRequestParams,
