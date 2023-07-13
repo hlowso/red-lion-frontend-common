@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { ActivityGetParams, ActivityRow } from 'common'
-import { RequestsContext } from '../contexts/RequestsContext'
+import { RequestsContext } from '../../contexts/RequestsContext'
 
 const useActivities = (params: ActivityGetParams, enabled: boolean) => {
   const Requests = useContext(RequestsContext)
