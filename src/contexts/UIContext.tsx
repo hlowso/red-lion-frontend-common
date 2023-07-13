@@ -22,6 +22,7 @@ interface Context {
   NavbarBrand: (props: UI.NavbarProps) => JSX.Element | null
   ToastContainer: (props: UI.ToastContainerProps) => JSX.Element | null
   Toast: (props: UI.ToastProps) => JSX.Element | null
+  ToastHeader: (props: UI.ToastHeaderProps) => JSX.Element | null
   Card: (props: UI.CardProps) => JSX.Element | null
   CardHeader: (props: UI.CardHeaderProps) => JSX.Element | null
   CardBody: (props: UI.CardBodyProps) => JSX.Element | null
@@ -64,6 +65,7 @@ const UIContext = createContext<Context>({
   NavbarBrand: () => null,
   ToastContainer: () => null,
   Toast: () => null,
+  ToastHeader: () => null,
   Card: () => null,
   CardHeader: () => null,
   CardBody: () => null,

@@ -66,11 +66,11 @@ export namespace UI {
     position: 'top-end'
     containerPosition: 'fixed'
   }
-
   export interface ToastProps extends PropsWithChildren<BaseProps> {
     onClose: () => void
     bg: string
   }
+  export interface ToastHeaderProps extends PropsWithChildren<BaseProps> {}
 
   export interface AccordionProps extends PropsWithChildren<BaseProps> {
     open?: boolean
