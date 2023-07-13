@@ -24,6 +24,8 @@ interface Context {
   Toast: (props: UI.ToastProps) => JSX.Element | null
   Card: (props: UI.CardProps) => JSX.Element | null
   CardHeader: (props: UI.CardHeaderProps) => JSX.Element | null
+  CardBody: (props: UI.CardBodyProps) => JSX.Element | null
+  CardTitle: (props: UI.CardTitleProps) => JSX.Element | null
   ListGroup: (props: UI.ListGroupProps) => JSX.Element | null
   ListGroupItem: (props: UI.ListGroupItemProps) => JSX.Element | null
   Accordion: (props: UI.AccordionProps) => JSX.Element | null
@@ -64,6 +66,8 @@ const UIContext = createContext<Context>({
   Toast: () => null,
   Card: () => null,
   CardHeader: () => null,
+  CardBody: () => null,
+  CardTitle: () => null,
   ListGroup: () => null,
   ListGroupItem: () => null,
   Accordion: () => null,
