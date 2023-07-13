@@ -6,7 +6,7 @@ import React, {
 } from 'react'
 import useCurrentUser from '../hooks/useCurrentUser'
 import useGames from '../hooks/useGames'
-import useCharacters from '../hooks/useCharacters'
+import useCharacters from '../hooks/characters/useCharacters'
 import { Character, Possessions } from 'common'
 import { useSocket } from './SocketContext'
 
