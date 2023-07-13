@@ -7,7 +7,12 @@ interface Props extends ActivityField {
   value?: number
 }
 
-const ActivityFieldInput = ({ kind, options, setValue, value }: Props) => {
+const InputSwitch = ({
+  kind,
+  options,
+  setValue,
+  value
+}: Omit<Props, 'description'>) => {
   const ui = useUIContext()
   switch (kind) {
     case 'radio':
@@ -28,6 +33,26 @@ const ActivityFieldInput = ({ kind, options, setValue, value }: Props) => {
         </ui.Div>
       )
   }
+}
+
+const ActivityFieldInput = ({ description, ...props }: Props) => {
+  const ui = useUIContext()
+  return (
+    <ui.Div>
+      <ui.Span
+        style={{
+          fontStyle: 'italic',
+          color: '#777',
+          fontSize: 'small',
+          margin: '0 0 5px',
+          display: 'block'
+        }}
+      >
+        {description}
+      </ui.Span>
+      <InputSwitch {...props} />
+    </ui.Div>
+  )
 }
 
 export default ActivityFieldInput
