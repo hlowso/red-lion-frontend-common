@@ -1,33 +1,46 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { ActivityRow } from 'common'
 import { useUIContext } from '../../contexts'
+import {
+  ActivityCompletionContext,
+  ActivityCompletionProvider
+} from '../../contexts/ActivityCompletionContext'
+import ActivityFieldInputs from './ActivityFieldInputs'
 
 interface Props {
   show: boolean
   activity?: ActivityRow
   close: () => void
-  log: () => void
 }
 
-const ActivityModal = ({ show, activity, log, close }: Props) => {
-  const { Modal, ModalHeader, ModalFooter, ModalBody, Button, P } =
-    useUIContext()
+const ActivityModal = ({ show, close }: Props) => {
+  const ui = useUIContext()
+  const { activity, logCompletion, canLog } = useContext(
+    ActivityCompletionContext
+  )
+  const onLog = () => {
+    close()
+    logCompletion()
+  }
   return (
-    <Modal show={show} onHide={close}>
-      <ModalHeader>{activity?.name}</ModalHeader>
-      <ModalBody>
-        <P>{activity?.description}</P>
-      </ModalBody>
-      <ModalFooter>
-        <Button onClick={close} variant='secondary'>
-          Close
-        </Button>
-        <Button onClick={log} variant='primary'>
+    <ui.Modal show={show} onHide={close}>
+      <ui.ModalHeader>{activity?.name}</ui.ModalHeader>
+      <ui.ModalBody>
+        <ui.P>{activity?.description}</ui.P>
+        {activity?.fields && <ActivityFieldInputs fields={activity.fields} />}
+      </ui.ModalBody>
+      <ui.ModalFooter>
+        <ui.Button disabled={!canLog} onClick={onLog} variant='primary'>
           Log
-        </Button>
-      </ModalFooter>
-    </Modal>
+        </ui.Button>
+      </ui.ModalFooter>
+    </ui.Modal>
   )
 }
 
-export default ActivityModal
+export default (props: Props) =>
+  props.show ? (
+    <ActivityCompletionProvider activity={props.activity}>
+      <ActivityModal {...props} />
+    </ActivityCompletionProvider>
+  ) : null
