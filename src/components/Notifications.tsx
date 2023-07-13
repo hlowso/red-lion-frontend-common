@@ -9,9 +9,9 @@ interface NotificationProps extends SocketPayload.Notify {
 const Notification = ({ clear, header, body, variant }: NotificationProps) => {
   const ui = useUIContext()
   return (
-    <ui.Toast onClose={clear} bg={variant} style={{ padding: '10px' }}>
-      <ui.Span style={{ color: 'white', fontSize: 'large' }}>{header}</ui.Span>
-      <ui.Div style={{ color: 'white', margin: '10px 0 0' }}>
+    <ui.Toast onClose={clear} bg={variant}>
+      <ui.ToastHeader>{header}</ui.ToastHeader>
+      <ui.Div style={{ color: 'white', margin: '10px 0 0', padding: '10px' }}>
         <ui.Marked>{body}</ui.Marked>
       </ui.Div>
     </ui.Toast>
@@ -19,13 +19,13 @@ const Notification = ({ clear, header, body, variant }: NotificationProps) => {
 }
 
 const Notifications = () => {
-  const { ToastContainer } = useUIContext()
+  const ui = useUIContext()
   const { notifications, setNotifications } = useSocket()!
   const clearNotification = (uuid: string) =>
     setNotifications((N) => N.filter((n) => n.uuid !== uuid))
 
   return (
-    <ToastContainer
+    <ui.ToastContainer
       position='top-end'
       containerPosition='fixed'
       style={{ margin: '20px' }}
@@ -37,7 +37,7 @@ const Notifications = () => {
           clear={() => clearNotification(notification.uuid)}
         />
       ))}
-    </ToastContainer>
+    </ui.ToastContainer>
   )
 }
 
