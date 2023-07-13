@@ -1,5 +1,5 @@
-export * from './useActivities'
-export * from './useCharacters'
+export * from './activities/useActivities'
+export * from './characters/useCharacters'
 export * from './useCurrentUser'
 export * from './useGames'
 export * from './useItems'
