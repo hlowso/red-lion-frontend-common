@@ -9,10 +9,10 @@ import React, {
 import { usePlayContext } from './PlayContext'
 import { useQueryClient } from '@tanstack/react-query'
 import { RequestsContext } from './RequestsContext'
-import useA from '../hooks/useActivities'
+import useA from '../hooks/activities/useActivities'
 
 interface Props extends PropsWithChildren {
-  activityId?: number
+  activity?: ActivityRow | number
 }
 
 interface Context {
@@ -40,7 +40,7 @@ export const ActivityCompletionProvider = ({ children, ...props }: Props) => {
   const { gameId, characterId, ...context } = usePlayContext()
   const { data: activities } = useA({ gameId, characterId }, !context.isLoading)
   const [activityId, setActivityId] = useState<number | undefined>(
-    props.activityId
+    typeof props.activity === 'number' ? props.activity : props.activity?.id
   )
   const [isLogging, setIsLogging] = useState(false)
   const [fieldValues, setFieldValues] = useState<FormulaContextValue[]>([])
@@ -61,18 +61,27 @@ export const ActivityCompletionProvider = ({ children, ...props }: Props) => {
   }
 
   const logCompletion = async () => {
+    // 0. Throw an error if the required IDs are not present
     if (!gameId || !characterId || !activityId) {
       throw `Cannot log activity completion; missing an identifier: gameId: ${gameId}, characterId: ${characterId}, activityId: ${activityId}`
     }
+
+    // 1. Set logging state
     setIsLogging(true)
+
+    // 2. Create the log record
     await Requests.completeActivityAsCharacter(
       {
-        characterId: characterId!,
+        characterId,
         activityId
       },
       { fieldValues }
     )
+
+    // 3. Done logging
     setIsLogging(false)
+
+    // 4. Fetch updated records pertaining to current game
     await queryClient.invalidateQueries({ queryKey: ['games', gameId] })
   }
 
