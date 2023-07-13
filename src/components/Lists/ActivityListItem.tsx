@@ -1,6 +1,7 @@
-import React, { useContext, useState, useEffect } from 'react'
+import React from 'react'
 import { ActivityRow } from 'common'
-import { RequestsContext, usePlayContext, useUIContext } from '../../contexts'
+import { useUIContext } from '../../contexts'
+import useCharacterActivityCounts from '../../hooks/characters/useCharacterActivityCounts'
 
 interface Props {
   open: () => void
@@ -8,23 +9,15 @@ interface Props {
 }
 
 const ActivityListItem = ({ activity, open }: Props) => {
-  const { Div, Spinner, ListGroupItem, Span } = useUIContext()
-  const Requests = useContext(RequestsContext)
-  const { characterId } = usePlayContext()
-  const [countToday, setCountToday] = useState<number>()
-
-  useEffect(() => {
-    if (characterId)
-      Requests.getCharacterActivityCountToday({
-        characterId,
-        activityId: activity.id
-      }).then(setCountToday)
-  }, [characterId])
+  const ui = useUIContext()
+  const { data: countToday } = useCharacterActivityCounts({
+    activityId: activity.id
+  })
 
   return (
-    <ListGroupItem onClick={open} style={{ cursor: 'pointer' }}>
-      <Div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Span
+    <ui.ListGroupItem onClick={open} style={{ cursor: 'pointer' }}>
+      <ui.Div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <ui.Span
           style={{
             overflow: 'hidden',
             textOverflow: 'ellipsis',
@@ -32,14 +25,14 @@ const ActivityListItem = ({ activity, open }: Props) => {
           }}
         >
           {activity.name}
-        </Span>
+        </ui.Span>
         {Number.isInteger(countToday) ? (
           `${countToday}/${activity.count || 1}`
         ) : (
-          <Spinner small />
+          <ui.Spinner small />
         )}
-      </Div>
-    </ListGroupItem>
+      </ui.Div>
+    </ui.ListGroupItem>
   )
 }
 
