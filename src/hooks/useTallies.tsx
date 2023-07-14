@@ -2,13 +2,15 @@ import { useQuery } from '@tanstack/react-query'
 import { TallyRow, TallyGetParams } from 'common'
 import { useContext } from 'react'
 import { RequestsContext } from '../contexts/RequestsContext'
+import { usePlayContext } from '../contexts'
 
-const useTallies = (params: TallyGetParams, enabled: boolean) => {
+const useTallies = (params?: TallyGetParams) => {
   const Requests = useContext(RequestsContext)
-  return useQuery<TallyRow[]>({
-    queryKey: ['games', params.gameId, 'tallies', params.id],
-    queryFn: () => Requests.getTallies(params),
-    enabled
+  const { gameId } = usePlayContext()
+  return useQuery<undefined, undefined, TallyRow[], any>({
+    queryKey: ['games', gameId, 'tallies', params?.id],
+    queryFn: () => Requests.getTallies({ gameId, ...(params || {}) }),
+    enabled: !!gameId && (!params || params.id)
   })
 }
 

@@ -2,22 +2,25 @@ import { useContext } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { ActivityGetParams, ActivityRow } from 'common'
 import { RequestsContext } from '../../contexts/RequestsContext'
+import { usePlayContext } from '../../contexts'
 
-const useActivities = (params: ActivityGetParams, enabled: boolean) => {
+const useActivities = (params?: ActivityGetParams) => {
   const Requests = useContext(RequestsContext)
+  const { gameId, characterId } = usePlayContext()
   return useQuery<ActivityRow[]>({
     queryKey: [
       'games',
-      params.gameId,
+      gameId,
       'lists',
-      params.listId,
+      params?.listId,
       'characters',
-      params.characterId,
+      characterId,
       'activities',
-      params.id
+      params?.id
     ],
-    queryFn: () => Requests.getActivities(params),
-    enabled
+    queryFn: () =>
+      Requests.getActivities({ gameId, characterId, ...(params || {}) }),
+    enabled: !!gameId && !!characterId
   })
 }
 
