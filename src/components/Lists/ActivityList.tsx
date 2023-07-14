@@ -5,11 +5,19 @@ import { useUIContext } from '../../contexts'
 
 interface Props {
   openActivityModal: (activityId: number) => void
+  openCreateActivityModal: () => void
+  listId: number
   listName: string
   activities: ActivityRow[]
 }
 
-const ActivityList = ({ listName, activities, openActivityModal }: Props) => {
+const ActivityList = ({
+  listId,
+  listName,
+  activities,
+  openActivityModal,
+  openCreateActivityModal
+}: Props) => {
   const ui = useUIContext()
   return (
     <ui.Card
@@ -19,8 +27,21 @@ const ActivityList = ({ listName, activities, openActivityModal }: Props) => {
         height: 'fit-content'
       }}
     >
-      <ui.CardHeader>
+      <ui.CardHeader
+        style={{ display: 'flex', justifyContent: 'space-between' }}
+      >
         <ui.Strong>{listName}</ui.Strong>
+        <ui.Div>
+          {listId > 0 && (
+            <ui.Button
+              variant='outline-secondary'
+              onClick={openCreateActivityModal}
+              size='sm'
+            >
+              <ui.Icon name='PlusLg' />
+            </ui.Button>
+          )}
+        </ui.Div>
       </ui.CardHeader>
       <ui.Div>
         <ui.ListGroup>
