@@ -5,8 +5,8 @@ import React, {
   useEffect
 } from 'react'
 import useCurrentUser from '../hooks/useCurrentUser'
-import useGames from '../hooks/useGames'
-import useCharacters from '../hooks/characters/useCharacters'
+import useG from '../hooks/useGames'
+import useC from '../hooks/characters/useCharacters'
 import { Character, Possessions } from 'common'
 import { useSocket } from './SocketContext'
 
@@ -24,12 +24,17 @@ export const usePlayContext = () => useContext(PlayContext)
 export const PlayProvider = ({ children }: PropsWithChildren) => {
   const socketEvents = useSocket()
   const query = new URLSearchParams(document.location.search)
-  const { data: user } = useCurrentUser(query.get('username') as string)
-  const { data: games } = useGames({ userId: user?.id }, !!user)
+  const { data: user, isLoading: currentUserLoading } = useCurrentUser(
+    query.get('username') as string
+  )
+  const { data: games, isLoading: GLoading } = useG(
+    { userId: user?.id },
+    !!user
+  )
   const [game] = Array.isArray(games) ? games : []
-  const { data: characters, isLoading } = useCharacters(
+  const { data: characters, isLoading: CLoading } = useC(
     { userId: user?.id, gameId: game?.id },
-    !!user && !!game
+    !!user?.id && !!game?.id
   )
   const [character] = Array.isArray(characters) ? characters : []
 
@@ -48,7 +53,7 @@ export const PlayProvider = ({ children }: PropsWithChildren) => {
   }
 
   const value = {
-    isLoading,
+    isLoading: currentUserLoading || GLoading || CLoading,
     userId: user?.id,
     username: user?.username,
     characterId: character?.id,
