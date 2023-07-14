@@ -33,11 +33,17 @@ const unplannedActivites = (lists: ListRow[], activities: ActivityRow[]) =>
 const LandscapeApp = () => {
   const Requests = useContext(Contexts.RequestsContext)
   const queryClient = useQueryClient()
-  const { Div } = useUIContext()
-  const { gameId, characterId, ...context } = usePlayContext()
-  const { data: L } = useL({ gameId, characterId }, !context.isLoading)
-  const { data: A } = useA({ gameId, characterId }, !context.isLoading)
-  const { data: T } = useT({ gameId }, !context.isLoading)
+  const ui = useUIContext()
+  const { gameId, characterId } = usePlayContext()
+  const { data: L, isLoading: LLoading } = useL(
+    { gameId, characterId },
+    !!gameId && !!characterId
+  )
+  const { data: A, isLoading: ALoading } = useA(
+    { gameId, characterId },
+    !!gameId && !!characterId
+  )
+  const { data: T, isLoading: TLoading } = useT({ gameId }, !!gameId)
 
   const [openListId, setOpenListId] = useState<number>(-1)
   const [selectUnplannedModalOpen, setSelectUnplannedModalOpen] =
@@ -63,10 +69,22 @@ const LandscapeApp = () => {
     await queryClient.invalidateQueries({ queryKey: ['games', gameId] })
   }
 
-  return (
-    <Div className='LandscapeApp'>
+  return LLoading || ALoading || TLoading ? (
+    <ui.Div
+      style={{
+        width: '100vw',
+        height: '100vh',
+        position: 'fixed',
+        top: 0,
+        display: 'flex'
+      }}
+    >
+      <ui.Spinner style={{ margin: 'auto' }} />
+    </ui.Div>
+  ) : (
+    <ui.Div className='LandscapeApp'>
       <Nav />
-      <Div
+      <ui.Div
         style={{
           position: 'fixed',
           height: '100vh',
@@ -87,12 +105,11 @@ const LandscapeApp = () => {
           }
         />
         <Lists lists={L || []} activities={A || []} openListId={openListId} />
-      </Div>
+      </ui.Div>
       <Possessions />
       <Vendor />
       <Notifications />
       <SelectUnplannedActivityModal
-        isLogging={isLogging}
         show={selectUnplannedModalOpen}
         close={() => setSelectUnplannedModalOpen(false)}
         activities={unplannedActivites(L || [], A || [])}
@@ -108,7 +125,7 @@ const LandscapeApp = () => {
         close={() => setCreateUnplannedModalOpen(false)}
         createActivity={onCreateUnplanned}
       />
-    </Div>
+    </ui.Div>
   )
 }
 
