@@ -1,6 +1,5 @@
-import React, { useContext, useState } from 'react'
-import { useQueryClient } from '@tanstack/react-query'
-import { RequestsContext, usePlayContext, useUIContext } from '../../contexts'
+import React, { useState } from 'react'
+import { useUIContext } from '../../contexts'
 import ActivityModal from './ActivityModal'
 import ActivityList from './ActivityList'
 import { ListRow, ActivityRow } from 'common'
@@ -10,15 +9,6 @@ interface Props {
   lists: ListRow[]
   activities: ActivityRow[]
   openListId: number
-}
-
-const Loading = () => {
-  const { Div, Spinner } = useUIContext()
-  return (
-    <Div style={{ margin: '30vh auto', width: 'fit-content' }}>
-      <Spinner />
-    </Div>
-  )
 }
 
 const Lists = ({ lists, activities, openListId }: Props) => {
