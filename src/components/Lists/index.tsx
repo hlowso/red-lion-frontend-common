@@ -27,7 +27,7 @@ const Lists = ({ lists, activities, openListId }: Props) => {
   return (
     <ui.Div style={{ flexGrow: 1 }}>
       <ActivityList
-        showAddButton={openListId}
+        showAddButton={!!openListId && openListId > 0}
         listName={openListName}
         activities={openListActivities || []}
         openActivityModal={setOpenActivityId}
@@ -40,7 +40,7 @@ const Lists = ({ lists, activities, openListId }: Props) => {
       />
       <CreateActivityModal
         listId={openListId}
-        show={!openListId && openListId > 0 && createActivityModalOpen}
+        show={!!openListId && openListId > 0 && createActivityModalOpen}
         close={() => setCreateActivityModalOpen(false)}
       />
     </ui.Div>
