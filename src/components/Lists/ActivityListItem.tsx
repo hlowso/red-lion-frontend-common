@@ -10,7 +10,7 @@ interface Props {
 
 const ActivityListItem = ({ activity, open }: Props) => {
   const ui = useUIContext()
-  const { data: countToday } = useCharacterActivityCounts({
+  const { data: countToday, isLoading } = useCharacterActivityCounts({
     activityId: activity.id
   })
 
@@ -26,10 +26,10 @@ const ActivityListItem = ({ activity, open }: Props) => {
         >
           {activity.name}
         </ui.Span>
-        {Number.isInteger(countToday) ? (
-          `${countToday}/${activity.count || 1}`
-        ) : (
+        {isLoading ? (
           <ui.Spinner small />
+        ) : (
+          `${countToday}/${activity.count || 1}`
         )}
       </ui.Div>
     </ui.ListGroupItem>
