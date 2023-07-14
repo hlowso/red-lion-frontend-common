@@ -7,6 +7,7 @@ import React, {
 } from 'react'
 import { Socket } from 'socket.io-client'
 import { SOCKET_EVENTS, SocketPayload } from 'common'
+import { useQueryClient } from '@tanstack/react-query'
 
 const io = require('socket.io-client/dist/socket.io.js')
 
@@ -24,16 +25,20 @@ export const SocketProvider = ({
   serverUrl
 }: PropsWithChildren<{ serverUrl: string }>) => {
   const socket = io(serverUrl)
+  const queryClient = useQueryClient()
   const [notifications, setNotifications] = useState<SocketPayload.Notify[]>([])
 
   useEffect(() => {
     const onNotify = (payload: SocketPayload.Notify) =>
       setNotifications((N) => [...N, payload])
+    const onRefresh = () => queryClient.invalidateQueries(['games'])
 
     socket.on(SOCKET_EVENTS.NOTIFY, onNotify)
+    socket.on(SOCKET_EVENTS.REFRESH, onRefresh)
 
     return () => {
       socket.off(SOCKET_EVENTS.NOTIFY, onNotify)
+      socket.off(SOCKET_EVENTS.REFRESH, onRefresh)
     }
   }, [])
 
