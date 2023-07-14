@@ -130,7 +130,7 @@ const CreateActivityModal = ({ show, close }: Props) => {
 }
 
 export default (props: Props) => (
-  <ActivityCreationProvider listId={props.listId}>
+  <ActivityCreationProvider key={props.listId} listId={props.listId}>
     <CreateActivityModal {...props} />
   </ActivityCreationProvider>
 )
