@@ -1,68 +1,42 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext } from 'react'
 import { useUIContext } from '../../contexts'
-import { ActivityPostParams, Delta, TallyRow } from 'common'
 import { byKey } from 'common/util/tally'
+import {
+  ActivityCreationContext,
+  ActivityCreationProvider
+} from '../../contexts/ActivityCreationContext'
+import useTallies from '../../hooks/useTallies'
 
 interface Props {
-  tallies: TallyRow[]
-  isCreating: boolean
+  listId?: number
   show: boolean
   close: () => void
-  createActivity: (params: Omit<ActivityPostParams, 'listId'>) => void
 }
 
-const CreateActivityModal = ({
-  tallies,
-  isCreating,
-  show,
-  close,
-  createActivity
-}: Props) => {
+const CreateActivityModal = ({ show, close }: Props) => {
   const ui = useUIContext()
-  const [tallyKey, setTallyKey] = useState('')
-  const [name, setName] = useState('')
-  const [description, setDescription] = useState('')
-  const [direction, setDirection] = useState<1 | -1>(1)
-  const [significance, setSignificance] = useState<1 | 2 | 3>(1)
-
-  useEffect(() => setTallyKey(tallies[0]?.key), [tallies.length])
+  const { data: tallies } = useTallies()
+  const {
+    name,
+    onNameChange,
+    tallyKey,
+    onTallyChange,
+    description,
+    onDescriptionChange,
+    direction,
+    setDirection,
+    significance,
+    setSignificance,
+    createActivity,
+    isCreating
+  } = useContext(ActivityCreationContext)
 
   const groupStyle = { margin: '0 0 10px' }
   const selectButtonStyle = { margin: '0 5px 0 0', opacity: 0.85 }
 
-  const onTallyChange = (ev: React.ChangeEvent<{ value: string }>) => {
-    setTallyKey(ev.target.value)
-  }
-
-  const onNameChange = (ev: React.ChangeEvent<{ value: string }>) => {
-    // TODO validate name
-    setName(ev.target.value)
-  }
-
-  const onDescriptionChange = (ev: React.ChangeEvent<{ value: string }>) => {
-    // TODO validate description
-    setDescription(ev.target.value)
-  }
-
   const onCreate = () => {
-    const expression = `${direction} * randomInt(${significance}, ${significance} ^ 3)`
-    const completionDelta: Delta = {
-      tallies: {
-        [tallyKey]: {
-          expression,
-          variables: []
-        }
-      }
-    }
-    createActivity({
-      name,
-      description,
-      schedule: null,
-      fields: null,
-      count: null,
-      fieldValues: null,
-      completionDelta
-    })
+    close()
+    createActivity()
   }
 
   return (
@@ -76,14 +50,16 @@ const CreateActivityModal = ({
             <ui.InputGroup style={groupStyle}>
               <ui.InputGroupText>Impacted</ui.InputGroupText>
               <ui.FormSelect onChange={onTallyChange}>
-                {tallies.map((tally) => (
+                {(tallies || []).map((tally) => (
                   <ui.FormSelectOption key={tally.id} value={tally.key}>
                     {tally.name}
                   </ui.FormSelectOption>
                 ))}
               </ui.FormSelect>
               <ui.InputGroupText>
-                <ui.Icon name={byKey(tallies, tallyKey)?.icon || ''} />
+                <ui.Icon
+                  name={byKey(tallies || [], tallyKey || '')?.icon || ''}
+                />
               </ui.InputGroupText>
             </ui.InputGroup>
             <ui.InputGroup style={groupStyle}>
@@ -153,4 +129,8 @@ const CreateActivityModal = ({
   )
 }
 
-export default CreateActivityModal
+export default (props: Props) => (
+  <ActivityCreationProvider listId={props.listId}>
+    <CreateActivityModal {...props} />
+  </ActivityCreationProvider>
+)
