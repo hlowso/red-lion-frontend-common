@@ -1,23 +1,18 @@
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import Nav from '../components/Nav'
 import Lists from '../components/Lists'
 import Possessions from '../components/Possessions'
 import Notifications from '../components/Notifications'
 import Vendor from '../components/Vendor'
 import ListNav from '../components/ListNav'
-import { useUIContext, usePlayContext } from '../contexts'
+import { useUIContext } from '../contexts'
 import { interfaceLists } from 'common/selectors'
-import { ActivityPostParams, ActivityRow, ListRow } from 'common'
+import { ActivityRow, ListRow } from 'common'
 import CreateActivityModal from '../components/Lists/CreateActivityModal'
 import useL from '../hooks/useLists'
 import useA from '../hooks/activities/useActivities'
-import useT from '../hooks/useTallies'
-import { Contexts } from '..'
-import { useQueryClient } from '@tanstack/react-query'
 import SelectUnplannedActivityModal from '../components/Lists/SelectUnplannedActivityModal'
-
-const unplannedList = (lists: ListRow[]) =>
-  lists.find((l) => l.name === 'Unplanned')
+import { Util } from 'common'
 
 const listNavItems = (lists: ListRow[]) => [
   { id: -1, name: 'Today', icon: 'BrightnessLowFill' },
@@ -28,48 +23,19 @@ const listNavItems = (lists: ListRow[]) => [
   }))
 ]
 const unplannedActivites = (lists: ListRow[], activities: ActivityRow[]) =>
-  activities.filter((a) => a.listId === unplannedList(lists)?.id)
+  activities.filter((a) => a.listId === Util.List.unplannedList(lists)?.id)
 
 const LandscapeApp = () => {
-  const Requests = useContext(Contexts.RequestsContext)
-  const queryClient = useQueryClient()
   const ui = useUIContext()
-  const { gameId, characterId } = usePlayContext()
-  const { data: L, isLoading: LLoading } = useL(
-    { gameId, characterId },
-    !!gameId && !!characterId
-  )
-  const { data: A, isLoading: ALoading } = useA(
-    { gameId, characterId },
-    !!gameId && !!characterId
-  )
-  const { data: T, isLoading: TLoading } = useT({ gameId }, !!gameId)
-
+  const { data: L, isLoading: LLoading } = useL()
+  const { data: A, isLoading: ALoading } = useA()
   const [openListId, setOpenListId] = useState<number>(-1)
   const [selectUnplannedModalOpen, setSelectUnplannedModalOpen] =
     useState(false)
   const [createUnplannedModalOpen, setCreateUnplannedModalOpen] =
     useState(false)
-  const [isLogging, setIsLogging] = useState(false)
 
-  const onCreateUnplanned = async (
-    params: Omit<ActivityPostParams, 'listId'>
-  ) => {
-    setIsLogging(true)
-    setCreateUnplannedModalOpen(false)
-    await Requests.createActivity({
-      ...params,
-      listId: unplannedList(L || [])?.id || -1,
-      logCompletionOnCreate: {
-        subjectId: characterId || -1,
-        subjectType: 'character'
-      }
-    })
-    setIsLogging(false)
-    await queryClient.invalidateQueries({ queryKey: ['games', gameId] })
-  }
-
-  return LLoading || ALoading || TLoading ? (
+  return LLoading || ALoading ? (
     <ui.Div
       style={{
         width: '100vw',
@@ -119,11 +85,8 @@ const LandscapeApp = () => {
         }}
       />
       <CreateActivityModal
-        tallies={T || []}
-        isCreating={isLogging}
         show={createUnplannedModalOpen}
         close={() => setCreateUnplannedModalOpen(false)}
-        createActivity={onCreateUnplanned}
       />
     </ui.Div>
   )
