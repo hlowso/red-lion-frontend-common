@@ -6,7 +6,7 @@ interface Props {
   components: Context
 }
 
-interface Context {
+export interface Context {
   Div: (props: UI.DivProps) => JSX.Element | null
   Span: (props: UI.SpanProps) => JSX.Element | null
   P: (props: UI.PProps) => JSX.Element | null
