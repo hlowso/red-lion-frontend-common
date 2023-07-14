@@ -8,7 +8,6 @@ import {
 } from '../../contexts/ActivityCompletionContext'
 
 interface Props {
-  isLogging: boolean
   show: boolean
   close: () => void
   activities: ActivityRow[]
