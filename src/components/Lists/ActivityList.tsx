@@ -6,13 +6,13 @@ import { useUIContext } from '../../contexts'
 interface Props {
   openActivityModal: (activityId: number) => void
   openCreateActivityModal: () => void
-  listId: number
+  showAddButton: boolean
   listName: string
   activities: ActivityRow[]
 }
 
 const ActivityList = ({
-  listId,
+  showAddButton,
   listName,
   activities,
   openActivityModal,
@@ -32,7 +32,7 @@ const ActivityList = ({
       >
         <ui.Strong>{listName}</ui.Strong>
         <ui.Div>
-          {listId > 0 && (
+          {showAddButton && (
             <ui.Button
               variant='outline-secondary'
               onClick={openCreateActivityModal}
