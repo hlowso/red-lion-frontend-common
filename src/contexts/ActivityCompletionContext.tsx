@@ -37,8 +37,11 @@ export const ActivityCompletionContext = createContext<Context>({
 export const ActivityCompletionProvider = ({ children, ...props }: Props) => {
   const Requests = useContext(RequestsContext)
   const queryClient = useQueryClient()
-  const { gameId, characterId, ...context } = usePlayContext()
-  const { data: activities } = useA({ gameId, characterId }, !context.isLoading)
+  const { gameId, characterId } = usePlayContext()
+  const { data: activities } = useA(
+    { gameId, characterId },
+    !!gameId && !!characterId
+  )
   const [activityId, setActivityId] = useState<number | undefined>(
     typeof props.activity === 'number' ? props.activity : props.activity?.id
   )
