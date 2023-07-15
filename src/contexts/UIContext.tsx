@@ -47,6 +47,7 @@ export interface Context {
   OverlayTrigger: (props: UI.OverlayTriggerProps) => JSX.Element | null
   Tooltip: (props: UI.TooltipProps) => JSX.Element | null
   Marked: (props: UI.MarkedProps) => JSX.Element | null
+  ProgressBar: (props: UI.ProgressBarProps) => JSX.Element | null
 }
 
 const UIContext = createContext<Context>({
@@ -89,7 +90,8 @@ const UIContext = createContext<Context>({
   Icon: () => null,
   OverlayTrigger: () => null,
   Tooltip: () => null,
-  Marked: () => null
+  Marked: () => null,
+  ProgressBar: () => null
 })
 
 export const useUIContext = () => useContext(UIContext)

@@ -124,4 +124,9 @@ export namespace UI {
   export interface MarkedProps {
     children: string
   }
+
+  export interface ProgressBarProps extends BaseProps {
+    now: number
+    variant: string
+  }
 }
