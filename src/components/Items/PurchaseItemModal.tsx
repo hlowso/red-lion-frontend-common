@@ -133,10 +133,7 @@ const PurchaseItemModal = ({ item, purchase, close }: Props) => {
   const { Modal, ModalHeader, ModalBody, Div, Spinner, Marked, Strong } =
     useUIContext()
   const { gameId, possessions, isLoading: contextIsLoading } = usePlayContext()
-  const { data: tallies, isLoading: talliesAreLoading } = useTallies(
-    { gameId },
-    !!gameId
-  )
+  const { data: tallies, isLoading: talliesAreLoading } = useTallies()
   const { data: items, isLoading: itemsAreLoading } = useItems(
     { gameId },
     !!gameId

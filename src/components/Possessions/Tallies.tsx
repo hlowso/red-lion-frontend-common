@@ -23,10 +23,7 @@ const Tallies = () => {
     tallies: characterTallies,
     isLoading: contextLoading
   } = usePlayContext()
-  const { data: tallies, isLoading: talliesLoading } = useTallies(
-    { gameId },
-    !!gameId
-  )
+  const { data: tallies, isLoading: talliesLoading } = useTallies()
   const isLoading = contextLoading || talliesLoading
 
   return (
