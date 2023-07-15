@@ -16,6 +16,9 @@ const Characters = ({ GET, PATCH }) => {
   }: CharacterActivityRequestParams): Promise<number> =>
     GET(`/characters/${characterId}/activities/${activityId}/count-today`)
 
+  const getCharacterTallyTargets = async ({ id }: CharacterGetParams) =>
+    GET(`/characters/${id}/tally-targets`)
+
   const completeActivityAsCharacter = async (
     { characterId, activityId }: CharacterActivityRequestParams,
     body?: { fieldValues: FormulaContextValue[] }
@@ -36,6 +39,7 @@ const Characters = ({ GET, PATCH }) => {
   return {
     getCharacters,
     getCharacterActivityCountToday,
+    getCharacterTallyTargets,
     completeActivityAsCharacter,
     purchaseItemAsCharacter,
     utilizeItemAsCharacter
