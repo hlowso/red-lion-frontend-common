@@ -26,7 +26,7 @@ const Notifications = () => {
 
   return (
     <ui.ToastContainer
-      position='top-end'
+      position='bottom-start'
       containerPosition='fixed'
       style={{ margin: '20px' }}
     >
