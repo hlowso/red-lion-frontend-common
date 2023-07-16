@@ -13,14 +13,11 @@ import useItems from '../hooks/useItems'
 
 const Vendor = () => {
   const queryClient = useQueryClient()
-  const { Card, Div, Span, Spinner } = useUIContext()
+  const ui = useUIContext()
   const Requests = useContext(RequestsContext)
   const { gameId, characterId, isLoading: contextLoading } = usePlayContext()
   const { shopping, toggleShopping } = useVendorContext()
-  const { data: items, isLoading: itemsLoading } = useItems(
-    { gameId },
-    !!gameId
-  )
+  const { data: items, isLoading: itemsLoading } = useItems()
   const [openItemId, setOpenItemId] = useState<number>()
   const [isPurchasing, setIsPurchasing] = useState(false)
   const openItem = (items || []).find((i) => i.id === openItemId)
@@ -53,22 +50,24 @@ const Vendor = () => {
   }
 
   return shopping ? (
-    <Div>
-      <Card className='vendor'>
-        <Span>Vendor</Span>
+    <ui.Div>
+      <ui.Card className='vendor'>
+        <ui.CardHeader>Vendor</ui.CardHeader>
         {contextLoading || itemsLoading || isPurchasing ? (
-          <Spinner />
+          <ui.Spinner />
         ) : (
-          <ItemSlots rows={6} columns={5} itemSlots={itemSlots} />
+          <ui.CardBody>
+            <ItemSlots rows={6} columns={5} itemSlots={itemSlots} />
+          </ui.CardBody>
         )}
-      </Card>
+      </ui.Card>
       <PurchaseItemModal
         item={openItem}
         purchase={onPurchase}
         close={() => setOpenItemId(undefined)}
       />
       <Backdrop onClick={toggleShopping} />
-    </Div>
+    </ui.Div>
   ) : null
 }
 

@@ -134,10 +134,7 @@ const PurchaseItemModal = ({ item, purchase, close }: Props) => {
     useUIContext()
   const { gameId, possessions, isLoading: contextIsLoading } = usePlayContext()
   const { data: tallies, isLoading: talliesAreLoading } = useTallies()
-  const { data: items, isLoading: itemsAreLoading } = useItems(
-    { gameId },
-    !!gameId
-  )
+  const { data: items, isLoading: itemsAreLoading } = useItems()
   const [quantity, setQuantity] = useState(1)
   const affordable =
     !!item &&

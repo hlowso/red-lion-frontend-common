@@ -29,7 +29,7 @@ const Inventory = () => {
     items: characterItems,
     isLoading: contextLoading
   } = usePlayContext()
-  const { data: items, isLoading } = useItems({ gameId }, !!gameId)
+  const { data: items, isLoading } = useItems()
   const [openItemId, setOpenItemId] = useState<number>()
   const [isUsing, setIsUsing] = useState(false)
   const openItem = (items || []).find((item) => item.id === openItemId)
