@@ -63,7 +63,7 @@ export namespace UI {
   export interface NavbarBrandProps extends PropsWithChildren<BaseProps> {}
 
   export interface ToastContainerProps extends PropsWithChildren<BaseProps> {
-    position: 'top-end'
+    position: 'top-end' | 'bottom-start'
     containerPosition: 'fixed'
   }
   export interface ToastProps extends PropsWithChildren<BaseProps> {
@@ -115,6 +115,7 @@ export namespace UI {
   export interface OverlayTriggerProps
     extends PropsWithChildren<{ key?: string | number }> {
     overlay: (props: any) => JSX.Element
+    placement?: 'right' | 'bottom' | 'top' | 'left'
   }
 
   export interface TooltipProps extends PropsWithChildren<{}> {
