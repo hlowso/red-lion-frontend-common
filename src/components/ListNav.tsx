@@ -9,7 +9,7 @@ interface ListNavItem {
 
 interface Props {
   lists: ListNavItem[]
-  openListId: number
+  openListId?: number
   openList: (listId: number) => void
   openUnplannedModal: () => void
 }
