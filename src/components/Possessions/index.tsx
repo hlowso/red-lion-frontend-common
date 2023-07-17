@@ -14,6 +14,7 @@ const Possessions = () => {
     minWidth: '520px',
     border: 'solid 1px #aaa',
     borderBottom: 'unset',
+    boxShadow: '0px 0px 16px rgba(0, 0, 0, 0.2)',
     zIndex: 2
   }
 
