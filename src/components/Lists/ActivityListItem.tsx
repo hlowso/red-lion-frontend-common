@@ -1,36 +1,33 @@
 import React from 'react'
-import { ActivityRow } from 'common'
+import { Activity } from 'common'
 import { useUIContext } from '../../contexts'
-import useCharacterActivityCounts from '../../hooks/characters/useCharacterActivityCounts'
 
 interface Props {
   open: () => void
-  activity: ActivityRow
+  activity: Activity
 }
 
 const ActivityListItem = ({ activity, open }: Props) => {
   const ui = useUIContext()
-  const { data: countToday, isLoading } = useCharacterActivityCounts({
-    activityId: activity.id
-  })
+  const complete = (activity.countToday || 0) >= (activity.count || 1)
 
   return (
-    <ui.ListGroupItem onClick={open} style={{ cursor: 'pointer' }}>
+    <ui.ListGroupItem
+      onClick={complete ? undefined : open}
+      style={{ cursor: complete ? undefined : 'pointer' }}
+    >
       <ui.Div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <ui.Span
           style={{
             overflow: 'hidden',
             textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap'
+            whiteSpace: 'nowrap',
+            textDecoration: complete ? 'line-through' : undefined
           }}
         >
           {activity.name}
         </ui.Span>
-        {isLoading ? (
-          <ui.Spinner small />
-        ) : (
-          `${countToday}/${activity.count || 1}`
-        )}
+        {activity.countToday} / {activity.count || 1}
       </ui.Div>
     </ui.ListGroupItem>
   )
