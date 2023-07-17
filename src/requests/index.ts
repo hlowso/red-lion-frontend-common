@@ -21,7 +21,7 @@ const RequestHelpers = (apiBaseUrl: string) => {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: !!body ? JSON.stringify(body) : undefined
+      body: JSON.stringify(body || {})
     })
 
   const PATCH = (endpoint: string, body?: any) =>
@@ -30,7 +30,7 @@ const RequestHelpers = (apiBaseUrl: string) => {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: !!body ? JSON.stringify(body) : undefined
+      body: JSON.stringify(body || {})
     })
 
   return {
