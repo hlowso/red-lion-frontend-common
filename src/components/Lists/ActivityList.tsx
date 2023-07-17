@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { ActivityRow } from 'common'
 import ActivityListItem from './ActivityListItem'
-import { useUIContext } from '../../contexts'
+import { FrontendContext, useUIContext } from '../../contexts'
 
 interface Props {
   openActivityModal: (activityId: number) => void
@@ -18,12 +18,13 @@ const ActivityList = ({
   openActivityModal,
   openCreateActivityModal
 }: Props) => {
+  const { orientation } = useContext(FrontendContext)
   const ui = useUIContext()
   return (
     <ui.Card
       style={{
         flexGrow: 1,
-        margin: '0 0 0 15px',
+        margin: orientation === 'landscape' ? '0 0 0 15px' : 0,
         height: 'fit-content'
       }}
     >
