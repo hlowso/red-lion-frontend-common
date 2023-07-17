@@ -15,22 +15,22 @@ const RequestHelpers = (apiBaseUrl: string) => {
       }
     }).then((res) => res.json())
 
-  const POST = (endpoint: string, body: any) =>
+  const POST = (endpoint: string, body?: any) =>
     fetch(apiBaseUrl + endpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(body)
+      body: !!body ? JSON.stringify(body) : undefined
     })
 
-  const PATCH = (endpoint: string, body: any) =>
+  const PATCH = (endpoint: string, body?: any) =>
     fetch(apiBaseUrl + endpoint, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(body)
+      body: !!body ? JSON.stringify(body) : undefined
     })
 
   return {
