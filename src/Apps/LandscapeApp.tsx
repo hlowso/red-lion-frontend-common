@@ -13,6 +13,7 @@ import SelectUnplannedActivityModal from '../components/Lists/SelectUnplannedAct
 import TallyTargets from '../components/TallyTargets'
 import { AppProps } from '../App'
 import { Util } from 'common'
+import { unplanned } from 'common/selectors'
 
 const LandscapeApp = ({
   openListId,
@@ -65,7 +66,7 @@ const LandscapeApp = ({
             openListId={openListId!}
             openList={setOpenListId}
             openUnplannedModal={() =>
-              Util.Activity.unplannedActivites(L || [], A || []).length
+              unplanned(L || [], A || []).length
                 ? setSelectUnplannedModalOpen(true)
                 : setCreateUnplannedModalOpen(true)
             }
@@ -83,7 +84,7 @@ const LandscapeApp = ({
       <SelectUnplannedActivityModal
         show={selectUnplannedModalOpen}
         close={() => setSelectUnplannedModalOpen(false)}
-        activities={Util.Activity.unplannedActivites(L || [], A || [])}
+        activities={unplanned(L || [], A || [])}
         createNewActivity={() => {
           setSelectUnplannedModalOpen(false)
           setCreateUnplannedModalOpen(true)

@@ -5,6 +5,7 @@ import useL from '../hooks/useLists'
 import useA from '../hooks/activities/useActivities'
 import Lists from '../components/Lists'
 import ListNav from '../components/ListNav'
+import { unplanned } from 'common/selectors'
 import { Util } from 'common'
 
 const PortraitApp = ({
@@ -23,7 +24,7 @@ const PortraitApp = ({
       openListId={openListId}
       openList={(id) => setOpenListId(id)}
       openUnplannedModal={() =>
-        Util.Activity.unplannedActivites(L || [], A || []).length
+        unplanned(L || [], A || []).length
           ? setSelectUnplannedModalOpen(true)
           : setCreateUnplannedModalOpen(true)
       }
