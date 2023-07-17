@@ -1,5 +1,6 @@
 import React, { useContext } from 'react'
 import { ActivityRow } from 'common'
+import { todayComplete, todayIncomplete } from 'common/selectors'
 import ActivityListItem from './ActivityListItem'
 import { FrontendContext, useUIContext } from '../../contexts'
 
@@ -20,16 +21,24 @@ const ActivityList = ({
 }: Props) => {
   const { orientation } = useContext(FrontendContext)
   const ui = useUIContext()
+  const incomplete = todayIncomplete(activities)
+  const complete = todayComplete(activities)
+
   return (
     <ui.Card
       style={{
         flexGrow: 1,
         margin: orientation === 'landscape' ? '0 0 0 15px' : 0,
-        height: 'fit-content'
+        height: 'fit-content',
+        backgroundColor: '#eee'
       }}
     >
       <ui.CardHeader
-        style={{ display: 'flex', justifyContent: 'space-between' }}
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          backgroundColor: '#eee'
+        }}
       >
         <ui.Strong>{listName}</ui.Strong>
         <ui.Div>
@@ -46,7 +55,20 @@ const ActivityList = ({
       </ui.CardHeader>
       <ui.Div>
         <ui.ListGroup>
-          {activities.map((activity) => (
+          {incomplete.map((activity) => (
+            <ActivityListItem
+              key={activity.id}
+              activity={activity}
+              open={() => openActivityModal(activity.id)}
+            />
+          ))}
+        </ui.ListGroup>
+        <ui.ListGroup
+          style={{
+            margin: !!incomplete.length && !!complete.length ? '10px 0 0' : 0
+          }}
+        >
+          {complete.map((activity) => (
             <ActivityListItem
               key={activity.id}
               activity={activity}
