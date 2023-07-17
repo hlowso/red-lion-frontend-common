@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Nav from '../components/Nav'
 import Lists from '../components/Lists'
 import Possessions from '../components/Possessions'
@@ -6,35 +6,25 @@ import Notifications from '../components/Notifications'
 import Vendor from '../components/Vendor'
 import ListNav from '../components/ListNav'
 import { useUIContext } from '../contexts'
-import { interfaceLists } from 'common/selectors'
-import { ActivityRow, ListRow } from 'common'
 import CreateActivityModal from '../components/Lists/CreateActivityModal'
 import useL from '../hooks/useLists'
 import useA from '../hooks/activities/useActivities'
 import SelectUnplannedActivityModal from '../components/Lists/SelectUnplannedActivityModal'
 import TallyTargets from '../components/TallyTargets'
+import { AppProps } from '../App'
 import { Util } from 'common'
 
-const listNavItems = (lists: ListRow[]) => [
-  { id: -1, name: 'Today', icon: 'BrightnessLowFill' },
-  ...interfaceLists(lists || []).map(({ id, name }) => ({
-    id,
-    name,
-    icon: 'ListCheck'
-  }))
-]
-const unplannedActivites = (lists: ListRow[], activities: ActivityRow[]) =>
-  activities.filter((a) => a.listId === Util.List.unplannedList(lists)?.id)
-
-const LandscapeApp = () => {
+const LandscapeApp = ({
+  openListId,
+  setOpenListId,
+  createUnplannedModalOpen,
+  selectUnplannedModalOpen,
+  setCreateUnplannedModalOpen,
+  setSelectUnplannedModalOpen
+}: AppProps) => {
   const ui = useUIContext()
   const { data: L, isLoading: LLoading } = useL()
   const { data: A, isLoading: ALoading } = useA()
-  const [openListId, setOpenListId] = useState<number>(-1)
-  const [selectUnplannedModalOpen, setSelectUnplannedModalOpen] =
-    useState(false)
-  const [createUnplannedModalOpen, setCreateUnplannedModalOpen] =
-    useState(false)
 
   return LLoading || ALoading ? (
     <ui.Div
@@ -71,16 +61,20 @@ const LandscapeApp = () => {
           }}
         >
           <ListNav
-            lists={listNavItems(L || [])}
-            openListId={openListId}
+            lists={Util.List.listNavItems(L || [])}
+            openListId={openListId!}
             openList={setOpenListId}
             openUnplannedModal={() =>
-              unplannedActivites(L || [], A || []).length
+              Util.Activity.unplannedActivites(L || [], A || []).length
                 ? setSelectUnplannedModalOpen(true)
                 : setCreateUnplannedModalOpen(true)
             }
           />
-          <Lists lists={L || []} activities={A || []} openListId={openListId} />
+          <Lists
+            lists={L || []}
+            activities={A || []}
+            openListId={openListId!}
+          />
         </ui.Div>
       </ui.Div>
       <Possessions />
@@ -89,7 +83,7 @@ const LandscapeApp = () => {
       <SelectUnplannedActivityModal
         show={selectUnplannedModalOpen}
         close={() => setSelectUnplannedModalOpen(false)}
-        activities={unplannedActivites(L || [], A || [])}
+        activities={Util.Activity.unplannedActivites(L || [], A || [])}
         createNewActivity={() => {
           setSelectUnplannedModalOpen(false)
           setCreateUnplannedModalOpen(true)
