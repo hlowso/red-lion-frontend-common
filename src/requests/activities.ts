@@ -1,15 +1,22 @@
-import { ActivityGetParams, ActivityPostParams } from 'common'
+import { ActivityGetParams, ActivityPostParams, ActivityRow } from 'common'
 
-const Activities = ({ GET, POST }) => {
+const Activities = ({ GET, POST, PATCH }) => {
   const getActivities = (params: ActivityGetParams) =>
     GET('/activities', params)
 
   const createActivity = (params: ActivityPostParams) =>
     POST('/activities', params)
 
+  const updateActivity = ({
+    id,
+    ...params
+  }: { id: number } & Partial<Omit<ActivityRow, 'id'>>) =>
+    PATCH(`/activities/${id}`, params)
+
   return {
     getActivities,
-    createActivity
+    createActivity,
+    updateActivity
   }
 }
 
