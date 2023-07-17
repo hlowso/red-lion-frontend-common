@@ -106,6 +106,11 @@ export namespace UI {
   export interface FormSelectOptionProps extends PropsWithChildren<BaseProps> {
     value: string
   }
+  export interface FormCheckProps extends BaseProps {
+    label: string
+    onChange: (ev: React.ChangeEvent<any>) => void
+    checked: boolean
+  }
 
   export interface IconProps extends BaseProps {
     name: string
