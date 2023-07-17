@@ -5,9 +5,13 @@ interface Props extends PropsWithChildren {
   serverUrl?: string
   apiBaseUrl?: string
   components?: UIContext
+  orientation: 'landscape' | 'portrait'
 }
 
-export const FrontendContext = createContext<Props>({})
+export const FrontendContext = createContext<Props>({
+  orientation: 'landscape'
+})
+
 export const FrontendProvider = ({ children, ...props }: Props) => {
   return (
     <FrontendContext.Provider value={props}>
