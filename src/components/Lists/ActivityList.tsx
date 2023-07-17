@@ -29,8 +29,8 @@ const ActivityList = ({
       style={{
         flexGrow: 1,
         margin: orientation === 'landscape' ? '0 0 0 15px' : 0,
-        height: 'fit-content',
-        backgroundColor: '#eee'
+        backgroundColor: 'rgba(0,0,0,0)',
+        border: 'none'
       }}
     >
       <ui.CardHeader
@@ -53,29 +53,37 @@ const ActivityList = ({
           )}
         </ui.Div>
       </ui.CardHeader>
-      <ui.Div>
-        <ui.ListGroup>
-          {incomplete.map((activity) => (
-            <ActivityListItem
-              key={activity.id}
-              activity={activity}
-              open={() => openActivityModal(activity.id)}
-            />
-          ))}
-        </ui.ListGroup>
-        <ui.ListGroup
-          style={{
-            margin: !!incomplete.length && !!complete.length ? '10px 0 0' : 0
-          }}
-        >
-          {complete.map((activity) => (
-            <ActivityListItem
-              key={activity.id}
-              activity={activity}
-              open={() => openActivityModal(activity.id)}
-            />
-          ))}
-        </ui.ListGroup>
+      <ui.Div
+        style={{
+          overflow: 'scroll',
+          height: '90vh'
+        }}
+      >
+        <ui.Div style={{ backgroundColor: '#eee' }}>
+          <ui.ListGroup>
+            {incomplete.map((activity) => (
+              <ActivityListItem
+                key={activity.id}
+                activity={activity}
+                open={() => openActivityModal(activity.id)}
+              />
+            ))}
+          </ui.ListGroup>
+          <ui.ListGroup
+            style={{
+              margin: !!incomplete.length && !!complete.length ? '10px 0 0' : 0
+            }}
+          >
+            {complete.map((activity) => (
+              <ActivityListItem
+                key={activity.id}
+                activity={activity}
+                open={() => openActivityModal(activity.id)}
+              />
+            ))}
+          </ui.ListGroup>
+        </ui.Div>
+        <ui.Div style={{ height: '400px', backgroundColor: 'rgba(0,0,0,0)' }} />
       </ui.Div>
     </ui.Card>
   )
