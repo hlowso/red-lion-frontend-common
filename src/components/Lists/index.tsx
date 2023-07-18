@@ -2,13 +2,13 @@ import React, { useState } from 'react'
 import { useUIContext } from '../../contexts'
 import ActivityModal from './ActivityModal'
 import ActivityList from './ActivityList'
-import { ListRow, ActivityRow } from 'common'
+import { ListRow, Activity } from 'common'
 import { dueToday } from 'common/selectors'
 import CreateActivityModal from './CreateActivityModal'
 
 interface Props {
   lists: ListRow[]
-  activities: ActivityRow[]
+  activities: Activity[]
   openListId: number
 }
 
