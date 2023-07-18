@@ -13,10 +13,18 @@ const ProgressOverlayTrigger = ({
   const ui = useUIContext()
   const tooltip = (props: any) => (
     <ui.Tooltip id={`target-tooltip-${id}`} {...props}>
-      <ui.Icon name={tallyIcon!} style={{ margin: '0 5px 0 0' }} />
-      <ui.Span>
-        {Math.round((currentValue || 0) / value)}% ({currentValue} / {value})
-      </ui.Span>
+      <ui.Div style={{ display: 'flex', alignItems: 'center' }}>
+        <ui.Icon
+          name={tallyIcon!}
+          style={{ margin: '0 10px 0 0', fontSize: 'x-large' }}
+        />
+        <ui.Div style={{ display: 'flex', flexDirection: 'column' }}>
+          <ui.Span>{Math.round(100 * ((currentValue || 0) / value))}%</ui.Span>
+          <ui.Span style={{ fontSize: 'x-small' }}>
+            {currentValue} / {value}
+          </ui.Span>
+        </ui.Div>
+      </ui.Div>
     </ui.Tooltip>
   )
 
