@@ -15,7 +15,9 @@ interface Schedule {
 }
 
 const getScheduleInfo = (schedule?: string): Schedule | undefined => {
-  const date = new Date(schedule!)
+  if (!schedule) return undefined
+
+  const date = new Date(schedule)
   if (isValid(date)) {
     return {
       late: date.getTime() < new Date().getTime(),
@@ -24,7 +26,7 @@ const getScheduleInfo = (schedule?: string): Schedule | undefined => {
   }
 
   try {
-    return { display: `Resets: ${cronstrue.toString(schedule!)}` }
+    return { display: `Resets: ${cronstrue.toString(schedule)}` }
   } catch (e) {
     return undefined
   }
