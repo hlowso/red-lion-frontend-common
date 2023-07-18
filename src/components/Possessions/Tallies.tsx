@@ -8,26 +8,30 @@ interface TallyProps {
 }
 
 const Tally = ({ icon, count }: TallyProps) => {
-  const { Icon } = useUIContext()
+  const ui = useUIContext()
   return (
-    <span>
-      <Icon name={icon} /> {count}
-    </span>
+    <ui.Span>
+      <ui.Icon name={icon} /> {count}
+    </ui.Span>
   )
 }
 
 const Tallies = () => {
   const { Badge, Spinner } = useUIContext()
-  const {
-    gameId,
-    tallies: characterTallies,
-    isLoading: contextLoading
-  } = usePlayContext()
+  const { tallies: characterTallies, isLoading: contextLoading } =
+    usePlayContext()
   const { data: tallies, isLoading: talliesLoading } = useTallies()
   const isLoading = contextLoading || talliesLoading
 
   return (
-    <Badge bg='secondary'>
+    <Badge
+      bg='secondary'
+      style={{
+        width: `${40 * (tallies?.length || 0)}px`,
+        display: 'flex',
+        justifyContent: 'space-between'
+      }}
+    >
       {isLoading ? (
         <Spinner small />
       ) : (
