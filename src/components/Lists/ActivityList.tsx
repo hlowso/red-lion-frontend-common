@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
-import { ActivityRow } from 'common'
-import { todayComplete, todayIncomplete } from 'common/selectors'
+import { Activity } from 'common'
+import { complete, incomplete } from 'common/selectors'
 import ActivityListItem from './ActivityListItem'
 import { FrontendContext, useUIContext } from '../../contexts'
 
@@ -9,7 +9,7 @@ interface Props {
   openCreateActivityModal: () => void
   showAddButton: boolean
   listName: string
-  activities: ActivityRow[]
+  activities: Activity[]
 }
 
 const ActivityList = ({
@@ -21,8 +21,8 @@ const ActivityList = ({
 }: Props) => {
   const { orientation } = useContext(FrontendContext)
   const ui = useUIContext()
-  const incomplete = todayIncomplete(activities)
-  const complete = todayComplete(activities)
+  const toDo = incomplete(activities)
+  const done = complete(activities)
 
   return (
     <ui.Card
@@ -61,7 +61,7 @@ const ActivityList = ({
       >
         <ui.Div style={{ backgroundColor: '#eee' }}>
           <ui.ListGroup>
-            {incomplete.map((activity) => (
+            {toDo.map((activity) => (
               <ActivityListItem
                 key={activity.id}
                 activity={activity}
@@ -71,10 +71,10 @@ const ActivityList = ({
           </ui.ListGroup>
           <ui.ListGroup
             style={{
-              margin: !!incomplete.length && !!complete.length ? '10px 0 0' : 0
+              margin: !!toDo.length && !!done.length ? '10px 0 0' : 0
             }}
           >
-            {complete.map((activity) => (
+            {done.map((activity) => (
               <ActivityListItem
                 key={activity.id}
                 activity={activity}
