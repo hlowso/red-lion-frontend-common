@@ -32,9 +32,11 @@ const ActivityModal = ({ show, close }: Props) => {
 
   const onToggleDueToday = async (dueToday: boolean) => {
     setIsLoading(true)
+    const midnight = new Date()
+    midnight.setHours(0, 0, 0, 0)
     await Requests.updateActivity({
       id: activity?.id!,
-      schedule: dueToday ? Util.Date.dateString(new Date()) : ''
+      schedule: dueToday ? midnight.toISOString() : ''
     })
     setIsLoading(false)
     queryClient.invalidateQueries(['games', gameId])
