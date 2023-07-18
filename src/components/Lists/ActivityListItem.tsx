@@ -1,7 +1,7 @@
 import React from 'react'
 import { Activity } from 'common'
 import { useUIContext } from '../../contexts'
-import { isValid } from 'common/util/date'
+import { Util } from 'common'
 import cronstrue from 'cronstrue'
 
 interface Props {
@@ -18,9 +18,9 @@ const getScheduleInfo = (schedule?: string): Schedule | undefined => {
   if (!schedule) return undefined
 
   const date = new Date(schedule)
-  if (isValid(date)) {
+  if (Util.Date.isValid(date)) {
     return {
-      late: date.getTime() < new Date().getTime(),
+      late: Util.Date.isLate(date),
       display: `Due: ${date.toDateString()}`
     }
   }
@@ -34,7 +34,7 @@ const getScheduleInfo = (schedule?: string): Schedule | undefined => {
 
 const ActivityListItem = ({ activity, open }: Props) => {
   const ui = useUIContext()
-  const complete = (activity.countToday || 0) >= (activity.count || 1)
+  const complete = Util.Activity.complete(activity)
   const scheduleInfo = getScheduleInfo(activity.schedule)
 
   return (
@@ -72,7 +72,7 @@ const ActivityListItem = ({ activity, open }: Props) => {
           )}
         </ui.Div>
         <ui.Span>
-          {activity.countToday} / {activity.count || 1}
+          {activity.status?.countToday || 0} / {activity.count || 1}
         </ui.Span>
       </ui.Div>
     </ui.ListGroupItem>
