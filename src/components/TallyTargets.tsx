@@ -42,12 +42,12 @@ const TallyTargets = () => {
   return (
     <ui.Div style={{ width: '100%' }}>
       {tallyTargets?.map((target) => (
-        <ProgressOverlayTrigger {...target}>
+        <ProgressOverlayTrigger key={target.id} {...target}>
           <ui.ProgressBar
             key={target.id}
             now={100 * (target.currentValue! / target.value)}
             variant={target.color}
-            style={{ margin: '0 0 10px' }}
+            style={{ margin: '0 0 7px' }}
           />
         </ProgressOverlayTrigger>
       ))}
