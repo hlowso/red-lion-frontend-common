@@ -133,7 +133,9 @@ export namespace UI {
   }
 
   export interface ProgressBarProps extends BaseProps {
-    now: number
-    variant: string
+    progress: number
+    color: string
+    animated?: boolean
+    glowing?: boolean
   }
 }

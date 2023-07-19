@@ -45,8 +45,14 @@ const TallyTargets = () => {
         <ProgressOverlayTrigger key={target.id} {...target}>
           <ui.ProgressBar
             key={target.id}
-            now={100 * (target.currentValue! / target.value)}
-            variant={target.color}
+            progress={
+              target.currentValue! < 2 * target.value
+                ? (100 * (target.currentValue! / target.value)) % 100
+                : 100
+            }
+            color={target.color}
+            animated={target.currentValue! >= target.value}
+            glowing={target.currentValue! >= 2 * target.value}
             style={{ margin: '0 0 7px' }}
           />
         </ProgressOverlayTrigger>
