@@ -18,12 +18,17 @@ interface Props {
 const ActivityModal = ({ show, close }: Props) => {
   const ui = useUIContext()
   const queryClient = useQueryClient()
-  const { gameId } = usePlayContext()
+  const { gameId, isFetching: contextFetching } = usePlayContext()
   const Requests = useContext(RequestsContext)
   const { activity, logCompletion, canLog, isLogging } = useContext(
     ActivityCompletionContext
   )
   const [isLoading, setIsLoading] = useState(false)
+  const spin = !activity || isLoading || isLogging || contextFetching
+  const canToggleDueToday =
+    !!activity &&
+    (!activity.schedule ||
+      Util.Date.isValid(new Date(activity?.schedule || '')))
 
   const onLog = async () => {
     await logCompletion()
@@ -42,16 +47,11 @@ const ActivityModal = ({ show, close }: Props) => {
     queryClient.invalidateQueries(['games', gameId])
   }
 
-  const canToggleDueToday =
-    !!activity &&
-    (!activity.schedule ||
-      Util.Date.isValid(new Date(activity?.schedule || '')))
-
   return (
     <ui.Modal show={show} onHide={close}>
       <ui.ModalHeader>{activity?.name}</ui.ModalHeader>
       <ui.ModalBody>
-        {!activity || isLoading || isLogging ? (
+        {spin ? (
           <ui.Div
             style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
           >
@@ -74,6 +74,7 @@ const ActivityModal = ({ show, close }: Props) => {
             label='Due Today'
             checked={Util.Activity.dueToday(activity)}
             onChange={() => onToggleDueToday(!Util.Activity.dueToday(activity))}
+            disabled={isLoading || contextFetching}
           />
         ) : null}
         <ui.Button disabled={!canLog} onClick={onLog} variant='primary'>
