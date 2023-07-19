@@ -121,6 +121,7 @@ export namespace UI {
   export interface OverlayTriggerProps
     extends PropsWithChildren<{ key?: string | number }> {
     overlay: (props: any) => JSX.Element
+    disabled?: boolean
     placement?: 'right' | 'bottom' | 'top' | 'left'
   }
 
