@@ -109,7 +109,8 @@ export namespace UI {
   export interface FormCheckProps extends BaseProps {
     label: string
     onChange: (ev: React.ChangeEvent<any>) => void
-    checked: boolean
+    checked?: boolean
+    disabled?: boolean
   }
 
   export interface IconProps extends BaseProps {
