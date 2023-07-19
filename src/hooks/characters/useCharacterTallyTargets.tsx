@@ -8,7 +8,7 @@ const useCharacterTallyTargets = () => {
   const Requests = useContext(RequestsContext)
   const { gameId, characterId: id, userId, ...context } = usePlayContext()
 
-  return useQuery<undefined, undefined, CharacterTallyTarget[], any>({
+  const result = useQuery<undefined, undefined, CharacterTallyTarget[], any>({
     queryKey: [
       'games',
       gameId,
@@ -24,6 +24,8 @@ const useCharacterTallyTargets = () => {
       }),
     enabled: !!gameId && !!userId && !!id && !context.isLoading
   })
+
+  return { ...result, data: result.data?.sort((a, b) => a.id - b.id) }
 }
 
 export default useCharacterTallyTargets
