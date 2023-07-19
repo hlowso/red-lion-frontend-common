@@ -7,7 +7,7 @@ import { usePlayContext } from '../../contexts'
 const useActivities = (params?: ActivityGetParams) => {
   const Requests = useContext(RequestsContext)
   const { gameId, characterId } = usePlayContext()
-  return useQuery<Activity[]>({
+  const result = useQuery<Activity[]>({
     queryKey: [
       'games',
       gameId,
@@ -22,6 +22,7 @@ const useActivities = (params?: ActivityGetParams) => {
       Requests.getActivities({ gameId, characterId, ...(params || {}) }),
     enabled: !!gameId && !!characterId
   })
+  return { ...result, data: result.data?.sort((a, b) => a.id - b.id) }
 }
 
 export default useActivities
