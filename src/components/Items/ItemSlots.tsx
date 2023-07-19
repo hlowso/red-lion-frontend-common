@@ -1,11 +1,12 @@
 import React from 'react'
-import { useUIContext } from '../../contexts'
+import { useUIContext, useVendorContext } from '../../contexts'
 import ItemSlot from './ItemSlot'
 import { Item } from 'common'
 
 interface Props {
   rows: number
   columns: number
+  canSpin?: boolean
   itemSlots: Array<
     Item & {
       count?: number
@@ -14,25 +15,30 @@ interface Props {
   >
 }
 
-const ItemSlots = ({ rows, columns, itemSlots }: Props) => {
-  const { Div, Row, Col } = useUIContext()
+const ItemSlots = ({ rows, columns, itemSlots, canSpin = true }: Props) => {
+  const ui = useUIContext()
+  const { isPurchasing } = useVendorContext()
+
   const idx = (i: number, j: number) => i * columns + j
+  const spin = (i: number, j: number) =>
+    canSpin && isPurchasing && idx(i, j) === itemSlots.length
+
   return (
-    <Div>
+    <ui.Div>
       {Array(rows)
         .fill(0)
         .map((_, i) => (
-          <Row key={i}>
+          <ui.Row key={i}>
             {Array(columns)
               .fill(0)
               .map((_, j) => (
-                <Col key={j}>
-                  <ItemSlot item={itemSlots[idx(i, j)]} />
-                </Col>
+                <ui.Col key={j}>
+                  <ItemSlot item={itemSlots[idx(i, j)]} spin={spin(i, j)} />
+                </ui.Col>
               ))}
-          </Row>
+          </ui.Row>
         ))}
-    </Div>
+    </ui.Div>
   )
 }
 

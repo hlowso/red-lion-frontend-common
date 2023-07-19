@@ -20,14 +20,14 @@ const ActivityModal = ({ show, close }: Props) => {
   const queryClient = useQueryClient()
   const { gameId } = usePlayContext()
   const Requests = useContext(RequestsContext)
-  const { activity, logCompletion, canLog } = useContext(
+  const { activity, logCompletion, canLog, isLogging } = useContext(
     ActivityCompletionContext
   )
   const [isLoading, setIsLoading] = useState(false)
 
-  const onLog = () => {
+  const onLog = async () => {
+    await logCompletion()
     close()
-    logCompletion()
   }
 
   const onToggleDueToday = async (dueToday: boolean) => {
@@ -51,15 +51,25 @@ const ActivityModal = ({ show, close }: Props) => {
     <ui.Modal show={show} onHide={close}>
       <ui.ModalHeader>{activity?.name}</ui.ModalHeader>
       <ui.ModalBody>
-        <ui.P>{activity?.description}</ui.P>
-        {activity?.fields && <ActivityFieldInputs fields={activity.fields} />}
+        {!activity || isLoading || isLogging ? (
+          <ui.Div
+            style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
+          >
+            <ui.Spinner />
+          </ui.Div>
+        ) : (
+          <ui.Div>
+            <ui.P>{activity?.description}</ui.P>
+            {activity?.fields && (
+              <ActivityFieldInputs fields={activity.fields} />
+            )}
+          </ui.Div>
+        )}
       </ui.ModalBody>
       <ui.ModalFooter
         style={{ display: 'flex', justifyContent: 'space-between' }}
       >
-        {!activity || isLoading ? (
-          <ui.Spinner />
-        ) : canToggleDueToday ? (
+        {canToggleDueToday ? (
           <ui.FormCheck
             label='Due Today'
             checked={Util.Activity.dueToday(activity)}

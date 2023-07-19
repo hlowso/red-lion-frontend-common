@@ -47,7 +47,7 @@ export const ActivityCreationContext = createContext<Context>({
 export const ActivityCreationProvider = ({ children, listId }: Props) => {
   const Requests = useContext(RequestsContext)
   const queryClient = useQueryClient()
-  const { gameId, characterId } = usePlayContext()
+  const { gameId, userId, characterId } = usePlayContext()
   const { data: tallies } = useTallies()
   const { data: lists } = useLists()
   const [isCreating, setIsCreating] = useState(false)
@@ -63,7 +63,7 @@ export const ActivityCreationProvider = ({ children, listId }: Props) => {
     }
   }, [tallies?.length])
 
-  const canCreate = !!name && !!direction && !!significance
+  const canCreate = !!name && !!direction && !!significance && !isCreating
 
   const onTallyChange = (ev: React.ChangeEvent<{ value: string }>) => {
     setTallyKey(ev.target.value)
@@ -109,7 +109,20 @@ export const ActivityCreationProvider = ({ children, listId }: Props) => {
           }
     })
     setIsCreating(false)
-    await queryClient.invalidateQueries({ queryKey: ['games', gameId] })
+    queryClient.invalidateQueries({
+      queryKey: ['games', gameId, 'users', userId, 'characters']
+    })
+    queryClient.invalidateQueries({
+      queryKey: [
+        'games',
+        gameId,
+        'lists',
+        undefined,
+        'characters',
+        characterId,
+        'activities'
+      ]
+    })
   }
 
   const value = {

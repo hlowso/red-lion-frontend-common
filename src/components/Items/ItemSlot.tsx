@@ -1,13 +1,14 @@
 import React from 'react'
 import ItemImage from './ItemImage'
 import { Item } from 'common'
-import { useUIContext } from '../../contexts'
+import { useUIContext, useVendorContext } from '../../contexts'
 
 interface Props {
   item?: Item & {
     count?: number
     open?: () => void
   }
+  spin?: boolean
 }
 
 type TooltipItemProps = Pick<Item, 'key' | 'name' | 'description' | 'imageUrl'>
@@ -84,8 +85,9 @@ const SlotOverlayTrigger = (
   )
 }
 
-const ItemSlot = ({ item }: Props) => {
-  const { Div } = useUIContext()
+const ItemSlot = ({ item, spin }: Props) => {
+  const ui = useUIContext()
+  const { isPurchasing } = useVendorContext()
   const style: React.CSSProperties = {
     cursor: !!item?.open ? 'pointer' : undefined,
     position: 'relative',
@@ -93,12 +95,31 @@ const ItemSlot = ({ item }: Props) => {
     margin: '2px',
     border: 'solid 1px #ddd'
   }
-  return item ? (
-    <Div className='rounded' onClick={item.open} style={style}>
+  return spin ? (
+    <ui.Div
+      style={{
+        ...style,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}
+    >
+      <ui.Spinner />
+    </ui.Div>
+  ) : !!item ? (
+    <ui.Div
+      className='rounded'
+      onClick={item.open}
+      style={{
+        ...style,
+        opacity: isPurchasing ? 0.5 : 1,
+        pointerEvents: isPurchasing ? 'none' : undefined
+      }}
+    >
       <SlotOverlayTrigger {...item} />
-    </Div>
+    </ui.Div>
   ) : (
-    <Div style={style} />
+    <ui.Div style={style} />
   )
 }
 

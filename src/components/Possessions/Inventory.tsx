@@ -2,7 +2,12 @@ import React, { useContext, useState } from 'react'
 import ItemSlots from '../Items/ItemSlots'
 import ViewItemModal from '../Items/ViewItemModal'
 import { useQueryClient } from '@tanstack/react-query'
-import { RequestsContext, usePlayContext, useUIContext } from '../../contexts'
+import {
+  RequestsContext,
+  usePlayContext,
+  useUIContext,
+  useVendorContext
+} from '../../contexts'
 import useItems from '../../hooks/useItems'
 
 const Loading = () => {
@@ -23,16 +28,28 @@ const Inventory = () => {
   const queryClient = useQueryClient()
   const { Div } = useUIContext()
   const Requests = useContext(RequestsContext)
+
   const {
     gameId,
     characterId,
     items: characterItems,
-    isLoading: contextLoading
+    isLoading: contextLoading,
+    isFetching: contextFetching
   } = usePlayContext()
-  const { data: items, isLoading } = useItems()
+
+  const { isPurchasing } = useVendorContext()
+
+  const {
+    data: items,
+    isLoading: itemsLoading,
+    isFetching: itemsFetching
+  } = useItems()
   const [openItemId, setOpenItemId] = useState<number>()
   const [isUsing, setIsUsing] = useState(false)
   const openItem = (items || []).find((item) => item.id === openItemId)
+  const spin =
+    !isPurchasing &&
+    (itemsLoading || itemsFetching || contextLoading || contextFetching)
 
   const onUse = async () => {
     // 1. Close modal
@@ -66,7 +83,7 @@ const Inventory = () => {
       open: () => setOpenItemId(item.id)
     }))
 
-  return isLoading || contextLoading ? (
+  return spin ? (
     <Loading />
   ) : (
     <Div>

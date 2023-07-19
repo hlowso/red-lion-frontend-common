@@ -37,7 +37,7 @@ export const ActivityCompletionContext = createContext<Context>({
 export const ActivityCompletionProvider = ({ children, ...props }: Props) => {
   const Requests = useContext(RequestsContext)
   const queryClient = useQueryClient()
-  const { gameId, characterId } = usePlayContext()
+  const { gameId, characterId, userId } = usePlayContext()
   const { data: activities } = useA()
   const [activityId, setActivityId] = useState<number | undefined>(
     typeof props.activity === 'number' ? props.activity : props.activity?.id
@@ -46,6 +46,7 @@ export const ActivityCompletionProvider = ({ children, ...props }: Props) => {
   const [fieldValues, setFieldValues] = useState<FormulaContextValue[]>([])
   const activity = (activities || []).find((a) => a.id === activityId)
   const canLog =
+    !isLogging &&
     !!activity &&
     (!activity.fields ||
       !activity.fields.length ||
@@ -81,8 +82,21 @@ export const ActivityCompletionProvider = ({ children, ...props }: Props) => {
     // 3. Done logging
     setIsLogging(false)
 
-    // 4. Fetch updated records pertaining to current game
-    await queryClient.invalidateQueries({ queryKey: ['games', gameId] })
+    // 4. Fetch updated records pertaining to character and activities
+    queryClient.invalidateQueries({
+      queryKey: ['games', gameId, 'users', userId, 'characters']
+    })
+    queryClient.invalidateQueries({
+      queryKey: [
+        'games',
+        gameId,
+        'lists',
+        undefined,
+        'characters',
+        characterId,
+        'activities'
+      ]
+    })
   }
 
   const value = {

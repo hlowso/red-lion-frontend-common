@@ -9,7 +9,7 @@ import useItems from '../../hooks/useItems'
 interface Props {
   item?: Item
   close: () => void
-  purchase: (quantity: number) => Promise<void>
+  purchase: (quantity: number) => void
 }
 
 interface FooterProps {
@@ -17,7 +17,7 @@ interface FooterProps {
   setQuantity: (quantity: number) => void
   onChange: (ev: React.ChangeEvent<HTMLInputElement>) => void
   affordable: boolean
-  purchase: (quantity: number) => Promise<void>
+  purchase: (quantity: number) => void
   close: () => void
 }
 

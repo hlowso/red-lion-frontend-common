@@ -1,6 +1,6 @@
 import React from 'react'
 import { Activity } from 'common'
-import { useUIContext } from '../../contexts'
+import { usePlayContext, useUIContext } from '../../contexts'
 import { Util } from 'common'
 import cronstrue from 'cronstrue'
 
@@ -36,6 +36,7 @@ const ActivityListItem = ({ activity, open }: Props) => {
   const ui = useUIContext()
   const complete = Util.Activity.complete(activity)
   const scheduleInfo = getScheduleInfo(activity.schedule)
+  const { isFetching } = usePlayContext()
 
   return (
     <ui.ListGroupItem
@@ -64,7 +65,7 @@ const ActivityListItem = ({ activity, open }: Props) => {
             <ui.Span
               style={{
                 fontSize: 'small',
-                color: scheduleInfo.late ? '#DC3545' : undefined
+                color: scheduleInfo.late && !complete ? '#DC3545' : undefined
               }}
             >
               {scheduleInfo.display}
@@ -72,7 +73,11 @@ const ActivityListItem = ({ activity, open }: Props) => {
           )}
         </ui.Div>
         <ui.Span>
-          {activity.status?.countToday || 0} / {activity.count || 1}
+          {isFetching ? (
+            <ui.Spinner small />
+          ) : (
+            `${activity.status?.countToday || 0} / ${activity.count || 1}`
+          )}
         </ui.Span>
       </ui.Div>
     </ui.ListGroupItem>

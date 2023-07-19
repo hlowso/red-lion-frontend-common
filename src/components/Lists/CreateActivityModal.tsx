@@ -34,9 +34,9 @@ const CreateActivityModal = ({ show, close }: Props) => {
   const groupStyle = { margin: '0 0 10px' }
   const selectButtonStyle = { margin: '0 5px 0 0', opacity: 0.85 }
 
-  const onCreate = () => {
+  const onCreate = async () => {
+    await createActivity()
     close()
-    createActivity()
   }
 
   return (
@@ -44,7 +44,11 @@ const CreateActivityModal = ({ show, close }: Props) => {
       <ui.ModalHeader>New Activity</ui.ModalHeader>
       <ui.ModalBody>
         {isCreating ? (
-          <ui.Spinner />
+          <ui.Div
+            style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
+          >
+            <ui.Spinner />
+          </ui.Div>
         ) : (
           <ui.Div>
             <ui.InputGroup style={groupStyle}>

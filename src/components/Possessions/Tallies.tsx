@@ -18,12 +18,17 @@ const Tally = ({ icon, count }: TallyProps) => {
 
 const Tallies = () => {
   const { Badge, Spinner } = useUIContext()
-  const { tallies: characterTallies, isLoading: contextLoading } =
-    usePlayContext()
+  const {
+    tallies: characterTallies,
+    isLoading: contextLoading,
+    isFetching
+  } = usePlayContext()
   const { data: tallies, isLoading: talliesLoading } = useTallies()
-  const isLoading = contextLoading || talliesLoading
+  const isLoading = contextLoading || talliesLoading || isFetching
 
-  return (
+  return isLoading ? (
+    <Spinner small />
+  ) : (
     <Badge
       bg='secondary'
       style={{
@@ -32,17 +37,13 @@ const Tallies = () => {
         justifyContent: 'space-between'
       }}
     >
-      {isLoading ? (
-        <Spinner small />
-      ) : (
-        tallies?.map((tally) => (
-          <Tally
-            key={tally.id}
-            icon={tally.icon}
-            count={(characterTallies || {})[tally.key] || 0}
-          />
-        ))
-      )}
+      {tallies?.map((tally) => (
+        <Tally
+          key={tally.id}
+          icon={tally.icon}
+          count={(characterTallies || {})[tally.key] || 0}
+        />
+      ))}
     </Badge>
   )
 }
