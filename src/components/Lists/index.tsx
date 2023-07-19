@@ -17,8 +17,7 @@ const Lists = ({ lists, activities, openListId }: Props) => {
   const [openActivityId, setOpenActivityId] = useState<number>()
   const [createActivityModalOpen, setCreateActivityModalOpen] = useState(false)
   const openActivity = activities?.find((a) => a.id === openActivityId)
-  const openListName =
-    lists?.find((list) => list.id === openListId)?.name || 'Today'
+  const openList = lists?.find((list) => list.id === openListId)
   const openListActivities =
     openListId === -1
       ? dueToday(activities || [])
@@ -28,7 +27,8 @@ const Lists = ({ lists, activities, openListId }: Props) => {
     <ui.Div style={{ flexGrow: 1 }}>
       <ActivityList
         showAddButton={!!openListId && openListId > 0}
-        listName={openListName}
+        listName={openList?.name || 'Today'}
+        listDescription={openList?.description}
         activities={openListActivities || []}
         openActivityModal={setOpenActivityId}
         openCreateActivityModal={() => setCreateActivityModalOpen(true)}

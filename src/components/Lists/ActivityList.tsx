@@ -9,12 +9,14 @@ interface Props {
   openCreateActivityModal: () => void
   showAddButton: boolean
   listName: string
+  listDescription?: string
   activities: Activity[]
 }
 
 const ActivityList = ({
   showAddButton,
   listName,
+  listDescription,
   activities,
   openActivityModal,
   openCreateActivityModal
@@ -23,6 +25,16 @@ const ActivityList = ({
   const ui = useUIContext()
   const toDo = incomplete(activities)
   const done = complete(activities)
+
+  const titleTooltip = (props: any) => (
+    <ui.Tooltip id={`header-tooltip-${listName}`} {...props}>
+      <ui.Card bg='dark'>
+        <ui.CardBody style={{ color: 'white', padding: '3px' }}>
+          {listDescription}
+        </ui.CardBody>
+      </ui.Card>
+    </ui.Tooltip>
+  )
 
   return (
     <ui.Card
@@ -40,7 +52,13 @@ const ActivityList = ({
           backgroundColor: '#eee'
         }}
       >
-        <ui.Strong>{listName}</ui.Strong>
+        <ui.OverlayTrigger
+          placement='left'
+          disabled={!listDescription}
+          overlay={titleTooltip}
+        >
+          <ui.Strong style={{ cursor: 'default' }}>{listName}</ui.Strong>
+        </ui.OverlayTrigger>
         <ui.Div>
           {showAddButton && (
             <ui.Button
