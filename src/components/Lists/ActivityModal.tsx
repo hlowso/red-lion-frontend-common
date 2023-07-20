@@ -59,7 +59,7 @@ const ActivityModal = ({ show, close }: Props) => {
           </ui.Div>
         ) : (
           <ui.Div>
-            <ui.P>{activity?.description}</ui.P>
+            <ui.Marked>{activity?.description || ''}</ui.Marked>
             {activity?.fields && (
               <ActivityFieldInputs fields={activity.fields} />
             )}
