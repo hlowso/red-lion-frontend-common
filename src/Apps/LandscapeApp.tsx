@@ -6,7 +6,7 @@ import Notifications from '../components/Notifications'
 import Vendor from '../components/Vendor'
 import ListNav from '../components/ListNav'
 import { useUIContext } from '../contexts'
-import CreateActivityModal from '../components/Lists/CreateActivityModal'
+import EditActivityModal from '../components/Lists/EditActivityModal'
 import useL from '../hooks/useLists'
 import useA from '../hooks/activities/useActivities'
 import SelectUnplannedActivityModal from '../components/Lists/SelectUnplannedActivityModal'
@@ -90,7 +90,7 @@ const LandscapeApp = ({
           setCreateUnplannedModalOpen(true)
         }}
       />
-      <CreateActivityModal
+      <EditActivityModal
         show={createUnplannedModalOpen}
         close={() => setCreateUnplannedModalOpen(false)}
       />

@@ -6,7 +6,7 @@ import useA from '../hooks/activities/useActivities'
 import Lists from '../components/Lists'
 import ListNav from '../components/ListNav'
 import SelectUnplannedActivityModal from '../components/Lists/SelectUnplannedActivityModal'
-import CreateActivityModal from '../components/Lists/CreateActivityModal'
+import EditActivityModal from '../components/Lists/EditActivityModal'
 import { unplanned } from 'common/selectors'
 import { Util } from 'common'
 
@@ -54,7 +54,7 @@ const PortraitApp = ({
           setCreateUnplannedModalOpen(true)
         }}
       />
-      <CreateActivityModal
+      <EditActivityModal
         show={createUnplannedModalOpen}
         close={() => setCreateUnplannedModalOpen(false)}
       />

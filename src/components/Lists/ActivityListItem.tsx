@@ -6,6 +6,7 @@ import cronstrue from 'cronstrue'
 
 interface Props {
   open: () => void
+  edit: () => void
   activity: Activity
 }
 
@@ -17,32 +18,27 @@ interface Schedule {
 const getScheduleInfo = (schedule?: string): Schedule | undefined => {
   if (!schedule) return undefined
 
-  const date = new Date(schedule)
-  if (Util.Date.isValid(date)) {
-    return {
-      late: Util.Date.isLate(date),
-      display: `Due: ${date.toDateString()}`
-    }
-  }
-
   try {
     return { display: `Resets: ${cronstrue.toString(schedule)}` }
-  } catch (e) {
-    return undefined
+  } catch (e) {}
+
+  const date = new Date(schedule)
+  if (!Util.Date.isValid(date)) return undefined
+
+  return {
+    late: Util.Date.isLate(date),
+    display: `Due: ${date.toDateString()}`
   }
 }
 
-const ActivityListItem = ({ activity, open }: Props) => {
+const ActivityListItem = ({ activity, open, edit }: Props) => {
   const ui = useUIContext()
   const complete = Util.Activity.complete(activity)
   const scheduleInfo = getScheduleInfo(activity.schedule)
   const { isFetching } = usePlayContext()
 
   return (
-    <ui.ListGroupItem
-      onClick={complete ? undefined : open}
-      style={{ cursor: complete ? undefined : 'pointer' }}
-    >
+    <ui.ListGroupItem>
       <ui.Div
         style={{
           display: 'flex',
@@ -50,7 +46,15 @@ const ActivityListItem = ({ activity, open }: Props) => {
           alignItems: 'center'
         }}
       >
-        <ui.Div style={{ display: 'flex', flexDirection: 'column' }}>
+        <ui.Div
+          onClick={complete ? undefined : open}
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            flexGrow: 1,
+            cursor: complete ? undefined : 'pointer'
+          }}
+        >
           <ui.Span
             style={{
               overflow: 'hidden',
@@ -72,7 +76,21 @@ const ActivityListItem = ({ activity, open }: Props) => {
             </ui.Span>
           )}
         </ui.Div>
-        <ui.Span>
+        <ui.Button
+          variant='outline-secondary'
+          onClick={edit}
+          style={{ padding: '4px 8px', margin: '0 10px 0' }}
+        >
+          <ui.Icon name='PencilSquare' />
+        </ui.Button>
+        <ui.Span
+          style={{
+            cursor: 'default',
+            width: '40px',
+            display: 'flex',
+            justifyContent: 'end'
+          }}
+        >
           {isFetching ? (
             <ui.Spinner small />
           ) : (

@@ -1,4 +1,4 @@
-import { Delta } from 'common'
+import { ActivityPostParams, Delta } from 'common'
 import React, {
   PropsWithChildren,
   createContext,
@@ -12,58 +12,90 @@ import { RequestsContext } from './RequestsContext'
 import useTallies from '../hooks/useTallies'
 import useLists from '../hooks/useLists'
 import { Util } from 'common'
+import useActivities from '../hooks/activities/useActivities'
 
 interface Props extends PropsWithChildren {
   listId?: number
+  activityId?: number
 }
 
 interface Context {
+  edition: boolean
+  creation: boolean
   isCreating: boolean
+  isUpdating: boolean
+  isRequesting: boolean
   createActivity: () => Promise<void>
+  updateActivity: () => Promise<void>
   canCreate: boolean
+  canUpdate: boolean
   name?: string
   onNameChange: (ev: React.ChangeEvent<{ value: string }>) => void
   tallyKey?: string
   onTallyChange: (ev: React.ChangeEvent<{ value: string }>) => void
   description?: string
   onDescriptionChange: (ev: React.ChangeEvent<{ value: string }>) => void
+  hasCount: boolean
+  setHasCount: (hasState: boolean) => void
+  count?: number
+  onCountChange: (ev: React.ChangeEvent<{ value: number }>) => void
+  schedule?: string
+  onScheduleChange: (ev: React.ChangeEvent<{ value: string }>) => void
   direction?: 1 | -1
   setDirection: (d: 1 | -1) => void
   significance?: 1 | 2 | 3
   setSignificance: (d: 1 | 2 | 3) => void
 }
 
-export const ActivityCreationContext = createContext<Context>({
+export const ActivityEditingContext = createContext<Context>({
+  edition: false,
+  creation: true,
   isCreating: false,
+  isUpdating: false,
+  isRequesting: false,
   createActivity: async () => {},
+  updateActivity: async () => {},
   canCreate: false,
+  canUpdate: false,
   onNameChange: () => {},
   onTallyChange: () => {},
   onDescriptionChange: () => {},
+  hasCount: false,
+  setHasCount: () => {},
+  onCountChange: () => {},
+  onScheduleChange: () => {},
   setDirection: () => {},
   setSignificance: () => {}
 })
 
-export const ActivityCreationProvider = ({ children, listId }: Props) => {
+export const ActivityEditingProvider = ({
+  children,
+  listId,
+  activityId
+}: Props) => {
   const Requests = useContext(RequestsContext)
   const queryClient = useQueryClient()
   const { gameId, userId, characterId } = usePlayContext()
   const { data: tallies } = useTallies()
   const { data: lists } = useLists()
-  const [isCreating, setIsCreating] = useState(false)
+  const { data: activities } = useActivities()
+  const activity = activities?.find((a) => a.id === activityId)
+  const [isRequesting, setIsRequesting] = useState(false)
   const [tallyKey, setTallyKey] = useState('')
-  const [name, setName] = useState('')
-  const [description, setDescription] = useState('')
+  const [name, setName] = useState(activity?.name || '')
+  const [description, setDescription] = useState(activity?.description || '')
+  const [hasCount, setHasCount] = useState(!!activity?.count)
+  const [count, setCount] = useState(activity?.count)
+  const [schedule, setSchedule] = useState(activity?.schedule)
   const [direction, setDirection] = useState<1 | -1>(1)
   const [significance, setSignificance] = useState<1 | 2 | 3>(1)
+  const canCreate = !!name && !!direction && !!significance && !isRequesting
 
   useEffect(() => {
     if (tallies) {
       setTallyKey(tallies[0]?.key)
     }
   }, [tallies?.length])
-
-  const canCreate = !!name && !!direction && !!significance && !isCreating
 
   const onTallyChange = (ev: React.ChangeEvent<{ value: string }>) => {
     setTallyKey(ev.target.value)
@@ -79,9 +111,19 @@ export const ActivityCreationProvider = ({ children, listId }: Props) => {
     setDescription(ev.target.value)
   }
 
+  const onCountChange = (ev: React.ChangeEvent<{ value: number }>) => {
+    const n = Number(ev.target.value)
+    if (Number.isInteger(n) && n > 0) setCount(n)
+  }
+
+  const onScheduleChange = (ev: React.ChangeEvent<{ value: string }>) => {
+    // TODO validate count
+    setSchedule(ev.target.value)
+  }
+
   // TODO: add dynamic fields...
 
-  const createActivity = async () => {
+  const upsert = async () => {
     const expression = `${direction} * randomInt(${significance}, ${significance} ^ 3)`
     const completionDelta: Delta = {
       tallies: {
@@ -91,24 +133,31 @@ export const ActivityCreationProvider = ({ children, listId }: Props) => {
         }
       }
     }
-    setIsCreating(true)
-    await Requests.createActivity({
+    setIsRequesting(true)
+    const params = {
       name,
       description,
       completionDelta,
-      schedule: null,
+      schedule,
       fields: null,
-      count: 1,
+      count: hasCount ? count : null,
       fieldValues: null,
-      listId: listId || Util.List.unplannedList(lists || [])?.id || -1,
-      logCompletionOnCreate: listId
-        ? undefined
-        : {
-            subjectId: characterId || -1,
-            subjectType: 'character'
-          }
-    })
-    setIsCreating(false)
+      listId:
+        activity?.listId || listId || Util.List.unplannedList(lists || [])?.id!,
+      logCompletionOnCreate:
+        activity || listId
+          ? undefined
+          : {
+              subjectId: characterId!,
+              subjectType: 'character'
+            }
+    } as ActivityPostParams
+
+    const result = activityId
+      ? await Requests.updateActivity({ id: activityId, ...params })
+      : await Requests.createActivity(params)
+
+    setIsRequesting(false)
     queryClient.invalidateQueries({
       queryKey: ['games', gameId, 'users', userId, 'characters']
     })
@@ -126,15 +175,27 @@ export const ActivityCreationProvider = ({ children, listId }: Props) => {
   }
 
   const value = {
-    createActivity,
-    isCreating,
+    edition: !!activity,
+    creation: !activity,
+    createActivity: () => upsert(),
+    updateActivity: () => upsert(),
+    isCreating: !activity && isRequesting,
+    isUpdating: !!activity && isRequesting,
+    isRequesting,
     canCreate,
+    canUpdate: canCreate,
     name,
     onNameChange,
     tallyKey,
     onTallyChange,
     description,
     onDescriptionChange,
+    hasCount,
+    setHasCount,
+    count,
+    onCountChange,
+    schedule,
+    onScheduleChange,
     direction,
     setDirection,
     significance,
@@ -142,8 +203,8 @@ export const ActivityCreationProvider = ({ children, listId }: Props) => {
   }
 
   return (
-    <ActivityCreationContext.Provider value={value}>
+    <ActivityEditingContext.Provider value={value}>
       {children}
-    </ActivityCreationContext.Provider>
+    </ActivityEditingContext.Provider>
   )
 }

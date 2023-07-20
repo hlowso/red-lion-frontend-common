@@ -2,34 +2,43 @@ import React, { useContext } from 'react'
 import { useUIContext } from '../../contexts'
 import { byKey } from 'common/util/tally'
 import {
-  ActivityCreationContext,
-  ActivityCreationProvider
-} from '../../contexts/ActivityCreationContext'
+  ActivityEditingContext,
+  ActivityEditingProvider
+} from '../../contexts/ActivityEditingContext'
 import useTallies from '../../hooks/useTallies'
 
 interface Props {
+  activityId?: number
   listId?: number
   show: boolean
   close: () => void
 }
 
-const CreateActivityModal = ({ show, close }: Props) => {
+const EditActivityModal = ({ show, close }: Props) => {
   const ui = useUIContext()
   const { data: tallies } = useTallies()
   const {
+    edition,
     name,
     onNameChange,
     tallyKey,
     onTallyChange,
     description,
     onDescriptionChange,
+    hasCount,
+    setHasCount,
+    count,
+    onCountChange,
+    schedule,
+    onScheduleChange,
     direction,
     setDirection,
     significance,
     setSignificance,
     createActivity,
-    isCreating
-  } = useContext(ActivityCreationContext)
+    updateActivity,
+    isRequesting
+  } = useContext(ActivityEditingContext)
 
   const groupStyle = { margin: '0 0 10px' }
   const selectButtonStyle = { margin: '0 5px 0 0', opacity: 0.85 }
@@ -39,11 +48,18 @@ const CreateActivityModal = ({ show, close }: Props) => {
     close()
   }
 
+  const onUpdate = async () => {
+    await updateActivity()
+    close()
+  }
+
   return (
     <ui.Modal show={show} onHide={close}>
-      <ui.ModalHeader>New Activity</ui.ModalHeader>
+      <ui.ModalHeader>
+        {edition ? 'Edit Activity' : 'New Activity'}
+      </ui.ModalHeader>
       <ui.ModalBody>
-        {isCreating ? (
+        {isRequesting ? (
           <ui.Div
             style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
           >
@@ -51,6 +67,18 @@ const CreateActivityModal = ({ show, close }: Props) => {
           </ui.Div>
         ) : (
           <ui.Div>
+            <ui.InputGroup style={groupStyle}>
+              <ui.InputGroupText>Name</ui.InputGroupText>
+              <ui.FormControl value={name} onChange={onNameChange} />
+            </ui.InputGroup>
+            <ui.InputGroup style={groupStyle}>
+              <ui.InputGroupText>Description</ui.InputGroupText>
+              <ui.FormControl
+                as='textarea'
+                value={description}
+                onChange={onDescriptionChange}
+              />
+            </ui.InputGroup>
             <ui.InputGroup style={groupStyle}>
               <ui.InputGroupText>Impacted</ui.InputGroupText>
               <ui.FormSelect onChange={onTallyChange}>
@@ -67,16 +95,23 @@ const CreateActivityModal = ({ show, close }: Props) => {
               </ui.InputGroupText>
             </ui.InputGroup>
             <ui.InputGroup style={groupStyle}>
-              <ui.InputGroupText>Name</ui.InputGroupText>
-              <ui.FormControl value={name} onChange={onNameChange} />
+              <ui.InputGroupText>Count</ui.InputGroupText>
+              <ui.InputGroupText>
+                <ui.FormCheck
+                  checked={hasCount}
+                  onChange={() => setHasCount(!hasCount)}
+                  label=''
+                />
+              </ui.InputGroupText>
+              <ui.FormControl
+                disabled={!hasCount}
+                value={count}
+                onChange={onCountChange}
+              />
             </ui.InputGroup>
             <ui.InputGroup style={groupStyle}>
-              <ui.InputGroupText>Description</ui.InputGroupText>
-              <ui.FormControl
-                as='textarea'
-                value={description}
-                onChange={onDescriptionChange}
-              />
+              <ui.InputGroupText>Schedule</ui.InputGroupText>
+              <ui.FormControl value={schedule} onChange={onScheduleChange} />
             </ui.InputGroup>
             <ui.Div style={groupStyle}>
               <ui.Button
@@ -123,18 +158,22 @@ const CreateActivityModal = ({ show, close }: Props) => {
       <ui.ModalFooter>
         <ui.Button
           variant='success'
-          disabled={!name || isCreating}
-          onClick={onCreate}
+          disabled={!name || isRequesting}
+          onClick={edition ? onUpdate : onCreate}
         >
-          Create
+          {edition ? 'Save' : 'Create'}
         </ui.Button>
       </ui.ModalFooter>
     </ui.Modal>
   )
 }
 
-export default (props: Props) => (
-  <ActivityCreationProvider key={props.listId} listId={props.listId}>
-    <CreateActivityModal {...props} />
-  </ActivityCreationProvider>
+export default ({ listId, activityId, ...props }: Props) => (
+  <ActivityEditingProvider
+    key={`${listId}:${activityId}`}
+    listId={listId}
+    activityId={activityId}
+  >
+    <EditActivityModal {...props} />
+  </ActivityEditingProvider>
 )

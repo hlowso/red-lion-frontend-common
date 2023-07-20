@@ -4,7 +4,7 @@ import ActivityModal from './ActivityModal'
 import ActivityList from './ActivityList'
 import { ListRow, Activity } from 'common'
 import { dueToday } from 'common/selectors'
-import CreateActivityModal from './CreateActivityModal'
+import EditActivityModal from './EditActivityModal'
 
 interface Props {
   lists: ListRow[]
@@ -15,13 +15,23 @@ interface Props {
 const Lists = ({ lists, activities, openListId }: Props) => {
   const ui = useUIContext()
   const [openActivityId, setOpenActivityId] = useState<number>()
-  const [createActivityModalOpen, setCreateActivityModalOpen] = useState(false)
+  const [editActivityId, setEditActivityId] = useState<number>()
+  const [editActivityModalOpen, setEditActivityModalOpen] = useState(false)
   const openActivity = activities?.find((a) => a.id === openActivityId)
   const openList = lists?.find((list) => list.id === openListId)
   const openListActivities =
     openListId === -1
       ? dueToday(activities || [])
       : activities?.filter((a) => a.listId === openListId)
+
+  const openEditActivityModal = (id?: number) => {
+    setEditActivityId(id)
+    setEditActivityModalOpen(true)
+  }
+  const closeEditActivityModal = () => {
+    setEditActivityId(undefined)
+    setEditActivityModalOpen(false)
+  }
 
   return (
     <ui.Div style={{ flexGrow: 1 }}>
@@ -31,17 +41,21 @@ const Lists = ({ lists, activities, openListId }: Props) => {
         listDescription={openList?.description}
         activities={openListActivities || []}
         openActivityModal={setOpenActivityId}
-        openCreateActivityModal={() => setCreateActivityModalOpen(true)}
+        openEditActivityModal={openEditActivityModal}
       />
       <ActivityModal
         show={!!openActivity}
         activity={openActivity!}
         close={() => setOpenActivityId(undefined)}
       />
-      <CreateActivityModal
+      <EditActivityModal
         listId={openListId}
-        show={!!openListId && openListId > 0 && createActivityModalOpen}
-        close={() => setCreateActivityModalOpen(false)}
+        activityId={editActivityId}
+        show={
+          editActivityModalOpen &&
+          (!!editActivityId || (!!openListId && openListId > 0))
+        }
+        close={closeEditActivityModal}
       />
     </ui.Div>
   )

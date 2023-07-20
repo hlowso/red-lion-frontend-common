@@ -99,6 +99,7 @@ export namespace UI {
     value: any
     as?: 'textarea'
     onChange: (ev: React.ChangeEvent<any>) => void
+    disabled?: boolean
   }
   export interface FormSelectProps extends PropsWithChildren<BaseProps> {
     onChange: (ev: React.ChangeEvent<any>) => void

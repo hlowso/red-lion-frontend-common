@@ -10,8 +10,7 @@ const Activities = ({ GET, POST, PATCH }) => {
   const updateActivity = ({
     id,
     ...params
-  }: { id: number } & Partial<Omit<ActivityRow, 'id'>>) =>
-    PATCH(`/activities/${id}`, params)
+  }: { id: number } & ActivityPostParams) => PATCH(`/activities/${id}`, params)
 
   return {
     getActivities,

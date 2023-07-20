@@ -6,7 +6,7 @@ import { FrontendContext, useUIContext } from '../../contexts'
 
 interface Props {
   openActivityModal: (activityId: number) => void
-  openCreateActivityModal: () => void
+  openEditActivityModal: (activityId?: number) => void
   showAddButton: boolean
   listName: string
   listDescription?: string
@@ -19,7 +19,7 @@ const ActivityList = ({
   listDescription,
   activities,
   openActivityModal,
-  openCreateActivityModal
+  openEditActivityModal
 }: Props) => {
   const { orientation } = useContext(FrontendContext)
   const ui = useUIContext()
@@ -63,7 +63,7 @@ const ActivityList = ({
           {showAddButton && (
             <ui.Button
               variant='outline-secondary'
-              onClick={openCreateActivityModal}
+              onClick={() => openEditActivityModal()}
               size='sm'
             >
               <ui.Icon name='PlusLg' />
@@ -84,6 +84,7 @@ const ActivityList = ({
                 key={activity.id}
                 activity={activity}
                 open={() => openActivityModal(activity.id)}
+                edit={() => openEditActivityModal(activity.id)}
               />
             ))}
           </ui.ListGroup>
@@ -97,6 +98,7 @@ const ActivityList = ({
                 key={activity.id}
                 activity={activity}
                 open={() => openActivityModal(activity.id)}
+                edit={() => openEditActivityModal(activity.id)}
               />
             ))}
           </ui.ListGroup>
