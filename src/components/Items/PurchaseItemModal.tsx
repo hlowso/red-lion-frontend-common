@@ -57,7 +57,7 @@ const Cost = ({
               -1 * count > (possessions.tallies[key] || 0) ? '0.5' : 'unset'
           }}
         >
-          <Icon name={Util.Tally.byKey(tallies, key)?.icon} size={30} />
+          <Icon name={Util.Tally.byKey(tallies, key)?.icon} size={50} />
           <Span style={{ marginTop: '5px' }}>
             <Strong>{-1 * count}</Strong>{' '}
             <Span>{Util.Tally.byKey(tallies, key)?.name}</Span>
