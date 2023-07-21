@@ -31,6 +31,42 @@ const getScheduleInfo = (schedule?: string): Schedule | undefined => {
   }
 }
 
+const Streak = ({ id, streak }: { id: number; streak: number }) => {
+  const ui = useUIContext()
+
+  const tooltip = (props) => (
+    <ui.Tooltip id={`streak-tooltip-${id}`} {...props}>
+      <ui.Card bg='dark' style={{ color: 'white' }}>
+        <ui.CardBody style={{ padding: '5px' }}>
+          Bonuses coming soon...
+        </ui.CardBody>
+      </ui.Card>
+    </ui.Tooltip>
+  )
+
+  return (
+    <ui.OverlayTrigger overlay={tooltip} placement='left'>
+      <ui.Div
+        style={{
+          position: 'relative',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          margin: '0 25px 0 0',
+          cursor: 'default',
+          width: '30px',
+          height: '30px'
+        }}
+      >
+        <ui.Icon name='Trophy' size={30} style={{ position: 'absolute' }} />
+        <ui.Span style={{ fontSize: 'x-small', transform: 'translateY(-35%)' }}>
+          {streak}
+        </ui.Span>
+      </ui.Div>
+    </ui.OverlayTrigger>
+  )
+}
+
 const ActivityListItem = ({ activity, open, edit }: Props) => {
   const ui = useUIContext()
   const complete = Util.Activity.complete(activity)
@@ -76,6 +112,9 @@ const ActivityListItem = ({ activity, open, edit }: Props) => {
             </ui.Span>
           )}
         </ui.Div>
+        {!!activity.status?.streak && (
+          <Streak id={activity.id} streak={activity.status.streak} />
+        )}
         <ui.Button
           variant='outline-secondary'
           onClick={edit}
