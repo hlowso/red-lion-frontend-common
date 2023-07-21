@@ -3,6 +3,14 @@ import { useUIContext } from '../contexts'
 import useCharacterTallyTargets from '../hooks/characters/useCharacterTallyTargets'
 import { CharacterTallyTarget } from 'common'
 
+const getZone = (current: number, value: number) => {
+  if (current < 0) return 'danger'
+  if (current >= 2 * value) return 'glory'
+  if (current >= value) return 'success'
+
+  return undefined
+}
+
 const ProgressOverlayTrigger = ({
   id,
   currentValue,
@@ -51,8 +59,7 @@ const TallyTargets = () => {
                 : 100
             }
             color={target.color}
-            animated={target.currentValue! >= target.value}
-            glowing={target.currentValue! >= 2 * target.value}
+            zone={getZone(target.currentValue!, target.value)}
             style={{ margin: '0 0 7px' }}
           />
         </ProgressOverlayTrigger>
