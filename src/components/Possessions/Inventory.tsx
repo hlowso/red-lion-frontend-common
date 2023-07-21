@@ -1,14 +1,9 @@
 import React, { useContext, useState } from 'react'
 import ItemSlots from '../Items/ItemSlots'
 import ViewItemModal from '../Items/ViewItemModal'
-import { useQueryClient } from '@tanstack/react-query'
-import {
-  RequestsContext,
-  usePlayContext,
-  useUIContext,
-  useVendorContext
-} from '../../contexts'
+import { usePlayContext, useUIContext, useVendorContext } from '../../contexts'
 import useItems from '../../hooks/useItems'
+import { ItemUsageContext } from '../../contexts/ItemUsageContext'
 
 const Loading = () => {
   const { Div, Spinner } = useUIContext()
@@ -25,19 +20,16 @@ const Loading = () => {
 }
 
 const Inventory = () => {
-  const queryClient = useQueryClient()
-  const { Div } = useUIContext()
-  const Requests = useContext(RequestsContext)
+  const ui = useUIContext()
 
   const {
-    gameId,
-    characterId,
     items: characterItems,
     isLoading: contextLoading,
     isFetching: contextFetching
   } = usePlayContext()
 
   const { isPurchasing } = useVendorContext()
+  const { isUsing, use } = useContext(ItemUsageContext)
 
   const {
     data: items,
@@ -45,30 +37,18 @@ const Inventory = () => {
     isFetching: itemsFetching
   } = useItems()
   const [openItemId, setOpenItemId] = useState<number>()
-  const [isUsing, setIsUsing] = useState(false)
   const openItem = (items || []).find((item) => item.id === openItemId)
   const spin =
     !isPurchasing &&
-    (itemsLoading || itemsFetching || contextLoading || contextFetching)
+    (itemsLoading ||
+      itemsFetching ||
+      contextLoading ||
+      contextFetching ||
+      isUsing)
 
   const onUse = async () => {
-    // 1. Close modal
+    await use(openItemId!)
     setOpenItemId(undefined)
-
-    // 2. Set using state
-    setIsUsing(true)
-
-    // 3. Request to use the item
-    await Requests.utilizeItemAsCharacter({
-      characterId: characterId!,
-      itemId: openItemId!
-    })
-
-    // 4. Fetch updated records pertaining to current game
-    await queryClient.invalidateQueries({ queryKey: ['games', gameId] })
-
-    // 5. Done using
-    setIsUsing(false)
   }
 
   const itemSlots = Object.entries(characterItems || {})
@@ -86,17 +66,17 @@ const Inventory = () => {
   return spin ? (
     <Loading />
   ) : (
-    <Div>
-      <Div className='inventory'>
+    <ui.Div>
+      <ui.Div className='inventory'>
         <ItemSlots rows={4} columns={5} itemSlots={itemSlots} />
-      </Div>
+      </ui.Div>
       <ViewItemModal
         item={openItem}
         use={openItem?.useDelta ? onUse : undefined}
         close={() => setOpenItemId(undefined)}
         quantity={characterItems![openItem?.key || ''] || 0}
       />
-    </Div>
+    </ui.Div>
   )
 }
 

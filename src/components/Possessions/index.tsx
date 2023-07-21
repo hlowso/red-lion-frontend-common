@@ -2,6 +2,7 @@ import React from 'react'
 import Inventory from './Inventory'
 import Tallies from './Tallies'
 import { useUIContext, useVendorContext } from '../../contexts'
+import { ItemUsageProvider } from '../../contexts/ItemUsageContext'
 
 const Possessions = () => {
   const { Div, Accordion, AccordionHeader, AccordionBody, Span } =
@@ -34,7 +35,9 @@ const Possessions = () => {
         </Div>
       </AccordionHeader>
       <AccordionBody>
-        <Inventory />
+        <ItemUsageProvider>
+          <Inventory />
+        </ItemUsageProvider>
       </AccordionBody>
     </Accordion>
   )
