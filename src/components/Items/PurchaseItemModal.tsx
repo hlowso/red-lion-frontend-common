@@ -38,16 +38,21 @@ const Cost = ({
 }: CostProps) => {
   const { Div, Card, Icon, Span, Strong } = useUIContext()
   const cost = Util.Delta.applyFactorToDelta(quantity, costDelta)
+  const style: React.CSSProperties = {
+    display: 'flex',
+    flexDirection: 'column',
+    padding: '10px',
+    margin: '5px',
+    width: 'fit-content',
+    alignItems: 'center'
+  }
+
   return (
     <Div style={{ display: 'flex', justifyContent: 'center' }}>
       {Object.entries(cost.tallies || {}).map(([key, count]) => (
         <Card
           style={{
-            display: 'flex',
-            flexDirection: 'column',
-            padding: '10px',
-            width: 'fit-content',
-            alignItems: 'center',
+            ...style,
             opacity:
               -1 * count > possessions.tallies[key] || 0 ? '0.5' : 'unset'
           }}
@@ -62,11 +67,7 @@ const Cost = ({
       {Object.entries(cost.items || {}).map(([key, count]) => (
         <Card
           style={{
-            display: 'flex',
-            flexDirection: 'column',
-            padding: '10px',
-            width: 'fit-content',
-            alignItems: 'center',
+            ...style,
             opacity: -1 * count > possessions.items[key] || 0 ? '0.5' : 'unset'
           }}
         >
@@ -132,7 +133,7 @@ const Footer = ({
 const PurchaseItemModal = ({ item, purchase, close }: Props) => {
   const { Modal, ModalHeader, ModalBody, Div, Spinner, Marked, Strong } =
     useUIContext()
-  const { gameId, possessions, isLoading: contextIsLoading } = usePlayContext()
+  const { possessions, isLoading: contextIsLoading } = usePlayContext()
   const { data: tallies, isLoading: talliesAreLoading } = useTallies()
   const { data: items, isLoading: itemsAreLoading } = useItems()
   const [quantity, setQuantity] = useState(1)
