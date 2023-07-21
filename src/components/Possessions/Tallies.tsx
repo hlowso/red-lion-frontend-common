@@ -4,14 +4,26 @@ import useTallies from '../../hooks/useTallies'
 
 interface TallyProps {
   icon: string
+  color?: string
   count: number
 }
 
-const Tally = ({ icon, count }: TallyProps) => {
+const getColor = (color?: string) => {
+  switch (color) {
+    case 'warning':
+      return '#ffc107'
+    case 'info':
+      return '#0dcaf0'
+    default:
+      return color
+  }
+}
+
+const Tally = ({ icon, color, count }: TallyProps) => {
   const ui = useUIContext()
   return (
     <ui.Span>
-      <ui.Icon name={icon} /> {count}
+      <ui.Icon name={icon} style={{ color: getColor(color) }} /> {count}
     </ui.Span>
   )
 }
@@ -41,6 +53,7 @@ const Tallies = () => {
         <Tally
           key={tally.id}
           icon={tally.icon}
+          color={tally.color}
           count={(characterTallies || {})[tally.key] || 0}
         />
       ))}
