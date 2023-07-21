@@ -54,7 +54,7 @@ const Cost = ({
           style={{
             ...style,
             opacity:
-              -1 * count > possessions.tallies[key] || 0 ? '0.5' : 'unset'
+              -1 * count > (possessions.tallies[key] || 0) ? '0.5' : 'unset'
           }}
         >
           <Icon name={Util.Tally.byKey(tallies, key)?.icon} size={30} />
