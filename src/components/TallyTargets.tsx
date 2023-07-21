@@ -58,7 +58,7 @@ const TallyTargets = () => {
                 ? (100 * (target.currentValue! / target.value)) % 100
                 : 100
             }
-            color={target.color}
+            color={target.color || 'primary'}
             zone={getZone(target.currentValue!, target.value)}
             style={{ margin: '0 0 7px' }}
           />
