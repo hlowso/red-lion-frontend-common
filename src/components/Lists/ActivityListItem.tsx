@@ -33,12 +33,14 @@ const getScheduleInfo = (schedule?: string): Schedule | undefined => {
 
 const Streak = ({ id, streak }: { id: number; streak: number }) => {
   const ui = useUIContext()
+  const bonus =
+    streak < 7 ? undefined : streak < 14 ? '25%' : streak < 30 ? '50%' : '75%'
 
   const tooltip = (props) => (
     <ui.Tooltip id={`streak-tooltip-${id}`} {...props}>
       <ui.Card bg='dark' style={{ color: 'white' }}>
         <ui.CardBody style={{ padding: '5px' }}>
-          Bonuses coming soon...
+          {bonus && `${bonus} delta bonus`}
         </ui.CardBody>
       </ui.Card>
     </ui.Tooltip>
