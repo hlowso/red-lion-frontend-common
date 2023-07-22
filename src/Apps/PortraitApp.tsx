@@ -19,8 +19,8 @@ const PortraitApp = ({
   createUnplannedModalOpen
 }: AppProps) => {
   const ui = useUIContext()
-  const { data: L, isLoading: LLoading } = useL()
-  const { data: A, isLoading: ALoading } = useA()
+  const { data: L } = useL()
+  const { data: A } = useA()
 
   return (
     <ui.Div>
