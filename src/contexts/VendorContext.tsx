@@ -5,7 +5,8 @@ import React, {
   useState
 } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
-import { RequestsContext, usePlayContext } from '../contexts'
+import { RequestsContext } from '../contexts/RequestsContext'
+import { usePlayContext } from '../contexts/PlayContext'
 
 interface Context {
   shopping: boolean
