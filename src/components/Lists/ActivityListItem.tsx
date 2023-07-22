@@ -47,7 +47,7 @@ const Streak = ({ id, streak }: { id: number; streak: number }) => {
   )
 
   return (
-    <ui.OverlayTrigger overlay={tooltip} placement='left'>
+    <ui.OverlayTrigger overlay={tooltip} placement='left' disabled={!bonus}>
       <ui.Div
         style={{
           position: 'relative',
