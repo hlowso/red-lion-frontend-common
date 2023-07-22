@@ -93,16 +93,30 @@ const ActivityListItem = ({ activity, open, edit }: Props) => {
             cursor: complete ? undefined : 'pointer'
           }}
         >
-          <ui.Span
+          <ui.Div
             style={{
               overflow: 'hidden',
               textOverflow: 'ellipsis',
               whiteSpace: 'nowrap',
-              textDecoration: complete ? 'line-through' : undefined
+              textDecoration: complete ? 'line-through' : undefined,
+              display: 'flex',
+              alignItems: 'center'
             }}
           >
-            {activity.name}
-          </ui.Span>
+            {activity.abstinenceDelta && (
+              <ui.Badge
+                bg='secondary'
+                style={{
+                  fontSize: 'x-small',
+                  margin: '0 5px 0 0',
+                  transform: 'translateY(10%)'
+                }}
+              >
+                DON'T
+              </ui.Badge>
+            )}
+            <ui.Span>{activity.name}</ui.Span>
+          </ui.Div>
           {scheduleInfo && (
             <ui.Span
               style={{
@@ -129,11 +143,13 @@ const ActivityListItem = ({ activity, open, edit }: Props) => {
             cursor: 'default',
             width: '40px',
             display: 'flex',
-            justifyContent: 'end'
+            justifyContent: 'center'
           }}
         >
           {isFetching ? (
             <ui.Spinner small />
+          ) : activity!.abstinenceDelta ? (
+            <ui.Icon name={complete ? 'X' : 'Check'} size={20} />
           ) : (
             `${activity.status?.countToday || 0} / ${activity.count || 1}`
           )}
