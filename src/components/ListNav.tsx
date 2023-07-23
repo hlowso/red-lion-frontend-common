@@ -12,6 +12,7 @@ interface Props {
   openListId?: number
   openList: (listId: number) => void
   openUnplannedModal: () => void
+  openCreateListModal: () => void
 }
 
 const Loading = () => {
@@ -27,7 +28,8 @@ const ListNav = ({
   lists,
   openListId,
   openList,
-  openUnplannedModal
+  openUnplannedModal,
+  openCreateListModal
 }: Props) => {
   const { ListGroup, ListGroupItem, Icon, Strong, Span, Div } = useUIContext()
   return (
@@ -52,6 +54,14 @@ const ListNav = ({
             </ListGroupItem>
           )),
           <Div key='divider' style={{ width: '100%', height: '2px' }} />,
+          <ListGroupItem
+            key={'new-list'}
+            onClick={openCreateListModal}
+            style={{ backgroundColor: '#eee', cursor: 'pointer' }}
+          >
+            <Icon name='Plus' style={{ marginRight: '10px' }} />
+            <Span>New List</Span>
+          </ListGroupItem>,
           <ListGroupItem
             key={'unplanned'}
             onClick={openUnplannedModal}

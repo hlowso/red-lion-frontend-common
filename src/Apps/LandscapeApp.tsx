@@ -14,14 +14,17 @@ import TallyTargets from '../components/TallyTargets'
 import { AppProps } from '../App'
 import { Util } from 'common'
 import { unplanned } from 'common/selectors'
+import EditListModal from '../components/Lists/EditListModal'
 
 const LandscapeApp = ({
   openListId,
   setOpenListId,
   createUnplannedModalOpen,
   selectUnplannedModalOpen,
+  createListModalOpen,
   setCreateUnplannedModalOpen,
-  setSelectUnplannedModalOpen
+  setSelectUnplannedModalOpen,
+  setCreateListModalOpen
 }: AppProps) => {
   const ui = useUIContext()
   const { data: L, isLoading: LLoading } = useL()
@@ -70,6 +73,7 @@ const LandscapeApp = ({
                 ? setSelectUnplannedModalOpen(true)
                 : setCreateUnplannedModalOpen(true)
             }
+            openCreateListModal={() => setCreateListModalOpen(true)}
           />
           <Lists
             lists={L || []}
@@ -89,6 +93,10 @@ const LandscapeApp = ({
           setSelectUnplannedModalOpen(false)
           setCreateUnplannedModalOpen(true)
         }}
+      />
+      <EditListModal
+        show={createListModalOpen}
+        close={() => setCreateListModalOpen(false)}
       />
       <EditActivityModal
         show={createUnplannedModalOpen}

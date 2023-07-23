@@ -6,6 +6,7 @@ import useA from '../hooks/activities/useActivities'
 import Lists from '../components/Lists'
 import ListNav from '../components/ListNav'
 import SelectUnplannedActivityModal from '../components/Lists/SelectUnplannedActivityModal'
+import EditListModal from '../components/Lists/EditListModal'
 import EditActivityModal from '../components/Lists/EditActivityModal'
 import { unplanned } from 'common/selectors'
 import { Util } from 'common'
@@ -15,8 +16,10 @@ const PortraitApp = ({
   setOpenListId,
   setSelectUnplannedModalOpen,
   setCreateUnplannedModalOpen,
+  setCreateListModalOpen,
   selectUnplannedModalOpen,
-  createUnplannedModalOpen
+  createUnplannedModalOpen,
+  createListModalOpen
 }: AppProps) => {
   const ui = useUIContext()
   const { data: L } = useL()
@@ -34,6 +37,7 @@ const PortraitApp = ({
               ? setSelectUnplannedModalOpen(true)
               : setCreateUnplannedModalOpen(true)
           }
+          openCreateListModal={() => setCreateListModalOpen(true)}
         />
       ) : (
         <ui.Div>
@@ -53,6 +57,10 @@ const PortraitApp = ({
           setSelectUnplannedModalOpen(false)
           setCreateUnplannedModalOpen(true)
         }}
+      />
+      <EditListModal
+        show={createListModalOpen}
+        close={() => setCreateListModalOpen(false)}
       />
       <EditActivityModal
         show={createUnplannedModalOpen}

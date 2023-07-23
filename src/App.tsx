@@ -18,8 +18,10 @@ export interface AppProps {
   setOpenListId: (id?: number) => void
   selectUnplannedModalOpen: boolean
   createUnplannedModalOpen: boolean
+  createListModalOpen: boolean
   setSelectUnplannedModalOpen: (open: boolean) => void
   setCreateUnplannedModalOpen: (open: boolean) => void
+  setCreateListModalOpen: (open: boolean) => void
 }
 
 const App = () => {
@@ -30,6 +32,7 @@ const App = () => {
     useState(false)
   const [createUnplannedModalOpen, setCreateUnplannedModalOpen] =
     useState(false)
+  const [createListModalOpen, setCreateListModalOpen] = useState(false)
 
   return (
     <UIProvider components={components!}>
@@ -44,8 +47,10 @@ const App = () => {
                     setOpenListId={setOpenListId}
                     selectUnplannedModalOpen={selectUnplannedModalOpen}
                     createUnplannedModalOpen={createUnplannedModalOpen}
+                    createListModalOpen={createListModalOpen}
                     setSelectUnplannedModalOpen={setSelectUnplannedModalOpen}
                     setCreateUnplannedModalOpen={setCreateUnplannedModalOpen}
+                    setCreateListModalOpen={setCreateListModalOpen}
                   />
                 ) : (
                   <PortraitApp
@@ -53,8 +58,10 @@ const App = () => {
                     setOpenListId={setOpenListId}
                     selectUnplannedModalOpen={selectUnplannedModalOpen}
                     createUnplannedModalOpen={createUnplannedModalOpen}
+                    createListModalOpen={createListModalOpen}
                     setSelectUnplannedModalOpen={setSelectUnplannedModalOpen}
                     setCreateUnplannedModalOpen={setCreateUnplannedModalOpen}
+                    setCreateListModalOpen={setCreateListModalOpen}
                   />
                 )}
               </VendorProvider>

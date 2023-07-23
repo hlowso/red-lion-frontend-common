@@ -41,7 +41,7 @@ const RequestHelpers = (apiBaseUrl: string) => {
     ...Logs({ GET }),
     ...Tallies({ GET }),
     ...Items({ GET }),
-    ...Lists({ GET })
+    ...Lists({ GET, POST })
   }
 }
 
