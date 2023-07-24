@@ -8,9 +8,15 @@ import Items from './items'
 import Lists from './lists'
 import { SOCKET_HEADER } from 'common'
 
+export interface HTTPRequests {
+  GET: <T>(endpoint: string, query?: T) => Promise<any>
+  POST: <T>(endpoint: string, body?: T) => Promise<any>
+  PATCH: <T>(endpoint: string, body?: T) => Promise<any>
+}
+
 const RequestHelpers = (apiBaseUrl: string, socketId = '') => {
-  const GET = <T>(endpoint: string, params?: T) =>
-    fetch(apiBaseUrl + endpoint + '?' + new URLSearchParams(params || {}), {
+  const GET = <T>(endpoint: string, query?: T) =>
+    fetch(apiBaseUrl + endpoint + '?' + new URLSearchParams(query || {}), {
       headers: {
         'Content-Type': 'application/json',
         [SOCKET_HEADER]: socketId
@@ -37,15 +43,17 @@ const RequestHelpers = (apiBaseUrl: string, socketId = '') => {
       body: JSON.stringify(body || {})
     })
 
+  const HTTP = { GET, POST, PATCH }
+
   return {
-    ...Users({ GET }),
-    ...Games({ GET }),
-    ...Characters({ GET, PATCH }),
-    ...Activities({ GET, POST, PATCH }),
-    ...Logs({ GET }),
-    ...Tallies({ GET }),
-    ...Items({ GET }),
-    ...Lists({ GET, POST })
+    ...Users(HTTP),
+    ...Games(HTTP),
+    ...Characters(HTTP),
+    ...Activities(HTTP),
+    ...Logs(HTTP),
+    ...Tallies(HTTP),
+    ...Items(HTTP),
+    ...Lists(HTTP)
   }
 }
 

@@ -5,8 +5,9 @@ import {
   PurchaseItemAsCharacterRequestBody,
   FormulaContextValue
 } from 'common'
+import { HTTPRequests } from '.'
 
-const Characters = ({ GET, PATCH }) => {
+const Characters = ({ GET, PATCH }: HTTPRequests) => {
   const getCharacters = async (params: CharacterGetParams) =>
     GET('/characters', params)
 

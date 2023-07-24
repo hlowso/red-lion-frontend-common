@@ -3,8 +3,9 @@ import {
   ActivityPostParams,
   ActivityPatchParams
 } from 'common'
+import { HTTPRequests } from '.'
 
-const Activities = ({ GET, POST, PATCH }) => {
+const Activities = ({ GET, POST, PATCH }: HTTPRequests) => {
   const getActivities = (params: ActivityGetParams) =>
     GET('/activities', params)
 
