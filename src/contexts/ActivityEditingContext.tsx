@@ -26,9 +26,11 @@ interface Context {
   isUpdating: boolean
   isRequesting: boolean
   createActivity: () => Promise<void>
-  updateActivity: () => Promise<void>
+  updateActivity: (args?: Partial<ActivityPostParams>) => Promise<void>
   canCreate: boolean
   canUpdate: boolean
+  listId?: number
+  setListId: (listId: number) => void
   name?: string
   onNameChange: (ev: React.ChangeEvent<{ value: string }>) => void
   tallyKey?: string
@@ -41,6 +43,7 @@ interface Context {
   onCountChange: (ev: React.ChangeEvent<{ value: number }>) => void
   schedule?: string
   onScheduleChange: (ev: React.ChangeEvent<{ value: string }>) => void
+  setSchedule: (schedule: string) => void
   direction?: 1 | -1
   setDirection: (d: 1 | -1) => void
   significance?: 1 | 2 | 3
@@ -57,6 +60,7 @@ export const ActivityEditingContext = createContext<Context>({
   updateActivity: async () => {},
   canCreate: false,
   canUpdate: false,
+  setListId: () => {},
   onNameChange: () => {},
   onTallyChange: () => {},
   onDescriptionChange: () => {},
@@ -64,24 +68,22 @@ export const ActivityEditingContext = createContext<Context>({
   setHasCount: () => {},
   onCountChange: () => {},
   onScheduleChange: () => {},
+  setSchedule: () => {},
   setDirection: () => {},
   setSignificance: () => {}
 })
 
-export const ActivityEditingProvider = ({
-  children,
-  listId,
-  activityId
-}: Props) => {
+export const ActivityEditingProvider = ({ children, ...props }: Props) => {
   const Requests = useContext(RequestsContext)
   const queryClient = useQueryClient()
   const { gameId, userId, characterId } = usePlayContext()
   const { data: tallies } = useTallies()
   const { data: lists } = useLists()
   const { data: activities } = useActivities()
-  const activity = activities?.find((a) => a.id === activityId)
+  const activity = activities?.find((a) => a.id === props.activityId)
   const [isRequesting, setIsRequesting] = useState(false)
   const [tallyKey, setTallyKey] = useState('')
+  const [listId, setListId] = useState(props.listId)
   const [name, setName] = useState(activity?.name || '')
   const [description, setDescription] = useState(activity?.description || '')
   const [hasCount, setHasCount] = useState(!!activity?.count)
@@ -123,7 +125,7 @@ export const ActivityEditingProvider = ({
 
   // TODO: add dynamic fields...
 
-  const upsert = async () => {
+  const upsert = async (args?: ActivityPostParams) => {
     const expression = `${direction} * randomInt(${significance}, ${significance} ^ 3)`
     const completionDelta: Delta = {
       tallies: {
@@ -134,6 +136,7 @@ export const ActivityEditingProvider = ({
       }
     }
     setIsRequesting(true)
+
     const params = {
       name,
       description,
@@ -142,19 +145,19 @@ export const ActivityEditingProvider = ({
       fields: null,
       count: hasCount ? count : null,
       fieldValues: null,
-      listId:
-        activity?.listId || listId || Util.List.unplannedList(lists || [])?.id!,
+      listId: listId || Util.List.unplannedList(lists || [])?.id!,
       logCompletionOnCreate:
         activity || listId
           ? undefined
           : {
               subjectId: characterId!,
               subjectType: 'character'
-            }
+            },
+      ...args
     } as ActivityPostParams
 
-    const result = activityId
-      ? await Requests.updateActivity({ id: activityId, ...params })
+    const result = props.activityId
+      ? await Requests.updateActivity({ id: props.activityId, ...params })
       : await Requests.createActivity(params)
 
     setIsRequesting(false)
@@ -178,12 +181,14 @@ export const ActivityEditingProvider = ({
     edition: !!activity,
     creation: !activity,
     createActivity: () => upsert(),
-    updateActivity: () => upsert(),
+    updateActivity: (args) => upsert(args),
     isCreating: !activity && isRequesting,
     isUpdating: !!activity && isRequesting,
     isRequesting,
     canCreate,
     canUpdate: canCreate,
+    listId,
+    setListId,
     name,
     onNameChange,
     tallyKey,
@@ -196,6 +201,7 @@ export const ActivityEditingProvider = ({
     onCountChange,
     schedule,
     onScheduleChange,
+    setSchedule,
     direction,
     setDirection,
     significance,

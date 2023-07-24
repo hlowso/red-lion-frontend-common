@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { ActivityRow } from 'common'
 import { RequestsContext, usePlayContext, useUIContext } from '../../contexts'
 import {
@@ -8,6 +8,11 @@ import {
 import ActivityFieldInputs from './ActivityFieldInputs'
 import { Util } from 'common'
 import { useQueryClient } from '@tanstack/react-query'
+import {
+  ActivityEditingContext,
+  ActivityEditingProvider
+} from '../../contexts/ActivityEditingContext'
+import useLists from '../../hooks/useLists'
 
 interface Props {
   show: boolean
@@ -17,34 +22,40 @@ interface Props {
 
 const ActivityModal = ({ show, close }: Props) => {
   const ui = useUIContext()
-  const queryClient = useQueryClient()
-  const { gameId, isFetching: contextFetching } = usePlayContext()
-  const Requests = useContext(RequestsContext)
+  const { isFetching: contextFetching } = usePlayContext()
+  const { data: lists } = useLists()
   const { activity, logCompletion, canLog, isLogging } = useContext(
     ActivityCompletionContext
   )
-  const [isLoading, setIsLoading] = useState(false)
-  const spin = !activity || isLoading || isLogging || contextFetching
+  const { updateActivity, isRequesting, setSchedule, setListId, listId } =
+    useContext(ActivityEditingContext)
+  const spin = !activity || isLogging || contextFetching || isRequesting
   const canToggleDueToday =
     !!activity &&
     (!activity.schedule ||
       Util.Date.isValid(new Date(activity?.schedule || '')))
+  const moveLists = lists
+    ?.filter((l) => l.id !== activity?.listId)
+    .map((l) => ({ id: String(l.id), label: l.name }))
+
+  useEffect(() => {}, [!!lists?.length])
 
   const onLog = async () => {
     await logCompletion()
     close()
   }
 
-  const onToggleDueToday = async (dueToday: boolean) => {
-    setIsLoading(true)
+  const onToggleDueToday = (dueToday: boolean) => {
     const midnight = new Date()
     midnight.setHours(0, 0, 0, 0)
-    await Requests.updateActivity({
-      id: activity?.id!,
+    updateActivity({
       schedule: dueToday ? midnight.toISOString() : ''
     })
-    setIsLoading(false)
-    queryClient.invalidateQueries(['games', gameId])
+  }
+
+  const onMove = async (listId: string) => {
+    await updateActivity({ listId: Number(listId) })
+    close()
   }
 
   return (
@@ -74,12 +85,20 @@ const ActivityModal = ({ show, close }: Props) => {
             label='Due Today'
             checked={Util.Activity.dueToday(activity)}
             onChange={() => onToggleDueToday(!Util.Activity.dueToday(activity))}
-            disabled={isLoading || contextFetching}
+            disabled={spin}
           />
         ) : null}
-        <ui.Button disabled={!canLog} onClick={onLog} variant='primary'>
-          Log
-        </ui.Button>
+        <ui.Div style={{ display: 'flex' }}>
+          <ui.Dropdown
+            style={{ margin: '0 10px 0 0' }}
+            label='Move'
+            items={moveLists || []}
+            action={onMove}
+          />
+          <ui.Button disabled={!canLog} onClick={onLog} variant='primary'>
+            Log
+          </ui.Button>
+        </ui.Div>
       </ui.ModalFooter>
     </ui.Modal>
   )
@@ -88,6 +107,12 @@ const ActivityModal = ({ show, close }: Props) => {
 export default (props: Props) =>
   props.show ? (
     <ActivityCompletionProvider activity={props.activity}>
-      <ActivityModal {...props} />
+      <ActivityEditingProvider
+        key={props.activity?.id}
+        listId={props.activity?.listId}
+        activityId={props.activity?.id}
+      >
+        <ActivityModal {...props} />
+      </ActivityEditingProvider>
     </ActivityCompletionProvider>
   ) : null
