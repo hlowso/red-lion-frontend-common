@@ -1,5 +1,6 @@
 import React from 'react'
 import { useUIContext } from '../contexts'
+import useActivities from '../hooks/activities/useActivities'
 
 interface ListNavItem {
   id: number
@@ -31,15 +32,16 @@ const ListNav = ({
   openUnplannedModal,
   openCreateListModal
 }: Props) => {
-  const { ListGroup, ListGroupItem, Icon, Strong, Span, Div } = useUIContext()
+  const ui = useUIContext()
+  const { data: A, isLoading: ALoading } = useActivities()
   return (
-    <ListGroup className='list-nav' style={{ backgroundColor: '#eee' }}>
+    <ui.ListGroup className='list-nav' style={{ backgroundColor: '#eee' }}>
       {lists.length === 0 ? (
         <Loading />
       ) : (
         [
           ...lists.map(({ id, icon, name }) => (
-            <ListGroupItem
+            <ui.ListGroupItem
               key={id}
               className='list'
               onClick={() => openList(id)}
@@ -49,30 +51,39 @@ const ListNav = ({
                 backgroundColor: id === openListId ? '#ccc' : '#eee'
               }}
             >
-              <Icon name={icon} style={{ marginRight: '10px' }} />
-              <Strong style={{ cursor: 'default' }}>{name}</Strong>
-            </ListGroupItem>
+              <ui.Icon name={icon} style={{ marginRight: '10px' }} />
+              <ui.Strong style={{ cursor: 'default', flexGrow: 1 }}>
+                {name}
+              </ui.Strong>
+              <ui.Badge bg='secondary'>
+                {ALoading ? (
+                  <ui.Spinner small />
+                ) : (
+                  A?.filter((a) => a.listId === id)?.length
+                )}
+              </ui.Badge>
+            </ui.ListGroupItem>
           )),
-          <Div key='divider' style={{ width: '100%', height: '2px' }} />,
-          <ListGroupItem
+          <ui.Div key='divider' style={{ width: '100%', height: '2px' }} />,
+          <ui.ListGroupItem
             key={'new-list'}
             onClick={openCreateListModal}
             style={{ backgroundColor: '#eee', cursor: 'pointer' }}
           >
-            <Icon name='Plus' style={{ marginRight: '10px' }} />
-            <Span>New List</Span>
-          </ListGroupItem>,
-          <ListGroupItem
+            <ui.Icon name='Plus' style={{ marginRight: '10px' }} />
+            <ui.Span>New List</ui.Span>
+          </ui.ListGroupItem>,
+          <ui.ListGroupItem
             key={'unplanned'}
             onClick={openUnplannedModal}
             style={{ backgroundColor: '#eee', cursor: 'pointer' }}
           >
-            <Icon name='PencilFill' style={{ marginRight: '10px' }} />
-            <Span>Log Unplanned</Span>
-          </ListGroupItem>
+            <ui.Icon name='PencilFill' style={{ marginRight: '10px' }} />
+            <ui.Span>Log Unplanned</ui.Span>
+          </ui.ListGroupItem>
         ]
       )}
-    </ListGroup>
+    </ui.ListGroup>
   )
 }
 
