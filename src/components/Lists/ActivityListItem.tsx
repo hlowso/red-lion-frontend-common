@@ -129,9 +129,6 @@ const ActivityListItem = ({ activity, open, edit, hide }: Props) => {
             </ui.Span>
           )}
         </ui.Div>
-        {!!activity.status?.streak && (
-          <Streak id={activity.id} streak={activity.status.streak} />
-        )}
         {!!hide && (
           <ui.Button
             onClick={hide}
@@ -144,6 +141,9 @@ const ActivityListItem = ({ activity, open, edit, hide }: Props) => {
           >
             <ui.Icon name='EyeSlash' />
           </ui.Button>
+        )}
+        {!!activity.status?.streak && (
+          <Streak id={activity.id} streak={activity.status.streak} />
         )}
         <ui.Button
           variant='outline-secondary'
