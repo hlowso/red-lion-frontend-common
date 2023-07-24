@@ -125,7 +125,7 @@ export const ActivityEditingProvider = ({ children, ...props }: Props) => {
 
   // TODO: add dynamic fields...
 
-  const upsert = async (args?: ActivityPostParams) => {
+  const upsert = async (args?: Partial<ActivityPostParams>) => {
     const expression = `${direction} * randomInt(${significance}, ${significance} ^ 3)`
     const completionDelta: Delta = {
       tallies: {
@@ -183,7 +183,7 @@ export const ActivityEditingProvider = ({ children, ...props }: Props) => {
     edition: !!activity,
     creation: !activity,
     createActivity: () => upsert(),
-    updateActivity: (args) => upsert(args),
+    updateActivity: (args?: Partial<ActivityPostParams>) => upsert(args),
     isCreating: !activity && isRequesting,
     isUpdating: !!activity && isRequesting,
     isRequesting,
