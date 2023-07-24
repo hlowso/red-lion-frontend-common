@@ -7,6 +7,7 @@ import cronstrue from 'cronstrue'
 interface Props {
   open: () => void
   edit: () => void
+  hide?: () => void
   activity: Activity
 }
 
@@ -69,7 +70,7 @@ const Streak = ({ id, streak }: { id: number; streak: number }) => {
   )
 }
 
-const ActivityListItem = ({ activity, open, edit }: Props) => {
+const ActivityListItem = ({ activity, open, edit, hide }: Props) => {
   const ui = useUIContext()
   const complete = Util.Activity.complete(activity)
   const scheduleInfo = getScheduleInfo(activity.schedule)
@@ -131,10 +132,29 @@ const ActivityListItem = ({ activity, open, edit }: Props) => {
         {!!activity.status?.streak && (
           <Streak id={activity.id} streak={activity.status.streak} />
         )}
+        {!!hide && (
+          <ui.Button
+            onClick={hide}
+            style={{
+              margin: '0 10px 0 0',
+              border: 'none',
+              background: 'none',
+              color: '#888'
+            }}
+          >
+            <ui.Icon name='EyeSlash' />
+          </ui.Button>
+        )}
         <ui.Button
           variant='outline-secondary'
           onClick={edit}
-          style={{ padding: '4px 8px', margin: '0 10px 0' }}
+          style={{
+            padding: '4px 8px',
+            margin: '0 10px 0 0',
+            border: 'none',
+            background: 'none',
+            color: '#888'
+          }}
         >
           <ui.Icon name='PencilSquare' />
         </ui.Button>
