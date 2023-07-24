@@ -1,18 +1,18 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { ActivityRow } from 'common'
-import { RequestsContext, usePlayContext, useUIContext } from '../../contexts'
+import { usePlayContext, useUIContext } from '../../contexts'
 import {
   ActivityCompletionContext,
   ActivityCompletionProvider
 } from '../../contexts/ActivityCompletionContext'
 import ActivityFieldInputs from './ActivityFieldInputs'
 import { Util } from 'common'
-import { useQueryClient } from '@tanstack/react-query'
 import {
   ActivityEditingContext,
   ActivityEditingProvider
 } from '../../contexts/ActivityEditingContext'
 import useLists from '../../hooks/useLists'
+import Delta from '../Delta'
 
 interface Props {
   show: boolean
@@ -74,6 +74,10 @@ const ActivityModal = ({ show, close }: Props) => {
             {activity?.fields && (
               <ActivityFieldInputs fields={activity.fields} />
             )}
+            <Delta
+              delta={activity?.completionDelta || {}}
+              style={{ margin: '10px 0 0' }}
+            />
           </ui.Div>
         )}
       </ui.ModalBody>
