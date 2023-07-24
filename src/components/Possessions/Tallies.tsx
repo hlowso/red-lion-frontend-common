@@ -8,7 +8,7 @@ interface TallyProps {
   count: number
 }
 
-const getColor = (color?: string) => {
+export const getColor = (color?: string) => {
   switch (color) {
     case 'warning':
       return '#ffc107'
