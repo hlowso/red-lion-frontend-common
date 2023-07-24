@@ -21,7 +21,7 @@ interface ChangeProps {
 
 const Change = ({ name, change, flipSigns }: ChangeProps) => {
   const ui = useUIContext()
-  const tooltip = (props) => (
+  const tooltip = (props: any) => (
     <ui.Tooltip {...props}>{(change as Formula).expression}</ui.Tooltip>
   )
   return (

@@ -36,7 +36,7 @@ const Streak = ({ id, streak }: { id: number; streak: number }) => {
   const bonus =
     streak < 7 ? undefined : streak < 14 ? '25%' : streak < 30 ? '50%' : '75%'
 
-  const tooltip = (props) => (
+  const tooltip = (props: any) => (
     <ui.Tooltip id={`streak-tooltip-${id}`} {...props}>
       <ui.Card bg='dark' style={{ color: 'white' }}>
         <ui.CardBody style={{ padding: '5px' }}>
