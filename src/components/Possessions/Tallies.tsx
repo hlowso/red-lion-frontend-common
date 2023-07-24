@@ -14,6 +14,8 @@ const getColor = (color?: string) => {
       return '#ffc107'
     case 'info':
       return '#0dcaf0'
+    case 'primary':
+      return '#0d6efd'
     default:
       return color
   }
