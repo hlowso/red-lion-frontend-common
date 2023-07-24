@@ -152,12 +152,14 @@ export const ActivityEditingProvider = ({ children, ...props }: Props) => {
           : {
               subjectId: characterId!,
               subjectType: 'character'
-            },
-      ...args
+            }
     } as ActivityPostParams
 
     const result = props.activityId
-      ? await Requests.updateActivity({ id: props.activityId, ...params })
+      ? await Requests.updateActivity({
+          id: props.activityId,
+          ...(args || params)
+        })
       : await Requests.createActivity(params)
 
     setIsRequesting(false)
