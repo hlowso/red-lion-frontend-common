@@ -55,7 +55,7 @@ const Streak = ({ id, streak }: { id: number; streak: number }) => {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          margin: '0 25px 0 0',
+          margin: '0 10px 0 0',
           cursor: 'default',
           width: '30px',
           height: '30px'
@@ -129,6 +129,9 @@ const ActivityListItem = ({ activity, open, edit, hide }: Props) => {
             </ui.Span>
           )}
         </ui.Div>
+        {!!activity.status?.streak && (
+          <Streak id={activity.id} streak={activity.status.streak} />
+        )}
         {!!hide && (
           <ui.Button
             onClick={hide}
@@ -141,9 +144,6 @@ const ActivityListItem = ({ activity, open, edit, hide }: Props) => {
           >
             <ui.Icon name='EyeSlash' />
           </ui.Button>
-        )}
-        {!!activity.status?.streak && (
-          <Streak id={activity.id} streak={activity.status.streak} />
         )}
         <ui.Button
           variant='outline-secondary'
