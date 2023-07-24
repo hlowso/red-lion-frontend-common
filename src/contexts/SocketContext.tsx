@@ -12,6 +12,7 @@ import { useQueryClient } from '@tanstack/react-query'
 const io = require('socket.io-client/dist/socket.io.js')
 
 interface SocketInterface {
+  socketId: string
   identify: (payload: SocketPayload.Identify) => Socket
   notifications: SocketPayload.Notify[]
   setNotifications: React.Dispatch<React.SetStateAction<SocketPayload.Notify[]>>
@@ -46,6 +47,7 @@ export const SocketProvider = ({
     socket.emit(SOCKET_EVENTS.IDENTIFY, payload)
 
   const value = {
+    socketId: socket.id,
     identify,
     notifications,
     setNotifications
