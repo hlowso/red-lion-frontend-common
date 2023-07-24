@@ -6,12 +6,14 @@ import Logs from './logs'
 import Tallies from './tallies'
 import Items from './items'
 import Lists from './lists'
+import { SOCKET_HEADER } from 'common'
 
-const RequestHelpers = (apiBaseUrl: string) => {
+const RequestHelpers = (apiBaseUrl: string, socketId = '') => {
   const GET = <T>(endpoint: string, params?: T) =>
     fetch(apiBaseUrl + endpoint + '?' + new URLSearchParams(params || {}), {
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        [SOCKET_HEADER]: socketId
       }
     }).then((res) => res.json())
 
@@ -19,7 +21,8 @@ const RequestHelpers = (apiBaseUrl: string) => {
     fetch(apiBaseUrl + endpoint, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        [SOCKET_HEADER]: socketId
       },
       body: JSON.stringify(body || {})
     })
@@ -28,7 +31,8 @@ const RequestHelpers = (apiBaseUrl: string) => {
     fetch(apiBaseUrl + endpoint, {
       method: 'PATCH',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        [SOCKET_HEADER]: socketId
       },
       body: JSON.stringify(body || {})
     })
