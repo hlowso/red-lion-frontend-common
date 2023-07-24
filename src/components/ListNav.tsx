@@ -1,6 +1,7 @@
 import React from 'react'
 import { useUIContext } from '../contexts'
 import useActivities from '../hooks/activities/useActivities'
+import { incomplete, dueToday, inList } from 'common/selectors'
 
 interface ListNavItem {
   id: number
@@ -58,8 +59,10 @@ const ListNav = ({
               <ui.Span style={{ fontSize: 'small' }}>
                 {ALoading ? (
                   <ui.Spinner small />
+                ) : id === -1 ? (
+                  incomplete(dueToday(A || [])).length
                 ) : (
-                  id > -1 && A?.filter((a) => a.listId === id)?.length
+                  incomplete(inList(id, A || [])).length
                 )}
               </ui.Span>
             </ui.ListGroupItem>
