@@ -35,10 +35,10 @@ const App = () => {
   const [createListModalOpen, setCreateListModalOpen] = useState(false)
 
   return (
-    <UIProvider components={components!}>
-      <RequestsProvider apiBaseUrl={apiBaseUrl!}>
-        <QueryClientProvider client={queryClient}>
-          <SocketProvider serverUrl={serverUrl!}>
+    <QueryClientProvider client={queryClient}>
+      <UIProvider components={components!}>
+        <SocketProvider serverUrl={serverUrl!}>
+          <RequestsProvider apiBaseUrl={apiBaseUrl!}>
             <PlayProvider>
               <VendorProvider>
                 {orientation === 'landscape' ? (
@@ -66,10 +66,10 @@ const App = () => {
                 )}
               </VendorProvider>
             </PlayProvider>
-          </SocketProvider>
-        </QueryClientProvider>
-      </RequestsProvider>
-    </UIProvider>
+          </RequestsProvider>
+        </SocketProvider>
+      </UIProvider>
+    </QueryClientProvider>
   )
 }
 
