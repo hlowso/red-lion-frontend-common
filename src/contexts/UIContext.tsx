@@ -12,6 +12,7 @@ export interface Context {
   P: (props: UI.PProps) => JSX.Element | null
   ButtonGroup: (props: UI.ButtonGroupProps) => JSX.Element | null
   Button: (props: UI.ButtonProps) => JSX.Element | null
+  Dropdown: (props: UI.DropdownProps) => JSX.Element | null
   Row: (props: UI.RowProps) => JSX.Element | null
   Col: (props: UI.ColProps) => JSX.Element | null
   Image: (props: UI.ImageProps) => JSX.Element | null
@@ -57,6 +58,7 @@ const UIContext = createContext<Context>({
   P: () => null,
   ButtonGroup: () => null,
   Button: () => null,
+  Dropdown: () => null,
   Row: () => null,
   Col: () => null,
   Image: () => null,

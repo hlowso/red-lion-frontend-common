@@ -27,6 +27,12 @@ export namespace UI {
     disabled?: boolean
   }
 
+  export interface DropdownProps extends BaseProps {
+    label: string
+    items: Array<{ id: string; label: string }>
+    action: (id: string) => Promise<void>
+  }
+
   export interface RowProps extends PropsWithChildren<BaseProps> {}
   export interface ColProps extends PropsWithChildren<BaseProps> {}
 
