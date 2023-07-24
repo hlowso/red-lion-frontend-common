@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
-import { Delta, Item, Possessions, TallyRow, Util } from 'common'
+import { Item, Possessions, TallyRow, Util, Delta as DeltaType } from 'common'
 import ItemImage from './ItemImage'
 import Tallies from '../Possessions/Tallies'
 import { usePlayContext, useUIContext } from '../../contexts'
 import useTallies from '../../hooks/useTallies'
 import useItems from '../../hooks/useItems'
+import Delta from '../Delta'
 
 interface Props {
   item?: Item
@@ -26,59 +27,25 @@ interface CostProps {
   items: Item[]
   possessions: Possessions
   quantity: number
-  costDelta: Delta
+  costDelta: DeltaType
 }
 
-const Cost = ({
-  tallies,
-  items,
-  possessions,
-  quantity,
-  costDelta
-}: CostProps) => {
-  const { Div, Card, Icon, Span, Strong } = useUIContext()
+const Cost = ({ possessions, quantity, costDelta }: CostProps) => {
   const cost = Util.Delta.applyFactorToDelta(quantity, costDelta)
-  const style: React.CSSProperties = {
-    display: 'flex',
-    flexDirection: 'column',
-    padding: '10px',
-    margin: '5px',
-    width: 'fit-content',
-    alignItems: 'center'
-  }
+  const fadedTallies = Object.entries(possessions.tallies || {})
+    .filter(([key, count]) => count < cost.tallies[key])
+    .map(([key]) => key)
+  const fadedItems = Object.entries(possessions.items || {})
+    .filter(([key, count]) => count < cost.tallies[key])
+    .map(([key]) => key)
 
   return (
-    <Div style={{ display: 'flex', justifyContent: 'center' }}>
-      {Object.entries(cost.tallies || {}).map(([key, count]) => (
-        <Card
-          style={{
-            ...style,
-            opacity:
-              -1 * count > (possessions.tallies[key] || 0) ? '0.5' : 'unset'
-          }}
-        >
-          <Icon name={Util.Tally.byKey(tallies, key)?.icon} size={50} />
-          <Span style={{ marginTop: '5px' }}>
-            <Strong>{-1 * count}</Strong>{' '}
-            <Span>{Util.Tally.byKey(tallies, key)?.name}</Span>
-          </Span>
-        </Card>
-      ))}
-      {Object.entries(cost.items || {}).map(([key, count]) => (
-        <Card
-          style={{
-            ...style,
-            opacity: -1 * count > possessions.items[key] || 0 ? '0.5' : 'unset'
-          }}
-        >
-          <ItemImage src={Util.Item.byKey(items, key)?.imageUrl} scale={0.75} />
-          <Span style={{ marginTop: '5px' }}>
-            <Strong>{-1 * count}</Strong>{' '}
-            <Span>{Util.Item.byKey(items, key)?.name}</Span>
-          </Span>
-        </Card>
-      ))}
-    </Div>
+    <Delta
+      delta={cost as DeltaType}
+      fadedItems={fadedItems}
+      fadedTallies={fadedTallies}
+      flipSigns
+    />
   )
 }
 
