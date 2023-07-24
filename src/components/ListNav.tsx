@@ -55,13 +55,13 @@ const ListNav = ({
               <ui.Strong style={{ cursor: 'default', flexGrow: 1 }}>
                 {name}
               </ui.Strong>
-              <ui.Badge bg='secondary'>
+              <ui.Span style={{ fontSize: 'small' }}>
                 {ALoading ? (
                   <ui.Spinner small />
                 ) : (
-                  A?.filter((a) => a.listId === id)?.length
+                  id > -1 && A?.filter((a) => a.listId === id)?.length
                 )}
-              </ui.Badge>
+              </ui.Span>
             </ui.ListGroupItem>
           )),
           <ui.Div key='divider' style={{ width: '100%', height: '2px' }} />,
