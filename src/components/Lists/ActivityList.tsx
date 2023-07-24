@@ -3,6 +3,7 @@ import { Activity } from 'common'
 import { complete, incomplete } from 'common/selectors'
 import ActivityListItem from './ActivityListItem'
 import { FrontendContext, useUIContext } from '../../contexts'
+import useLocal from '../../hooks/useLocal'
 
 interface Props {
   openActivityModal: (activityId: number) => void
@@ -22,9 +23,12 @@ const ActivityList = ({
   openEditActivityModal
 }: Props) => {
   const { orientation } = useContext(FrontendContext)
+  const { value: hiddenIds, set: setHiddenIds } = useLocal('hidden-activities')
   const ui = useUIContext()
-  const toDo = incomplete(activities)
-  const done = complete(activities)
+  const hidden = activities.filter((a) => hiddenIds.includes(a.id))
+  const showing = activities.filter((a) => !hiddenIds.includes(a.id))
+  const toDo = incomplete(showing)
+  const done = complete(showing)
 
   const titleTooltip = (props: any) => (
     <ui.Tooltip id={`header-tooltip-${listName}`} {...props}>
@@ -60,6 +64,26 @@ const ActivityList = ({
           <ui.Strong style={{ cursor: 'default' }}>{listName}</ui.Strong>
         </ui.OverlayTrigger>
         <ui.Div>
+          {!!hidden.length && (
+            <ui.Button
+              onClick={() =>
+                setHiddenIds(
+                  hiddenIds.filter(
+                    (id) => !activities.map((a) => a.id).includes(id)
+                  )
+                )
+              }
+              style={{
+                margin: '0 10px 0 0',
+                padding: 0,
+                border: 'none',
+                background: 'none',
+                color: '#222'
+              }}
+            >
+              <ui.Icon name='EyeFill' />
+            </ui.Button>
+          )}
           {showAddButton && (
             <ui.Button
               variant='outline-secondary'
@@ -85,6 +109,7 @@ const ActivityList = ({
                 activity={activity}
                 open={() => openActivityModal(activity.id)}
                 edit={() => openEditActivityModal(activity.id)}
+                hide={() => setHiddenIds([...hiddenIds, activity.id])}
               />
             ))}
           </ui.ListGroup>
