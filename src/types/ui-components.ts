@@ -119,6 +119,12 @@ export namespace UI {
     checked?: boolean
     disabled?: boolean
   }
+  export interface FormRadioProps extends BaseProps {
+    label?: string
+    onChange?: (ev: React.ChangeEvent<any>) => void
+    checked?: boolean
+    disabled?: boolean
+  }
 
   export interface IconProps extends BaseProps {
     name: string

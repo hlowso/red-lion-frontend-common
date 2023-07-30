@@ -45,6 +45,7 @@ export interface Context {
   FormSelect: (props: UI.FormSelectProps) => JSX.Element | null
   FormSelectOption: (props: UI.FormSelectOptionProps) => JSX.Element | null
   FormCheck: (props: UI.FormCheckProps) => JSX.Element | null
+  FormRadio: (props: UI.FormRadioProps) => JSX.Element | null
   Icon: (props: UI.IconProps) => JSX.Element | null
   OverlayTrigger: (props: UI.OverlayTriggerProps) => JSX.Element | null
   Tooltip: (props: UI.TooltipProps) => JSX.Element | null
@@ -91,6 +92,7 @@ const UIContext = createContext<Context>({
   FormSelect: () => null,
   FormSelectOption: () => null,
   FormCheck: () => null,
+  FormRadio: () => null,
   Icon: () => null,
   OverlayTrigger: () => null,
   Tooltip: () => null,
