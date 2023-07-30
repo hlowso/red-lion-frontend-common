@@ -15,7 +15,9 @@ const queryClient = new QueryClient()
 
 export interface AppProps {
   openListId?: number
+  openGoalId?: number
   setOpenListId: (id?: number) => void
+  setOpenGoalId: (id?: number) => void
   selectUnplannedModalOpen: boolean
   createUnplannedModalOpen: boolean
   createListModalOpen: boolean
@@ -28,6 +30,7 @@ const App = () => {
   const { serverUrl, apiBaseUrl, components, orientation } =
     useContext(FrontendContext)
   const [openListId, setOpenListId] = useState<number | undefined>(-1)
+  const [openGoalId, setOpenGoalId] = useState<number | undefined>()
   const [selectUnplannedModalOpen, setSelectUnplannedModalOpen] =
     useState(false)
   const [createUnplannedModalOpen, setCreateUnplannedModalOpen] =
@@ -44,7 +47,9 @@ const App = () => {
                 {orientation === 'landscape' ? (
                   <LandscapeApp
                     openListId={openListId}
+                    openGoalId={openGoalId}
                     setOpenListId={setOpenListId}
+                    setOpenGoalId={setOpenGoalId}
                     selectUnplannedModalOpen={selectUnplannedModalOpen}
                     createUnplannedModalOpen={createUnplannedModalOpen}
                     createListModalOpen={createListModalOpen}
@@ -55,7 +60,9 @@ const App = () => {
                 ) : (
                   <PortraitApp
                     openListId={openListId}
+                    openGoalId={openGoalId}
                     setOpenListId={setOpenListId}
+                    setOpenGoalId={setOpenGoalId}
                     selectUnplannedModalOpen={selectUnplannedModalOpen}
                     createUnplannedModalOpen={createUnplannedModalOpen}
                     createListModalOpen={createListModalOpen}

@@ -10,9 +10,10 @@ interface Props {
   lists: ListRow[]
   activities: Activity[]
   openListId: number
+  style?: React.CSSProperties
 }
 
-const Lists = ({ lists, activities, openListId }: Props) => {
+const Lists = ({ lists, activities, openListId, style }: Props) => {
   const ui = useUIContext()
   const [openActivityId, setOpenActivityId] = useState<number>()
   const [editActivityId, setEditActivityId] = useState<number>()
@@ -34,7 +35,7 @@ const Lists = ({ lists, activities, openListId }: Props) => {
   }
 
   return (
-    <ui.Div style={{ flexGrow: 1 }}>
+    <ui.Div style={{ ...style, flexGrow: 1 }}>
       <ActivityList
         showAddButton={!!openListId && openListId > 0}
         listName={openList?.name || 'Today'}

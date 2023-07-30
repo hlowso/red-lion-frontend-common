@@ -6,6 +6,7 @@ import Logs from './logs'
 import Tallies from './tallies'
 import Items from './items'
 import Lists from './lists'
+import Goals from './goals'
 import { SOCKET_HEADER } from 'common'
 
 export interface HTTPRequests {
@@ -53,7 +54,8 @@ const RequestHelpers = (apiBaseUrl: string, socketId = '') => {
     ...Logs(HTTP),
     ...Tallies(HTTP),
     ...Items(HTTP),
-    ...Lists(HTTP)
+    ...Lists(HTTP),
+    ...Goals(HTTP)
   }
 }
 

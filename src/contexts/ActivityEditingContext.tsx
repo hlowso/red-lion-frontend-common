@@ -48,6 +48,8 @@ interface Context {
   setDirection: (d: 1 | -1) => void
   significance?: 1 | 2 | 3
   setSignificance: (d: 1 | 2 | 3) => void
+  goalIds: number[]
+  toggleGoal: (id: number) => void
 }
 
 export const ActivityEditingContext = createContext<Context>({
@@ -70,7 +72,9 @@ export const ActivityEditingContext = createContext<Context>({
   onScheduleChange: () => {},
   setSchedule: () => {},
   setDirection: () => {},
-  setSignificance: () => {}
+  setSignificance: () => {},
+  goalIds: [],
+  toggleGoal: () => {}
 })
 
 export const ActivityEditingProvider = ({ children, ...props }: Props) => {
@@ -91,6 +95,7 @@ export const ActivityEditingProvider = ({ children, ...props }: Props) => {
   const [schedule, setSchedule] = useState(activity?.schedule)
   const [direction, setDirection] = useState<1 | -1>(1)
   const [significance, setSignificance] = useState<1 | 2 | 3>(1)
+  const [goalIds, setGoalIds] = useState<number[]>(activity?.goalIds || [])
   const canCreate = !!name && !!direction && !!significance && !isRequesting
 
   useEffect(() => {
@@ -123,6 +128,13 @@ export const ActivityEditingProvider = ({ children, ...props }: Props) => {
     setSchedule(ev.target.value)
   }
 
+  const toggleGoal = (id: number) => {
+    if (goalIds.includes(id)) {
+      return setGoalIds((goalIds) => goalIds.filter((g) => g !== id))
+    }
+    setGoalIds([...goalIds, id])
+  }
+
   // TODO: add dynamic fields...
 
   const upsert = async (args?: Partial<ActivityPostParams>) => {
@@ -152,7 +164,8 @@ export const ActivityEditingProvider = ({ children, ...props }: Props) => {
           : {
               subjectId: characterId!,
               subjectType: 'character'
-            }
+            },
+      goalIds
     } as ActivityPostParams
 
     const result = props.activityId
@@ -207,7 +220,9 @@ export const ActivityEditingProvider = ({ children, ...props }: Props) => {
     direction,
     setDirection,
     significance,
-    setSignificance
+    setSignificance,
+    goalIds,
+    toggleGoal
   }
 
   return (

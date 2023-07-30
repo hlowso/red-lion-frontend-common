@@ -6,6 +6,7 @@ import {
   ActivityEditingProvider
 } from '../../contexts/ActivityEditingContext'
 import useTallies from '../../hooks/useTallies'
+import useGoals from '../../hooks/useGoals'
 
 interface Props {
   activityId?: number
@@ -17,6 +18,7 @@ interface Props {
 const EditActivityModal = ({ show, close }: Props) => {
   const ui = useUIContext()
   const { data: tallies } = useTallies()
+  const { data: goals } = useGoals()
   const {
     edition,
     name,
@@ -37,6 +39,8 @@ const EditActivityModal = ({ show, close }: Props) => {
     setSignificance,
     createActivity,
     updateActivity,
+    toggleGoal,
+    goalIds,
     isRequesting
   } = useContext(ActivityEditingContext)
 
@@ -151,6 +155,21 @@ const EditActivityModal = ({ show, close }: Props) => {
               >
                 Major
               </ui.Button>
+            </ui.Div>
+            <ui.Div style={groupStyle}>
+              {goals?.map((g) => (
+                <ui.Button
+                  key={g.id}
+                  size='sm'
+                  style={{ margin: '0 5px 5px 0' }}
+                  onClick={() => toggleGoal(g.id)}
+                  variant={
+                    goalIds.includes(g.id) ? 'secondary' : 'outline-secondary'
+                  }
+                >
+                  {g.name}
+                </ui.Button>
+              ))}
             </ui.Div>
           </ui.Div>
         )}

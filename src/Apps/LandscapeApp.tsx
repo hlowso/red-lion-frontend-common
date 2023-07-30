@@ -15,10 +15,15 @@ import { AppProps } from '../App'
 import { Util } from 'common'
 import { unplanned } from 'common/selectors'
 import EditListModal from '../components/Lists/EditListModal'
+import GoalList from '../components/Goals/GoalList'
+import GoalModal from '../components/Goals/GoalModal'
+import useCharacterGoals from '../hooks/characters/useCharacterGoals'
 
 const LandscapeApp = ({
   openListId,
+  openGoalId,
   setOpenListId,
+  setOpenGoalId,
   createUnplannedModalOpen,
   selectUnplannedModalOpen,
   createListModalOpen,
@@ -29,6 +34,9 @@ const LandscapeApp = ({
   const ui = useUIContext()
   const { data: L, isLoading: LLoading } = useL()
   const { data: A, isLoading: ALoading } = useA()
+  const { data: CG, isFetching: CGFetching } = useCharacterGoals()
+
+  console.log('goal id', openGoalId)
 
   return LLoading || ALoading ? (
     <ui.Div
@@ -79,7 +87,9 @@ const LandscapeApp = ({
             lists={L || []}
             activities={A || []}
             openListId={openListId!}
+            style={{ margin: '0 20px 0' }}
           />
+          <GoalList goals={CG || []} openGoalModal={setOpenGoalId} />
         </ui.Div>
       </ui.Div>
       <Possessions />
@@ -101,6 +111,10 @@ const LandscapeApp = ({
       <EditActivityModal
         show={createUnplannedModalOpen}
         close={() => setCreateUnplannedModalOpen(false)}
+      />
+      <GoalModal
+        goal={(CG || []).find((g) => g.goalId === openGoalId)}
+        close={() => setOpenGoalId(undefined)}
       />
     </ui.Div>
   )
