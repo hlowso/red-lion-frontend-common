@@ -30,26 +30,26 @@ const GoalList = ({ goals, openGoalModal }: Props) => {
               }}
             >
               <ui.Icon name={goal.icon} size={30} />
-              <ui.Div
-                style={{
-                  margin: '5px 0 0',
-                  width: '50px',
-                  display: 'grid',
-                  gridTemplateColumns: '1fr 1fr 1fr',
-                  justifyItems: 'center'
-                }}
-              >
-                {AFetching ? (
-                  <ui.Spinner />
-                ) : (
-                  serveGoal(activities || [], goal.goalId).map((a) => (
+              {AFetching ? (
+                <ui.Spinner style={{ margin: '5px 0 0' }} />
+              ) : (
+                <ui.Div
+                  style={{
+                    margin: '5px 0 0',
+                    width: '50px',
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 1fr 1fr',
+                    justifyItems: 'center'
+                  }}
+                >
+                  {serveGoal(activities || [], goal.goalId).map((a) => (
                     <ui.Icon
                       name={!!a.status.done ? 'StarFill' : 'Star'}
                       size={15}
                     />
-                  ))
-                )}
-              </ui.Div>
+                  ))}
+                </ui.Div>
+              )}
             </ui.Div>
           </ui.CardBody>
         </ui.Card>
