@@ -22,20 +22,34 @@ const GoalList = ({ goals, openGoalModal }: Props) => {
           onClick={() => openGoalModal(goal.goalId)}
         >
           <ui.CardBody>
-            <ui.Icon name={goal.icon} size={30} />
-            <ui.Div style={{ display: 'flex' }}>
-              {AFetching ? (
-                <ui.Spinner />
-              ) : (
-                serveGoal(activities || [], goal.goalId).map((a) => (
-                  <ui.FormCheck
-                    label=''
-                    onChange={() => {}}
-                    checked={!!a.status.done}
-                    style={{ pointerEvents: 'none' }}
-                  />
-                ))
-              )}
+            <ui.Div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center'
+              }}
+            >
+              <ui.Icon name={goal.icon} size={30} />
+              <ui.Div
+                style={{
+                  margin: '5px 0 0',
+                  width: '50px',
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 1fr 1fr',
+                  justifyItems: 'center'
+                }}
+              >
+                {AFetching ? (
+                  <ui.Spinner />
+                ) : (
+                  serveGoal(activities || [], goal.goalId).map((a) => (
+                    <ui.Icon
+                      name={!!a.status.done ? 'StarFill' : 'Star'}
+                      size={15}
+                    />
+                  ))
+                )}
+              </ui.Div>
             </ui.Div>
           </ui.CardBody>
         </ui.Card>
