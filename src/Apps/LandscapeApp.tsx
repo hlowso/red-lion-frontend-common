@@ -36,8 +36,6 @@ const LandscapeApp = ({
   const { data: A, isLoading: ALoading } = useA()
   const { data: CG, isFetching: CGFetching } = useCharacterGoals()
 
-  console.log('goal id', openGoalId)
-
   return LLoading || ALoading ? (
     <ui.Div
       style={{
