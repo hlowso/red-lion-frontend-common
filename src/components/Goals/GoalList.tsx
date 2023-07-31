@@ -18,7 +18,7 @@ const GoalList = ({ goals, openGoalModal }: Props) => {
       {(goals || []).map((goal) => (
         <ui.Card
           key={goal.id}
-          style={{ margin: '0 0 10px' }}
+          style={{ margin: '0 0 10px', minWidth: '84px' }}
           onClick={() => openGoalModal(goal.goalId)}
         >
           <ui.CardBody>
@@ -44,6 +44,7 @@ const GoalList = ({ goals, openGoalModal }: Props) => {
                 >
                   {serveGoal(activities || [], goal.goalId).map((a) => (
                     <ui.Icon
+                      key={a.id}
                       name={!!a.status.done ? 'StarFill' : 'Star'}
                       size={15}
                     />
