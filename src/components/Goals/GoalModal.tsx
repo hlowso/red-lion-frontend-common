@@ -30,6 +30,23 @@ const GoalModal = ({ goal, close }: Props) => {
         </ui.Div>
       </ui.ModalHeader>
       <ui.ModalBody>
+        {goal?.targetDate && (
+          <ui.Span
+            style={{
+              margin: '0 0 10px',
+              color: '#555',
+              cursor: 'default',
+              fontSize: 'small',
+              display: 'block'
+            }}
+          >
+            {goal?.targetDate.toLocaleString('default', {
+              month: 'long',
+              day: 'numeric',
+              year: 'numeric'
+            })}
+          </ui.Span>
+        )}
         <ui.Marked>{goal?.description || ''}</ui.Marked>
       </ui.ModalBody>
       <ui.ModalFooter>

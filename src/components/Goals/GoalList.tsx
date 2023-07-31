@@ -30,6 +30,21 @@ const GoalList = ({ goals, openGoalModal }: Props) => {
               }}
             >
               <ui.Icon name={goal.icon} size={30} />
+              {goal.targetDate && (
+                <ui.Span
+                  style={{
+                    margin: '5px 0 0',
+                    fontSize: 'small',
+                    color: '#555',
+                    cursor: 'default'
+                  }}
+                >
+                  {goal.targetDate.toLocaleString('default', {
+                    month: 'short',
+                    day: 'numeric'
+                  })}
+                </ui.Span>
+              )}
               {AFetching ? (
                 <ui.Spinner style={{ margin: '5px 0 0' }} />
               ) : (
