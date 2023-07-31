@@ -1,21 +1,23 @@
 import React from 'react'
 import { useUIContext } from '../../contexts'
 import useActivities from '../../hooks/activities/useActivities'
-import { serveGoal } from 'common/selectors'
+import { serveGoal, Goal } from 'common/selectors'
 import { CharacterGoal } from 'common'
 
 interface Props {
   goals: CharacterGoal[]
   openGoalModal: (id: number) => void
+  style: React.CSSProperties
 }
 
-const GoalList = ({ goals, openGoalModal }: Props) => {
+const GoalList = ({ goals, openGoalModal, style }: Props) => {
   const ui = useUIContext()
   const { data: activities, isFetching: AFetching } = useActivities()
+  const inProgress = Goal.incomplete(goals, activities || [])
 
-  return (
-    <ui.Div style={{ display: 'flex', flexDirection: 'column' }}>
-      {(goals || []).map((goal) => (
+  return inProgress.length ? (
+    <ui.Div style={{ display: 'flex', flexDirection: 'column', ...style }}>
+      {inProgress.map((goal) => (
         <ui.Card
           key={goal.id}
           style={{ margin: '0 0 10px', minWidth: '84px' }}
@@ -71,7 +73,7 @@ const GoalList = ({ goals, openGoalModal }: Props) => {
         </ui.Card>
       ))}
     </ui.Div>
-  )
+  ) : null
 }
 
 export default GoalList
