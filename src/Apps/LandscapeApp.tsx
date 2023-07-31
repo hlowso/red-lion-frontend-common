@@ -11,6 +11,7 @@ import useL from '../hooks/useLists'
 import useA from '../hooks/activities/useActivities'
 import SelectUnplannedActivityModal from '../components/Lists/SelectUnplannedActivityModal'
 import TallyTargets from '../components/TallyTargets'
+import Decorations from '../components/Decorations'
 import { AppProps } from '../App'
 import { Util } from 'common'
 import { unplanned } from 'common/selectors'
@@ -34,7 +35,7 @@ const LandscapeApp = ({
   const ui = useUIContext()
   const { data: L, isLoading: LLoading } = useL()
   const { data: A, isLoading: ALoading } = useA()
-  const { data: CG, isFetching: CGFetching } = useCharacterGoals()
+  const { data: CG } = useCharacterGoals()
 
   return LLoading || ALoading ? (
     <ui.Div
@@ -62,6 +63,7 @@ const LandscapeApp = ({
       >
         <ui.Div>
           <TallyTargets />
+          <Decorations openGoalModal={setOpenGoalId} />
         </ui.Div>
         <ui.Div
           style={{
@@ -85,9 +87,12 @@ const LandscapeApp = ({
             lists={L || []}
             activities={A || []}
             openListId={openListId!}
-            style={{ margin: '0 20px 0' }}
           />
-          <GoalList goals={CG || []} openGoalModal={setOpenGoalId} />
+          <GoalList
+            goals={CG || []}
+            openGoalModal={setOpenGoalId}
+            style={{ margin: '0 0 0 20px' }}
+          />
         </ui.Div>
       </ui.Div>
       <Possessions />
