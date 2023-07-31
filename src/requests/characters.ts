@@ -3,7 +3,8 @@ import {
   CharacterActivityRequestParams,
   CharacterItemRequestParams,
   PurchaseItemAsCharacterRequestBody,
-  FormulaContextValue
+  FormulaContextValue,
+  CharacterGoal
 } from 'common'
 import { HTTPRequests } from '.'
 
@@ -20,8 +21,15 @@ const Characters = ({ GET, PATCH }: HTTPRequests) => {
   const getCharacterTallyTargets = async ({ id }: CharacterGetParams) =>
     GET(`/characters/${id}/tally-targets`)
 
-  const getCharacterGoals = async ({ id }: CharacterGetParams) =>
-    GET(`/characters/${id}/goals`)
+  const getCharacterGoals = async ({
+    id
+  }: CharacterGetParams): Promise<CharacterGoal[]> =>
+    GET(`/characters/${id}/goals`).then((goals: CharacterGoal[]) =>
+      goals.map((g) => ({
+        ...g,
+        targetDate: g.targetDate ? new Date(g.targetDate) : undefined
+      }))
+    )
 
   const completeActivityAsCharacter = async (
     { characterId, activityId }: CharacterActivityRequestParams,
