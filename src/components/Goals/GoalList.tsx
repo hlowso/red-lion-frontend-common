@@ -3,11 +3,31 @@ import { useUIContext } from '../../contexts'
 import useActivities from '../../hooks/activities/useActivities'
 import { serveGoal, Goal } from 'common/selectors'
 import { CharacterGoal } from 'common'
+import { daysUntil } from 'common/util/date'
+import { plural } from 'common/util/misc'
 
 interface Props {
   goals: CharacterGoal[]
   openGoalModal: (id: number) => void
   style: React.CSSProperties
+}
+
+const Days = ({ date }: { date: Date }) => {
+  const ui = useUIContext()
+  const days = daysUntil(date)
+
+  return (
+    <ui.Span
+      style={{
+        margin: '5px 0 0',
+        fontSize: 'small',
+        color: '#555',
+        cursor: 'default'
+      }}
+    >
+      {plural('day', days)}
+    </ui.Span>
+  )
 }
 
 const GoalList = ({ goals, openGoalModal, style }: Props) => {
@@ -32,21 +52,7 @@ const GoalList = ({ goals, openGoalModal, style }: Props) => {
               }}
             >
               <ui.Icon name={goal.icon} size={30} />
-              {goal.targetDate && (
-                <ui.Span
-                  style={{
-                    margin: '5px 0 0',
-                    fontSize: 'small',
-                    color: '#555',
-                    cursor: 'default'
-                  }}
-                >
-                  {goal.targetDate.toLocaleString('default', {
-                    month: 'short',
-                    day: 'numeric'
-                  })}
-                </ui.Span>
-              )}
+              {goal.targetDate && <Days date={goal.targetDate} />}
               {AFetching ? (
                 <ui.Spinner style={{ margin: '5px 0 0' }} />
               ) : (
