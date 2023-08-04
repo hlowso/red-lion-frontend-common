@@ -1,7 +1,6 @@
 import React from 'react'
-import { Activity } from 'common'
+import { Util, Activity } from 'common'
 import { usePlayContext, useUIContext } from '../../contexts'
-import { Util } from 'common'
 import cronstrue from 'cronstrue'
 
 interface Props {
@@ -75,9 +74,19 @@ const ActivityListItem = ({ activity, open, edit, hide }: Props) => {
   const complete = Util.Activity.complete(activity)
   const scheduleInfo = getScheduleInfo(activity.schedule)
   const { isFetching } = usePlayContext()
+  const percentage =
+    (activity.count || 1) > 1
+      ? Math.floor(((activity.status.countToday || 0) * 100) / activity.count)
+      : undefined
 
   return (
-    <ui.ListGroupItem>
+    <ui.ListGroupItem
+      style={{
+        background: percentage
+          ? `linear-gradient(to right, #eee, #eee ${percentage}%, white ${percentage}%, white)`
+          : undefined
+      }}
+    >
       <ui.Div
         style={{
           display: 'flex',
