@@ -1,7 +1,7 @@
 import React from 'react'
 import { useUIContext } from '../contexts'
 import useActivities from '../hooks/activities/useActivities'
-import { incomplete, dueToday, inList } from 'common/selectors'
+import { incomplete, dueToday, inList, toComplete } from 'common/selectors'
 
 interface ListNavItem {
   id: number
@@ -35,6 +35,8 @@ const ListNav = ({
 }: Props) => {
   const ui = useUIContext()
   const { data: A, isLoading: ALoading } = useActivities()
+  const todo = incomplete(toComplete(A || []))
+
   return (
     <ui.ListGroup className='list-nav' style={{ backgroundColor: '#eee' }}>
       {lists.length === 0 ? (
@@ -60,9 +62,9 @@ const ListNav = ({
                 {ALoading ? (
                   <ui.Spinner small />
                 ) : id === -1 ? (
-                  incomplete(dueToday(A || [])).length
+                  dueToday(todo || []).length
                 ) : (
-                  incomplete(inList(id, A || [])).length
+                  inList(id, todo || []).length
                 )}
               </ui.Span>
             </ui.ListGroupItem>
