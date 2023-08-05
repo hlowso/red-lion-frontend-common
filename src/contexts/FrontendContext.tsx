@@ -1,10 +1,12 @@
 import React, { createContext, PropsWithChildren } from 'react'
 import { Context as UIContext } from './UIContext'
+import { BackendFactory } from 'dnd-core'
 
 interface Props extends PropsWithChildren {
   serverUrl?: string
   apiBaseUrl?: string
   components?: UIContext
+  dndBackend?: BackendFactory
   orientation: 'landscape' | 'portrait'
 }
 
