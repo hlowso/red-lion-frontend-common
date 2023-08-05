@@ -10,6 +10,7 @@ import {
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
 import LandscapeApp from './Apps/LandscapeApp'
 import PortraitApp from './Apps/PortraitApp'
+import { DndProvider } from 'react-dnd'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -33,7 +34,7 @@ export interface AppProps {
 }
 
 const App = () => {
-  const { serverUrl, apiBaseUrl, components, orientation } =
+  const { serverUrl, apiBaseUrl, components, dndBackend, orientation } =
     useContext(FrontendContext)
   const [openListId, setOpenListId] = useState<number | undefined>(-1)
   const [openGoalId, setOpenGoalId] = useState<number | undefined>()
@@ -45,43 +46,45 @@ const App = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <UIProvider components={components!}>
-        <SocketProvider serverUrl={serverUrl!}>
-          <RequestsProvider apiBaseUrl={apiBaseUrl!}>
-            <PlayProvider>
-              <VendorProvider>
-                {orientation === 'landscape' ? (
-                  <LandscapeApp
-                    openListId={openListId}
-                    openGoalId={openGoalId}
-                    setOpenListId={setOpenListId}
-                    setOpenGoalId={setOpenGoalId}
-                    selectUnplannedModalOpen={selectUnplannedModalOpen}
-                    createUnplannedModalOpen={createUnplannedModalOpen}
-                    createListModalOpen={createListModalOpen}
-                    setSelectUnplannedModalOpen={setSelectUnplannedModalOpen}
-                    setCreateUnplannedModalOpen={setCreateUnplannedModalOpen}
-                    setCreateListModalOpen={setCreateListModalOpen}
-                  />
-                ) : (
-                  <PortraitApp
-                    openListId={openListId}
-                    openGoalId={openGoalId}
-                    setOpenListId={setOpenListId}
-                    setOpenGoalId={setOpenGoalId}
-                    selectUnplannedModalOpen={selectUnplannedModalOpen}
-                    createUnplannedModalOpen={createUnplannedModalOpen}
-                    createListModalOpen={createListModalOpen}
-                    setSelectUnplannedModalOpen={setSelectUnplannedModalOpen}
-                    setCreateUnplannedModalOpen={setCreateUnplannedModalOpen}
-                    setCreateListModalOpen={setCreateListModalOpen}
-                  />
-                )}
-              </VendorProvider>
-            </PlayProvider>
-          </RequestsProvider>
-        </SocketProvider>
-      </UIProvider>
+      <DndProvider backend={dndBackend!}>
+        <UIProvider components={components!}>
+          <SocketProvider serverUrl={serverUrl!}>
+            <RequestsProvider apiBaseUrl={apiBaseUrl!}>
+              <PlayProvider>
+                <VendorProvider>
+                  {orientation === 'landscape' ? (
+                    <LandscapeApp
+                      openListId={openListId}
+                      openGoalId={openGoalId}
+                      setOpenListId={setOpenListId}
+                      setOpenGoalId={setOpenGoalId}
+                      selectUnplannedModalOpen={selectUnplannedModalOpen}
+                      createUnplannedModalOpen={createUnplannedModalOpen}
+                      createListModalOpen={createListModalOpen}
+                      setSelectUnplannedModalOpen={setSelectUnplannedModalOpen}
+                      setCreateUnplannedModalOpen={setCreateUnplannedModalOpen}
+                      setCreateListModalOpen={setCreateListModalOpen}
+                    />
+                  ) : (
+                    <PortraitApp
+                      openListId={openListId}
+                      openGoalId={openGoalId}
+                      setOpenListId={setOpenListId}
+                      setOpenGoalId={setOpenGoalId}
+                      selectUnplannedModalOpen={selectUnplannedModalOpen}
+                      createUnplannedModalOpen={createUnplannedModalOpen}
+                      createListModalOpen={createListModalOpen}
+                      setSelectUnplannedModalOpen={setSelectUnplannedModalOpen}
+                      setCreateUnplannedModalOpen={setCreateUnplannedModalOpen}
+                      setCreateListModalOpen={setCreateListModalOpen}
+                    />
+                  )}
+                </VendorProvider>
+              </PlayProvider>
+            </RequestsProvider>
+          </SocketProvider>
+        </UIProvider>
+      </DndProvider>
     </QueryClientProvider>
   )
 }
