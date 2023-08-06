@@ -4,7 +4,8 @@ import {
   CharacterItemRequestParams,
   PurchaseItemAsCharacterRequestBody,
   FormulaContextValue,
-  CharacterGoal
+  CharacterGoal,
+  CharacterListRow
 } from 'common'
 import { HTTPRequests } from '.'
 
@@ -31,6 +32,11 @@ const Characters = ({ GET, PATCH }: HTTPRequests) => {
       }))
     )
 
+  const getCharacterLists = async ({
+    id
+  }: CharacterGetParams): Promise<CharacterListRow[]> =>
+    GET(`/characters/${id}/lists`)
+
   const completeActivityAsCharacter = async (
     { characterId, activityId }: CharacterActivityRequestParams,
     body?: { fieldValues: FormulaContextValue[] }
@@ -48,14 +54,25 @@ const Characters = ({ GET, PATCH }: HTTPRequests) => {
   }: CharacterItemRequestParams) =>
     PATCH(`/characters/${characterId}/items/${itemId}/use`)
 
+  const reorderCharacterActivities = (
+    characterId: number,
+    listId: number,
+    activityIds: number[]
+  ) =>
+    PATCH(`/characters/${characterId}/lists/${listId}/activity-positions`, {
+      activityIds
+    })
+
   return {
     getCharacters,
     getCharacterActivityCountToday,
     getCharacterTallyTargets,
     getCharacterGoals,
+    getCharacterLists,
     completeActivityAsCharacter,
     purchaseItemAsCharacter,
-    utilizeItemAsCharacter
+    utilizeItemAsCharacter,
+    reorderCharacterActivities
   }
 }
 
