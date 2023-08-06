@@ -2,10 +2,17 @@ import React, { useContext } from 'react'
 import { Activity } from 'common'
 import { complete, incomplete } from 'common/selectors'
 import ActivityListItem from './ActivityListItem'
-import { FrontendContext, useUIContext } from '../../contexts'
+import {
+  FrontendContext,
+  RequestsContext,
+  usePlayContext,
+  useUIContext
+} from '../../contexts'
 import useLocal from '../../hooks/useLocal'
+import { useQueryClient } from '@tanstack/react-query'
 
 interface Props {
+  listId: number
   openActivityModal: (activityId: number) => void
   openEditActivityModal: (activityId?: number) => void
   showAddButton: boolean
@@ -15,6 +22,7 @@ interface Props {
 }
 
 const ActivityList = ({
+  listId,
   showAddButton,
   listName,
   listDescription,
@@ -23,12 +31,26 @@ const ActivityList = ({
   openEditActivityModal
 }: Props) => {
   const { orientation } = useContext(FrontendContext)
+  const { characterId } = usePlayContext()
+  const { reorderCharacterActivities } = useContext(RequestsContext)
+  const queryClient = useQueryClient()
   const { value: hiddenIds, set: setHiddenIds } = useLocal('hidden-activities')
   const ui = useUIContext()
+
   const hidden = activities.filter((a) => hiddenIds.includes(a.id))
   const showing = activities.filter((a) => !hiddenIds.includes(a.id))
   const toDo = incomplete(showing)
   const done = complete(showing)
+
+  const reorder = async (aboveId: number, belowId: number) => {
+    const ids: number[] = []
+    for (let activity of activities) {
+      if (activity.id === belowId) ids.push(aboveId, belowId)
+      else if (activity.id !== aboveId) ids.push(activity.id)
+    }
+    await reorderCharacterActivities(characterId!, listId, ids)
+    queryClient.invalidateQueries()
+  }
 
   const titleTooltip = (props: any) => (
     <ui.Tooltip id={`header-tooltip-${listName}`} {...props}>
@@ -110,6 +132,7 @@ const ActivityList = ({
                 open={() => openActivityModal(activity.id)}
                 edit={() => openEditActivityModal(activity.id)}
                 hide={() => setHiddenIds([...hiddenIds, activity.id])}
+                reorder={reorder}
               />
             ))}
           </ui.ListGroup>
@@ -124,6 +147,7 @@ const ActivityList = ({
                 activity={activity}
                 open={() => openActivityModal(activity.id)}
                 edit={() => openEditActivityModal(activity.id)}
+                reorder={reorder}
               />
             ))}
           </ui.ListGroup>
