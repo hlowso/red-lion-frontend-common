@@ -60,6 +60,7 @@ const Delta = ({
     <ui.Div {...props} style={{ display: 'flex', ...(props?.style || {}) }}>
       {Object.entries(delta.tallies || {}).map(([key, change]) => (
         <ui.Card
+          key={key}
           style={{
             ...style,
             opacity: fadedTallies?.includes(key) ? 0.5 : 'unset'
@@ -80,6 +81,7 @@ const Delta = ({
       ))}
       {Object.entries(delta.items || {}).map(([key, change]) => (
         <ui.Card
+          key={key}
           style={{
             ...style,
             opacity: fadedItems?.includes(key) ? 0.5 : 'unset'
