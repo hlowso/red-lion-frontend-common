@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useRef, useState } from 'react'
+import { useDrag, useDrop } from 'react-dnd'
 import { Util, Activity } from 'common'
 import { usePlayContext, useUIContext } from '../../contexts'
 import cronstrue from 'cronstrue'
@@ -7,6 +8,7 @@ interface Props {
   open: () => void
   edit: () => void
   hide?: () => void
+  reorder: (aboveId: number, belowId: number) => void
   activity: Activity
 }
 
@@ -14,6 +16,8 @@ interface Schedule {
   late?: boolean
   display: string
 }
+
+const accept = 'ActivityListItem'
 
 const getScheduleInfo = (schedule?: string): Schedule | undefined => {
   if (!schedule) return undefined
@@ -69,121 +73,155 @@ const Streak = ({ id, streak }: { id: number; streak: number }) => {
   )
 }
 
-const ActivityListItem = ({ activity, open, edit, hide }: Props) => {
+const ActivityListItem = ({ activity, open, edit, hide, reorder }: Props) => {
+  const ref = useRef()
   const ui = useUIContext()
+  const { isFetching } = usePlayContext()
+  const [isUpdating, setIsUpdating] = useState(false)
   const complete = Util.Activity.complete(activity)
   const scheduleInfo = getScheduleInfo(activity.schedule)
-  const { isFetching } = usePlayContext()
   const percentage =
     (activity.count || 1) > 1
       ? Math.floor(((activity.status.countToday || 0) * 100) / activity.count)
       : undefined
 
+  const [{ isOver }, drop] = useDrop<Activity, {}, { isOver: boolean }>({
+    accept,
+    drop: async (item) => {
+      setIsUpdating(true)
+      await reorder(item.id, activity.id)
+      setIsUpdating(false)
+      return {}
+    },
+    collect: (monitor) => ({
+      isOver: monitor.isOver()
+    })
+  })
+
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: accept,
+    item: { id: activity.id },
+    collect: (monitor) => {
+      return {
+        isDragging: monitor.isDragging()
+      }
+    }
+  }))
+
+  drag(drop(ref))
+
   return (
     <ui.ListGroupItem
+      ref={ref}
       style={{
         background: percentage
           ? `linear-gradient(to right, #eee, #eee ${percentage}%, white ${percentage}%, white)`
-          : undefined
+          : undefined,
+        borderTop: isOver ? 'solid 2px black' : undefined,
+        opacity: isDragging ? 0.5 : undefined
       }}
     >
-      <ui.Div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center'
-        }}
-      >
+      {isUpdating ? (
+        <ui.Spinner />
+      ) : (
         <ui.Div
-          onClick={complete ? undefined : open}
           style={{
             display: 'flex',
-            flexDirection: 'column',
-            flexGrow: 1,
-            cursor: complete ? undefined : 'pointer'
+            justifyContent: 'space-between',
+            alignItems: 'center'
           }}
         >
           <ui.Div
+            onClick={complete ? undefined : open}
             style={{
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-              textDecoration: complete ? 'line-through' : undefined,
               display: 'flex',
-              alignItems: 'center'
+              flexDirection: 'column',
+              flexGrow: 1,
+              cursor: complete ? undefined : 'pointer'
             }}
           >
-            {activity.abstinenceDelta && (
-              <ui.Badge
-                bg='secondary'
-                style={{
-                  fontSize: 'x-small',
-                  margin: '0 5px 0 0',
-                  transform: 'translateY(10%)'
-                }}
-              >
-                DON'T
-              </ui.Badge>
-            )}
-            <ui.Span>{activity.name}</ui.Span>
-          </ui.Div>
-          {scheduleInfo && (
-            <ui.Span
+            <ui.Div
               style={{
-                fontSize: 'small',
-                color: scheduleInfo.late && !complete ? '#DC3545' : undefined
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                textDecoration: complete ? 'line-through' : undefined,
+                display: 'flex',
+                alignItems: 'center'
               }}
             >
-              {scheduleInfo.display}
-            </ui.Span>
+              {activity.abstinenceDelta && (
+                <ui.Badge
+                  bg='secondary'
+                  style={{
+                    fontSize: 'x-small',
+                    margin: '0 5px 0 0',
+                    transform: 'translateY(10%)'
+                  }}
+                >
+                  DON'T
+                </ui.Badge>
+              )}
+              <ui.Span>{activity.name}</ui.Span>
+            </ui.Div>
+            {scheduleInfo && (
+              <ui.Span
+                style={{
+                  fontSize: 'small',
+                  color: scheduleInfo.late && !complete ? '#DC3545' : undefined
+                }}
+              >
+                {scheduleInfo.display}
+              </ui.Span>
+            )}
+          </ui.Div>
+          {!!activity.status?.streak && (
+            <Streak id={activity.id} streak={activity.status.streak} />
           )}
-        </ui.Div>
-        {!!activity.status?.streak && (
-          <Streak id={activity.id} streak={activity.status.streak} />
-        )}
-        {!!hide && (
+          {!!hide && (
+            <ui.Button
+              onClick={hide}
+              style={{
+                margin: '0 10px 0 0',
+                border: 'none',
+                background: 'none',
+                color: '#888'
+              }}
+            >
+              <ui.Icon name='EyeSlash' />
+            </ui.Button>
+          )}
           <ui.Button
-            onClick={hide}
+            variant='outline-secondary'
+            onClick={edit}
             style={{
+              padding: '4px 8px',
               margin: '0 10px 0 0',
               border: 'none',
               background: 'none',
               color: '#888'
             }}
           >
-            <ui.Icon name='EyeSlash' />
+            <ui.Icon name='PencilSquare' />
           </ui.Button>
-        )}
-        <ui.Button
-          variant='outline-secondary'
-          onClick={edit}
-          style={{
-            padding: '4px 8px',
-            margin: '0 10px 0 0',
-            border: 'none',
-            background: 'none',
-            color: '#888'
-          }}
-        >
-          <ui.Icon name='PencilSquare' />
-        </ui.Button>
-        <ui.Span
-          style={{
-            cursor: 'default',
-            width: '40px',
-            display: 'flex',
-            justifyContent: 'center'
-          }}
-        >
-          {isFetching ? (
-            <ui.Spinner small />
-          ) : activity!.abstinenceDelta ? (
-            <ui.Icon name={complete ? 'X' : 'Check'} size={20} />
-          ) : (
-            `${activity.status?.countToday || 0} / ${activity.count || 1}`
-          )}
-        </ui.Span>
-      </ui.Div>
+          <ui.Span
+            style={{
+              cursor: 'default',
+              width: '40px',
+              display: 'flex',
+              justifyContent: 'center'
+            }}
+          >
+            {isFetching ? (
+              <ui.Spinner small />
+            ) : activity!.abstinenceDelta ? (
+              <ui.Icon name={complete ? 'X' : 'Check'} size={20} />
+            ) : (
+              `${activity.status?.countToday || 0} / ${activity.count || 1}`
+            )}
+          </ui.Span>
+        </ui.Div>
+      )}
     </ui.ListGroupItem>
   )
 }
