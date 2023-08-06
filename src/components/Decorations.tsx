@@ -46,8 +46,9 @@ const Decorations = ({ openGoalModal }: Props) => {
       {isFetching ? (
         <ui.Spinner />
       ) : (
-        decorations?.map((decoration) => (
+        decorations?.map((decoration, idx) => (
           <Decoration
+            key={`decoration-${idx}`}
             {...decoration}
             onClick={() => openGoalModal(decoration.goalId)}
           />
