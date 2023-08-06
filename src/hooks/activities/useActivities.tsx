@@ -1,6 +1,6 @@
 import { useContext } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { ActivityGetParams, Activity, Util } from 'common'
+import { ActivityGetParams, Activity } from 'common'
 import { RequestsContext } from '../../contexts/RequestsContext'
 import { usePlayContext } from '../../contexts'
 
@@ -22,7 +22,7 @@ const useActivities = (params?: ActivityGetParams) => {
       Requests.getActivities({ gameId, characterId, ...(params || {}) }),
     enabled: !!gameId && !!characterId
   })
-  return { ...result, data: result.data?.sort(Util.Activity.sort) }
+  return { ...result, data: result.data?.sort((a, b) => a.id - b.id) }
 }
 
 export default useActivities
