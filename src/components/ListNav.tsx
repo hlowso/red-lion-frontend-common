@@ -54,8 +54,21 @@ const ListNav = ({
                 backgroundColor: id === openListId ? '#ccc' : '#eee'
               }}
             >
-              <ui.Icon name={icon} style={{ marginRight: '10px' }} />
-              <ui.Strong style={{ cursor: 'default', flexGrow: 1 }}>
+              <ui.Icon
+                name={icon}
+                style={{ minWidth: '20px', marginRight: '10px' }}
+              />
+              <ui.Strong
+                title={name}
+                style={{
+                  cursor: 'default',
+                  flexGrow: 1,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                  paddingRight: '15px'
+                }}
+              >
                 {name}
               </ui.Strong>
               <ui.Span style={{ fontSize: 'small' }}>
