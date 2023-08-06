@@ -2,6 +2,7 @@ import React, { PropsWithChildren } from 'react'
 
 export namespace UI {
   export interface BaseProps {
+    ref?: any
     key?: string | number
     style?: React.CSSProperties
     onClick?: React.MouseEventHandler
