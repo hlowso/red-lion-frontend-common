@@ -15,10 +15,10 @@ import Decorations from '../components/Decorations'
 import { AppProps } from '../App'
 import { Util } from 'common'
 import { unplanned } from 'common/selectors'
-import EditListModal from '../components/Lists/EditListModal'
 import GoalList from '../components/Goals/GoalList'
 import GoalModal from '../components/Goals/GoalModal'
 import useCharacterGoals from '../hooks/characters/useCharacterGoals'
+import EditingModal from '../components/EditingModal'
 
 const LandscapeApp = ({
   openListId,
@@ -27,10 +27,8 @@ const LandscapeApp = ({
   setOpenGoalId,
   createUnplannedModalOpen,
   selectUnplannedModalOpen,
-  createListModalOpen,
   setCreateUnplannedModalOpen,
-  setSelectUnplannedModalOpen,
-  setCreateListModalOpen
+  setSelectUnplannedModalOpen
 }: AppProps) => {
   const ui = useUIContext()
   const { data: L, isLoading: LLoading } = useL()
@@ -81,7 +79,6 @@ const LandscapeApp = ({
                 ? setSelectUnplannedModalOpen(true)
                 : setCreateUnplannedModalOpen(true)
             }
-            openCreateListModal={() => setCreateListModalOpen(true)}
           />
           <Lists
             lists={L || []}
@@ -107,10 +104,7 @@ const LandscapeApp = ({
           setCreateUnplannedModalOpen(true)
         }}
       />
-      <EditListModal
-        show={createListModalOpen}
-        close={() => setCreateListModalOpen(false)}
-      />
+      <EditingModal />
       <EditActivityModal
         show={createUnplannedModalOpen}
         close={() => setCreateUnplannedModalOpen(false)}
