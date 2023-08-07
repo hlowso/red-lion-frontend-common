@@ -1,7 +1,8 @@
-import React from 'react'
-import { useUIContext } from '../contexts'
+import React, { useContext } from 'react'
+import { usePlayContext, useUIContext } from '../contexts'
 import useActivities from '../hooks/activities/useActivities'
 import { incomplete, dueToday, inList, toComplete } from 'common/selectors'
+import { EditingContext } from '../contexts/EditingContext'
 
 interface ListNavItem {
   id: number
@@ -14,7 +15,6 @@ interface Props {
   openListId?: number
   openList: (listId: number) => void
   openUnplannedModal: () => void
-  openCreateListModal: () => void
 }
 
 const Loading = () => {
@@ -30,10 +30,11 @@ const ListNav = ({
   lists,
   openListId,
   openList,
-  openUnplannedModal,
-  openCreateListModal
+  openUnplannedModal
 }: Props) => {
   const ui = useUIContext()
+  const { gameId } = usePlayContext()
+  const { edit } = useContext(EditingContext)
   const { data: A, isLoading: ALoading } = useActivities()
   const todo = incomplete(toComplete(A || []))
 
@@ -85,7 +86,21 @@ const ListNav = ({
           <ui.Div key='divider' style={{ width: '100%', height: '2px' }} />,
           <ui.ListGroupItem
             key={'new-list'}
-            onClick={openCreateListModal}
+            onClick={() =>
+              edit(
+                'New List',
+                'list',
+                [
+                  { name: 'name', kind: 'text', label: 'Name' },
+                  {
+                    name: 'description',
+                    kind: 'textarea',
+                    label: 'Description'
+                  }
+                ],
+                { gameId }
+              )
+            }
             style={{ backgroundColor: '#eee', cursor: 'pointer' }}
           >
             <ui.Icon name='Plus' style={{ marginRight: '10px' }} />
