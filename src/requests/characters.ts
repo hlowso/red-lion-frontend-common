@@ -5,7 +5,8 @@ import {
   PurchaseItemAsCharacterRequestBody,
   FormulaContextValue,
   CharacterGoal,
-  CharacterListRow
+  CharacterListRow,
+  CharacterList
 } from 'common'
 import { HTTPRequests } from '.'
 
@@ -54,6 +55,9 @@ const Characters = ({ GET, PATCH }: HTTPRequests) => {
   }: CharacterItemRequestParams) =>
     PATCH(`/characters/${characterId}/items/${itemId}/use`)
 
+  const updateCharacterList = (params: Partial<CharacterList>) =>
+    PATCH(`/characters/${params.characterId}/lists/${params.listId}`, params)
+
   const reorderCharacterActivities = (
     characterId: number,
     listId: number,
@@ -72,6 +76,7 @@ const Characters = ({ GET, PATCH }: HTTPRequests) => {
     completeActivityAsCharacter,
     purchaseItemAsCharacter,
     utilizeItemAsCharacter,
+    updateCharacterList,
     reorderCharacterActivities
   }
 }
