@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import {
   FrontendContext,
   PlayProvider,
@@ -12,6 +12,7 @@ import LandscapeApp from './Apps/LandscapeApp'
 import PortraitApp from './Apps/PortraitApp'
 import { DndProvider } from 'react-dnd'
 import { EditingProvider } from './contexts/EditingContext'
+import useLists from './hooks/useLists'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -33,8 +34,8 @@ export interface AppProps {
 }
 
 const App = () => {
-  const { serverUrl, apiBaseUrl, components, dndBackend, orientation } =
-    useContext(FrontendContext)
+  const { orientation } = useContext(FrontendContext)
+  const { data: lists } = useLists()
   const [openListId, setOpenListId] = useState<number | undefined>(-1)
   const [openGoalId, setOpenGoalId] = useState<number | undefined>()
   const [selectUnplannedModalOpen, setSelectUnplannedModalOpen] =
@@ -42,6 +43,38 @@ const App = () => {
   const [createUnplannedModalOpen, setCreateUnplannedModalOpen] =
     useState(false)
 
+  useEffect(() => {
+    setOpenListId((id) => (lists?.some((l) => l.id === id) ? id : -1))
+  }, [lists?.length])
+
+  return orientation === 'landscape' ? (
+    <LandscapeApp
+      openListId={openListId}
+      openGoalId={openGoalId}
+      setOpenListId={setOpenListId}
+      setOpenGoalId={setOpenGoalId}
+      selectUnplannedModalOpen={selectUnplannedModalOpen}
+      createUnplannedModalOpen={createUnplannedModalOpen}
+      setSelectUnplannedModalOpen={setSelectUnplannedModalOpen}
+      setCreateUnplannedModalOpen={setCreateUnplannedModalOpen}
+    />
+  ) : (
+    <PortraitApp
+      openListId={openListId}
+      openGoalId={openGoalId}
+      setOpenListId={setOpenListId}
+      setOpenGoalId={setOpenGoalId}
+      selectUnplannedModalOpen={selectUnplannedModalOpen}
+      createUnplannedModalOpen={createUnplannedModalOpen}
+      setSelectUnplannedModalOpen={setSelectUnplannedModalOpen}
+      setCreateUnplannedModalOpen={setCreateUnplannedModalOpen}
+    />
+  )
+}
+
+export default () => {
+  const { serverUrl, apiBaseUrl, components, dndBackend } =
+    useContext(FrontendContext)
   return (
     <QueryClientProvider client={queryClient}>
       <DndProvider backend={dndBackend!}>
@@ -51,37 +84,7 @@ const App = () => {
               <EditingProvider>
                 <PlayProvider>
                   <VendorProvider>
-                    {orientation === 'landscape' ? (
-                      <LandscapeApp
-                        openListId={openListId}
-                        openGoalId={openGoalId}
-                        setOpenListId={setOpenListId}
-                        setOpenGoalId={setOpenGoalId}
-                        selectUnplannedModalOpen={selectUnplannedModalOpen}
-                        createUnplannedModalOpen={createUnplannedModalOpen}
-                        setSelectUnplannedModalOpen={
-                          setSelectUnplannedModalOpen
-                        }
-                        setCreateUnplannedModalOpen={
-                          setCreateUnplannedModalOpen
-                        }
-                      />
-                    ) : (
-                      <PortraitApp
-                        openListId={openListId}
-                        openGoalId={openGoalId}
-                        setOpenListId={setOpenListId}
-                        setOpenGoalId={setOpenGoalId}
-                        selectUnplannedModalOpen={selectUnplannedModalOpen}
-                        createUnplannedModalOpen={createUnplannedModalOpen}
-                        setSelectUnplannedModalOpen={
-                          setSelectUnplannedModalOpen
-                        }
-                        setCreateUnplannedModalOpen={
-                          setCreateUnplannedModalOpen
-                        }
-                      />
-                    )}
+                    <App />
                   </VendorProvider>
                 </PlayProvider>
               </EditingProvider>
@@ -92,5 +95,3 @@ const App = () => {
     </QueryClientProvider>
   )
 }
-
-export default App
