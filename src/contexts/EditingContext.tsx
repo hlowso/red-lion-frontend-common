@@ -15,24 +15,36 @@ interface Context {
   isSubmitting: boolean
   canSubmit: boolean
   submitLabel: string
-  setValue: (name: string, value: string) => void
+  setValue: (name: string, value: any) => void
   edit: (
     formName: string,
     resource: EditableResource,
     fields: Field[],
-    base: any
+    base: any,
+    isUpdate: boolean
   ) => void
   submit: () => Promise<void>
   clear: () => void
   fields: Field[]
 }
 
-export interface Field {
-  kind: 'text' | 'textarea'
+interface FieldBase {
+  kind: 'text' | 'textarea' | 'checkbox'
   name: string
   label: string
+}
+
+interface TextField extends FieldBase {
+  kind: 'text' | 'textarea'
   value?: string
 }
+
+interface CheckboxField extends FieldBase {
+  kind: 'checkbox'
+  value?: boolean
+}
+
+export type Field = TextField | CheckboxField
 
 const getRequestName = (
   resource: EditableResource,
@@ -40,7 +52,7 @@ const getRequestName = (
 ): keyof Requests => {
   switch (resource) {
     case 'list':
-      if (update) return 'updateActivity'
+      if (update) return 'updateCharacterList'
       else return 'createList'
   }
 }
@@ -64,20 +76,27 @@ export const EditingProvider = ({ children }: PropsWithChildren) => {
   const [formName, setFormName] = useState('')
   const [resource, setResource] = useState<EditableResource>()
   const [base, setBase] = useState<any>({})
+  const [isUpdate, setIsUpdate] = useState(!!base.id)
   const [fields, setFields] = useState<Field[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const isUpdate = !!base.id
 
-  const setValue = (name: string, value: string) =>
+  const setValue = (name: string, value: any) =>
     setFields((fields) =>
       fields.map((f) => (f.name === name ? { ...f, value } : f))
     )
 
-  const edit: Context['edit'] = (formName, resource, fields, base) => {
+  const edit: Context['edit'] = (
+    formName,
+    resource,
+    fields,
+    base,
+    isUpdate
+  ) => {
     setFields(fields)
     setFormName(formName)
     setResource(resource)
     setBase(base)
+    setIsUpdate(isUpdate)
   }
 
   const clear = () => {
