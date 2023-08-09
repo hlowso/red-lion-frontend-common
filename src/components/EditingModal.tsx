@@ -29,12 +29,25 @@ const TextareaField = ({ field, onChange }: FieldProps) => {
   )
 }
 
+const CheckboxField = ({ field, onChange }: FieldProps) => {
+  const ui = useUIContext()
+  return (
+    <ui.FormCheck
+      label={field.label}
+      checked={!!field.value}
+      onChange={onChange}
+    />
+  )
+}
+
 const Field = ({ field, onChange }: FieldProps) => {
   switch (field.kind) {
     case 'text':
       return <TextField field={field} onChange={onChange} />
     case 'textarea':
       return <TextareaField field={field} onChange={onChange} />
+    case 'checkbox':
+      return <CheckboxField field={field} onChange={onChange} />
   }
 }
 
@@ -69,7 +82,10 @@ const EditingModal = () => {
                 key={`field-${f.name}`}
                 field={f}
                 onChange={(ev: React.ChangeEvent<{ value: string }>) =>
-                  setValue(f.name, ev.target.value)
+                  setValue(
+                    f.name,
+                    f.kind === 'checkbox' ? !f.value : ev.target.value
+                  )
                 }
               />
             ))}
