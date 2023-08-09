@@ -10,6 +10,7 @@ import {
 } from '../../contexts'
 import useLocal from '../../hooks/useLocal'
 import { useQueryClient } from '@tanstack/react-query'
+import { EditingContext } from '../../contexts/EditingContext'
 
 interface Props {
   listId: number
@@ -33,6 +34,7 @@ const ActivityList = ({
   const { orientation } = useContext(FrontendContext)
   const { characterId } = usePlayContext()
   const { reorderCharacterActivities } = useContext(RequestsContext)
+  const { edit } = useContext(EditingContext)
   const queryClient = useQueryClient()
   const { value: hiddenIds, set: setHiddenIds } = useLocal('hidden-activities')
   const ui = useUIContext()
@@ -41,6 +43,7 @@ const ActivityList = ({
   const showing = activities.filter((a) => !hiddenIds.includes(a.id))
   const toDo = incomplete(showing)
   const done = complete(showing)
+  const showEditButton = listId !== -1
 
   const reorder = async (aboveId: number, belowId: number) => {
     const ids: number[] = []
@@ -113,6 +116,43 @@ const ActivityList = ({
               size='sm'
             >
               <ui.Icon name='PlusLg' />
+            </ui.Button>
+          )}
+          {showEditButton && (
+            <ui.Button
+              variant='outline-secondary'
+              style={{ margin: '0 0 0 5px' }}
+              onClick={() =>
+                edit(
+                  'Edit List',
+                  'list',
+                  [
+                    {
+                      name: 'name',
+                      kind: 'text',
+                      label: 'Name',
+                      value: listName
+                    },
+                    {
+                      name: 'description',
+                      kind: 'textarea',
+                      label: 'Description',
+                      value: listDescription
+                    },
+                    {
+                      name: 'archived',
+                      kind: 'checkbox',
+                      label: 'Archived',
+                      value: false
+                    }
+                  ],
+                  { characterId, listId },
+                  true
+                )
+              }
+              size='sm'
+            >
+              <ui.Icon name='Pencil' />
             </ui.Button>
           )}
         </ui.Div>
