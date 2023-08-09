@@ -98,7 +98,8 @@ const ListNav = ({
                     label: 'Description'
                   }
                 ],
-                { gameId }
+                { gameId },
+                false
               )
             }
             style={{ backgroundColor: '#eee', cursor: 'pointer' }}
