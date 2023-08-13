@@ -1,10 +1,11 @@
-import React from 'react'
-import { useUIContext } from '../../contexts'
+import React, { useContext } from 'react'
+import { usePlayContext, useUIContext } from '../../contexts'
 import useActivities from '../../hooks/activities/useActivities'
 import { serveGoal, Goal } from 'common/selectors'
 import { CharacterGoal } from 'common'
 import { daysUntil } from 'common/util/date'
 import { plural } from 'common/util/misc'
+import { EditingContext } from '../../contexts/EditingContext'
 
 interface Props {
   goals: CharacterGoal[]
@@ -32,6 +33,8 @@ const Days = ({ date }: { date: Date }) => {
 
 const GoalList = ({ goals, openGoalModal, style }: Props) => {
   const ui = useUIContext()
+  const { gameId, characterId } = usePlayContext()
+  const { edit } = useContext(EditingContext)
   const { data: activities, isFetching: AFetching } = useActivities()
   const inProgress = Goal.incomplete(goals, activities || [])
 
@@ -78,6 +81,25 @@ const GoalList = ({ goals, openGoalModal, style }: Props) => {
           </ui.CardBody>
         </ui.Card>
       ))}
+      <ui.Button
+        className='rounded-circle'
+        onClick={() =>
+          edit(
+            'New Goal',
+            'goal',
+            [
+              { name: 'name', kind: 'text', label: 'Name' },
+              { name: 'description', kind: 'textarea', label: 'Description' },
+              { name: 'icon', kind: 'text', label: 'Icon' },
+              { name: 'targetDate', kind: 'date', label: 'Target Date' }
+            ],
+            { gameId, characterId },
+            false
+          )
+        }
+      >
+        <ui.Icon name='Plus' />
+      </ui.Button>
     </ui.Div>
   ) : null
 }
