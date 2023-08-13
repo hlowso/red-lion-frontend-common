@@ -10,7 +10,7 @@ import {
 } from 'common'
 import { HTTPRequests } from '.'
 
-const Characters = ({ GET, PATCH }: HTTPRequests) => {
+const Characters = ({ GET, PATCH, POST }: HTTPRequests) => {
   const getCharacters = async (params: CharacterGetParams) =>
     GET('/characters', params)
 
@@ -37,6 +37,11 @@ const Characters = ({ GET, PATCH }: HTTPRequests) => {
     id
   }: CharacterGetParams): Promise<CharacterListRow[]> =>
     GET(`/characters/${id}/lists`)
+
+  const createCharacterGoal = async (
+    params: Omit<CharacterGoal, 'id' | 'goalId'>
+  ): Promise<CharacterListRow[]> =>
+    POST(`/characters/${params.characterId}/goals`, params)
 
   const completeActivityAsCharacter = async (
     { characterId, activityId }: CharacterActivityRequestParams,
@@ -73,6 +78,7 @@ const Characters = ({ GET, PATCH }: HTTPRequests) => {
     getCharacterTallyTargets,
     getCharacterGoals,
     getCharacterLists,
+    createCharacterGoal,
     completeActivityAsCharacter,
     purchaseItemAsCharacter,
     utilizeItemAsCharacter,
