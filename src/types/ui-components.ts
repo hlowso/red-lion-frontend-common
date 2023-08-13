@@ -103,6 +103,7 @@ export namespace UI {
   export interface InputGroupProps extends PropsWithChildren<BaseProps> {}
   export interface InputGroupTextProps extends PropsWithChildren<BaseProps> {}
   export interface FormControlProps extends PropsWithChildren<BaseProps> {
+    type?: 'date'
     value: any
     as?: 'textarea'
     onChange: (ev: React.ChangeEvent<any>) => void
