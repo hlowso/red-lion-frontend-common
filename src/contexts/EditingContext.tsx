@@ -29,7 +29,7 @@ interface Context {
 }
 
 interface FieldBase {
-  kind: 'text' | 'textarea' | 'checkbox'
+  kind: 'text' | 'textarea' | 'checkbox' | 'date'
   name: string
   label: string
 }
@@ -44,7 +44,12 @@ interface CheckboxField extends FieldBase {
   value?: boolean
 }
 
-export type Field = TextField | CheckboxField
+interface DateField extends FieldBase {
+  kind: 'date'
+  value?: Date
+}
+
+export type Field = TextField | CheckboxField | DateField
 
 const getRequestName = (
   resource: EditableResource,
@@ -54,6 +59,9 @@ const getRequestName = (
     case 'list':
       if (update) return 'updateCharacterList'
       else return 'createList'
+    case 'goal':
+      if (update) return 'createCharacterGoal'
+      else return 'createCharacterGoal'
   }
 }
 
