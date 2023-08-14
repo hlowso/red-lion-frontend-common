@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { usePlayContext, useUIContext } from '../../contexts'
 import useActivities from '../../hooks/activities/useActivities'
-import { serveGoal, Goal } from 'common/selectors'
+import * as S from 'common/selectors'
 import { CharacterGoal } from 'common'
 import { daysUntil } from 'common/util/date'
 import { plural } from 'common/util/misc'
@@ -31,75 +31,93 @@ const Days = ({ date }: { date: Date }) => {
   )
 }
 
+const Goal = ({
+  id,
+  goalId,
+  targetDate,
+  icon,
+  openGoalModal
+}: CharacterGoal & Omit<Props, 'goals' | 'style'>) => {
+  const ui = useUIContext()
+  const { data: activities, isFetching: AFetching } = useActivities()
+
+  return (
+    <ui.Card
+      key={id}
+      style={{ margin: '0 0 10px', minWidth: '84px' }}
+      onClick={() => openGoalModal(goalId)}
+    >
+      <ui.CardBody>
+        <ui.Div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center'
+          }}
+        >
+          <ui.Icon name={icon} size={30} />
+          {targetDate && <Days date={targetDate} />}
+          {AFetching ? (
+            <ui.Spinner style={{ margin: '5px 0 0' }} />
+          ) : (
+            <ui.Div
+              style={{
+                margin: '5px 0 0',
+                width: '50px',
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr 1fr',
+                justifyItems: 'center'
+              }}
+            >
+              {S.serveGoal(activities || [], goalId).map((a) => (
+                <ui.Icon
+                  key={a.id}
+                  name={!!a.status.done ? 'StarFill' : 'Star'}
+                  size={15}
+                />
+              ))}
+            </ui.Div>
+          )}
+        </ui.Div>
+      </ui.CardBody>
+    </ui.Card>
+  )
+}
+
 const GoalList = ({ goals, openGoalModal, style }: Props) => {
   const ui = useUIContext()
   const { gameId, characterId } = usePlayContext()
   const { edit } = useContext(EditingContext)
-  const { data: activities, isFetching: AFetching } = useActivities()
-  const inProgress = Goal.incomplete(goals, activities || [])
+  const { data: activities } = useActivities()
+  const inProgress = S.Goal.incomplete(goals, activities || [])
 
   return inProgress.length ? (
     <ui.Div style={{ display: 'flex', flexDirection: 'column', ...style }}>
       {inProgress.map((goal) => (
-        <ui.Card
-          key={goal.id}
-          style={{ margin: '0 0 10px', minWidth: '84px' }}
-          onClick={() => openGoalModal(goal.goalId)}
-        >
-          <ui.CardBody>
-            <ui.Div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center'
-              }}
-            >
-              <ui.Icon name={goal.icon} size={30} />
-              {goal.targetDate && <Days date={goal.targetDate} />}
-              {AFetching ? (
-                <ui.Spinner style={{ margin: '5px 0 0' }} />
-              ) : (
-                <ui.Div
-                  style={{
-                    margin: '5px 0 0',
-                    width: '50px',
-                    display: 'grid',
-                    gridTemplateColumns: '1fr 1fr 1fr',
-                    justifyItems: 'center'
-                  }}
-                >
-                  {serveGoal(activities || [], goal.goalId).map((a) => (
-                    <ui.Icon
-                      key={a.id}
-                      name={!!a.status.done ? 'StarFill' : 'Star'}
-                      size={15}
-                    />
-                  ))}
-                </ui.Div>
-              )}
-            </ui.Div>
-          </ui.CardBody>
-        </ui.Card>
+        <Goal {...goal} openGoalModal={openGoalModal} />
       ))}
-      <ui.Button
-        className='rounded-circle'
-        onClick={() =>
-          edit(
-            'New Goal',
-            'goal',
-            [
-              { name: 'name', kind: 'text', label: 'Name' },
-              { name: 'description', kind: 'textarea', label: 'Description' },
-              { name: 'icon', kind: 'text', label: 'Icon' },
-              { name: 'targetDate', kind: 'date', label: 'Target Date' }
-            ],
-            { gameId, characterId },
-            false
-          )
-        }
-      >
-        <ui.Icon name='Plus' />
-      </ui.Button>
+      <ui.Div style={{ display: 'flex', justifyContent: 'center' }}>
+        <ui.Button
+          className='rounded-circle'
+          variant='outline-secondary'
+          onClick={() =>
+            edit(
+              'New Goal',
+              'goal',
+              [
+                { name: 'name', kind: 'text', label: 'Name' },
+                { name: 'description', kind: 'textarea', label: 'Description' },
+                { name: 'icon', kind: 'text', label: 'Icon' },
+                { name: 'targetDate', kind: 'date', label: 'Target Date' }
+              ],
+              { gameId, characterId },
+              false
+            )
+          }
+        >
+          <ui.Icon name='PlusLg' />
+        </ui.Button>
+      </ui.Div>
     </ui.Div>
   ) : null
 }
