@@ -6,7 +6,8 @@ import {
   FormulaContextValue,
   CharacterGoal,
   CharacterListRow,
-  CharacterList
+  CharacterList,
+  Requisite
 } from 'common'
 import { HTTPRequests } from '.'
 
@@ -72,6 +73,14 @@ const Characters = ({ GET, PATCH, POST }: HTTPRequests) => {
       activityIds
     })
 
+  const updateCharacterGoal = (
+    characterGoal: Requisite<Partial<CharacterGoal>, 'characterId' | 'goalId'>
+  ) =>
+    PATCH(
+      `/characters/${characterGoal.characterId}/goals/${characterGoal.goalId}`,
+      characterGoal
+    )
+
   return {
     getCharacters,
     getCharacterActivityCountToday,
@@ -83,7 +92,8 @@ const Characters = ({ GET, PATCH, POST }: HTTPRequests) => {
     purchaseItemAsCharacter,
     utilizeItemAsCharacter,
     updateCharacterList,
-    reorderCharacterActivities
+    reorderCharacterActivities,
+    updateCharacterGoal
   }
 }
 
