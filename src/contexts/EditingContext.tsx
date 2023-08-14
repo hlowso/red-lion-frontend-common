@@ -26,6 +26,7 @@ interface Context {
   submit: () => Promise<void>
   clear: () => void
   fields: Field[]
+  resource?: EditableResource
 }
 
 interface FieldBase {
@@ -59,8 +60,8 @@ const getRequestName = (
     case 'list':
       if (update) return 'updateCharacterList'
       else return 'createList'
-    case 'goal':
-      if (update) return 'createCharacterGoal'
+    case 'characterGoal':
+      if (update) return 'updateCharacterGoal'
       else return 'createCharacterGoal'
   }
 }
@@ -140,7 +141,8 @@ export const EditingProvider = ({ children }: PropsWithChildren) => {
     edit,
     submit,
     clear,
-    fields
+    fields,
+    resource
   }
 
   return (
