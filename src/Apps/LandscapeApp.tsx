@@ -88,7 +88,11 @@ const LandscapeApp = ({
           <GoalList
             goals={CG || []}
             openGoalModal={setOpenGoalId}
-            style={{ margin: '0 0 0 20px' }}
+            style={{
+              margin: '0 0 0 20px',
+              maxHeight: '90vh',
+              overflow: 'scroll'
+            }}
           />
         </ui.Div>
       </ui.Div>
@@ -110,7 +114,7 @@ const LandscapeApp = ({
         close={() => setCreateUnplannedModalOpen(false)}
       />
       <GoalModal
-        goal={(CG || []).find((g) => g.goalId === openGoalId)}
+        goal={(CG || []).find((g) => g.goalId === openGoalId)!}
         close={() => setOpenGoalId(undefined)}
       />
     </ui.Div>

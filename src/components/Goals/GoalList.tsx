@@ -90,7 +90,7 @@ const GoalList = ({ goals, openGoalModal, style }: Props) => {
   const inProgress = S.Goal.incomplete(goals, activities || [])
 
   return inProgress.length ? (
-    <ui.Div style={{ display: 'flex', flexDirection: 'column', ...style }}>
+    <ui.Div style={style}>
       {inProgress.map((goal) => (
         <Goal key={goal.goalId} {...goal} openGoalModal={openGoalModal} />
       ))}
@@ -119,6 +119,7 @@ const GoalList = ({ goals, openGoalModal, style }: Props) => {
           <ui.Icon name='PlusLg' />
         </ui.Button>
       </ui.Div>
+      <ui.Div style={{ height: '400px', backgroundColor: 'rgba(0,0,0,0)' }} />
     </ui.Div>
   ) : null
 }
