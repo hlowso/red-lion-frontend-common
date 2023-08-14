@@ -97,7 +97,7 @@ const EditingModal = () => {
       case 'textarea':
         return setValue(name, value)
       case 'checkbox':
-        return setValue(name, !value)
+        return setValue(name, value === 'on')
       case 'date':
         return setValue(name, new Date(value))
     }
