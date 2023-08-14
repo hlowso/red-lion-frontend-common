@@ -32,7 +32,6 @@ const Days = ({ date }: { date: Date }) => {
 }
 
 const Goal = ({
-  id,
   goalId,
   targetDate,
   icon,
@@ -43,7 +42,6 @@ const Goal = ({
 
   return (
     <ui.Card
-      key={id}
       style={{ margin: '0 0 10px', minWidth: '84px' }}
       onClick={() => openGoalModal(goalId)}
     >
@@ -94,16 +92,19 @@ const GoalList = ({ goals, openGoalModal, style }: Props) => {
   return inProgress.length ? (
     <ui.Div style={{ display: 'flex', flexDirection: 'column', ...style }}>
       {inProgress.map((goal) => (
-        <Goal {...goal} openGoalModal={openGoalModal} />
+        <Goal key={goal.goalId} {...goal} openGoalModal={openGoalModal} />
       ))}
-      <ui.Div style={{ display: 'flex', justifyContent: 'center' }}>
+      <ui.Div
+        key='new-goal'
+        style={{ display: 'flex', justifyContent: 'center' }}
+      >
         <ui.Button
           className='rounded-circle'
           variant='outline-secondary'
           onClick={() =>
             edit(
               'New Goal',
-              'goal',
+              'characterGoal',
               [
                 { name: 'name', kind: 'text', label: 'Name' },
                 { name: 'description', kind: 'textarea', label: 'Description' },
