@@ -5,14 +5,18 @@ import {
   RequestsProvider,
   SocketProvider,
   UIProvider,
-  VendorProvider
+  VendorProvider,
+  useUIContext
 } from './contexts'
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
-import LandscapeApp from './Apps/LandscapeApp'
-import PortraitApp from './Apps/PortraitApp'
+import Nav from './components/Nav'
 import { DndProvider } from 'react-dnd'
 import { EditingProvider } from './contexts/EditingContext'
 import useLists from './hooks/useLists'
+import { ListRow, Activity, CharacterGoal } from 'common'
+import useActivities from './hooks/activities/useActivities'
+import useCharacterGoals from './hooks/characters/useCharacterGoals'
+import { ViewsProvider, View } from './contexts/ViewsContext'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -23,6 +27,9 @@ const queryClient = new QueryClient({
 })
 
 export interface AppProps {
+  lists: ListRow[]
+  activities: Activity[]
+  characterGoals: CharacterGoal[]
   openListId?: number
   openGoalId?: number
   setOpenListId: (id?: number) => void
@@ -34,8 +41,11 @@ export interface AppProps {
 }
 
 const App = () => {
+  const ui = useUIContext()
   const { orientation } = useContext(FrontendContext)
   const { data: lists } = useLists()
+  const { data: activities } = useActivities()
+  const { data: characterGoals } = useCharacterGoals()
   const [openListId, setOpenListId] = useState<number | undefined>(-1)
   const [openGoalId, setOpenGoalId] = useState<number | undefined>()
   const [selectUnplannedModalOpen, setSelectUnplannedModalOpen] =
@@ -47,28 +57,25 @@ const App = () => {
     setOpenListId((id) => (lists?.some((l) => l.id === id) ? id : -1))
   }, [lists?.length])
 
-  return orientation === 'landscape' ? (
-    <LandscapeApp
-      openListId={openListId}
-      openGoalId={openGoalId}
-      setOpenListId={setOpenListId}
-      setOpenGoalId={setOpenGoalId}
-      selectUnplannedModalOpen={selectUnplannedModalOpen}
-      createUnplannedModalOpen={createUnplannedModalOpen}
-      setSelectUnplannedModalOpen={setSelectUnplannedModalOpen}
-      setCreateUnplannedModalOpen={setCreateUnplannedModalOpen}
-    />
-  ) : (
-    <PortraitApp
-      openListId={openListId}
-      openGoalId={openGoalId}
-      setOpenListId={setOpenListId}
-      setOpenGoalId={setOpenGoalId}
-      selectUnplannedModalOpen={selectUnplannedModalOpen}
-      createUnplannedModalOpen={createUnplannedModalOpen}
-      setSelectUnplannedModalOpen={setSelectUnplannedModalOpen}
-      setCreateUnplannedModalOpen={setCreateUnplannedModalOpen}
-    />
+  return (
+    <ui.Div
+      className={orientation === 'landscape' ? 'LandscapeApp' : 'PortraitApp'}
+    >
+      <Nav />
+      <View
+        lists={lists || []}
+        activities={activities || []}
+        characterGoals={characterGoals || []}
+        openListId={openListId}
+        openGoalId={openGoalId}
+        setOpenListId={setOpenListId}
+        setOpenGoalId={setOpenGoalId}
+        selectUnplannedModalOpen={selectUnplannedModalOpen}
+        createUnplannedModalOpen={createUnplannedModalOpen}
+        setSelectUnplannedModalOpen={setSelectUnplannedModalOpen}
+        setCreateUnplannedModalOpen={setCreateUnplannedModalOpen}
+      />
+    </ui.Div>
   )
 }
 
@@ -84,7 +91,9 @@ export default () => {
               <EditingProvider>
                 <PlayProvider>
                   <VendorProvider>
-                    <App />
+                    <ViewsProvider>
+                      <App />
+                    </ViewsProvider>
                   </VendorProvider>
                 </PlayProvider>
               </EditingProvider>
