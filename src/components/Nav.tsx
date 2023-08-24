@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { APP_NAME } from 'common'
 import { usePlayContext, useUIContext, useVendorContext } from '../contexts'
+import { ViewsContext } from '../contexts/ViewsContext'
 
 const Profile = ({
   username,
@@ -22,8 +23,8 @@ const Profile = ({
 }
 
 const Nav = () => {
-  const { Button, Spinner, Span, Navbar, NavbarCollapse, NavbarBrand } =
-    useUIContext()
+  const ui = useUIContext()
+  const { view, setView } = useContext(ViewsContext)
   const {
     username,
     imageUrl: profileImageUrl,
@@ -34,25 +35,47 @@ const Nav = () => {
   const vendorButtonVariant = shopping ? 'secondary' : 'outline-secondary'
 
   return (
-    <Navbar fixed='top' bg='dark' style={{ padding: '10px 20px' }}>
-      <NavbarCollapse className='justify-content-start'>
-        <NavbarBrand style={{ color: 'white' }}>{`${APP_NAME} / ${
+    <ui.Navbar fixed='top' bg='dark' style={{ padding: '10px 20px' }}>
+      <ui.NavbarCollapse className='justify-content-start'>
+        <ui.NavbarBrand style={{ color: 'white' }}>{`${APP_NAME} / ${
           isLoading ? '...' : gameName
-        }`}</NavbarBrand>
-        <Button variant={vendorButtonVariant} onClick={toggleShopping}>
+        }`}</ui.NavbarBrand>
+        <ui.Button variant={vendorButtonVariant} onClick={toggleShopping}>
           Vendor
-        </Button>
-      </NavbarCollapse>
-      <NavbarCollapse className='justify-content-end'>
-        <Span>
+        </ui.Button>
+        <ui.Span
+          style={{
+            cursor: 'pointer',
+            margin: '0 0 0 20px',
+            color: 'white',
+            textDecoration: view === 'play' ? 'underline' : undefined
+          }}
+          onClick={() => setView('play')}
+        >
+          Play
+        </ui.Span>
+        <ui.Span
+          style={{
+            cursor: 'pointer',
+            margin: '0 0 0 20px',
+            color: 'white',
+            textDecoration: view === 'journal' ? 'underline' : undefined
+          }}
+          onClick={() => setView('journal')}
+        >
+          Journal
+        </ui.Span>
+      </ui.NavbarCollapse>
+      <ui.NavbarCollapse className='justify-content-end'>
+        <ui.Span>
           {isLoading ? (
-            <Spinner />
+            <ui.Spinner />
           ) : (
             <Profile username={username!} imageUrl={profileImageUrl!} />
           )}
-        </Span>
-      </NavbarCollapse>
-    </Navbar>
+        </ui.Span>
+      </ui.NavbarCollapse>
+    </ui.Navbar>
   )
 }
 
