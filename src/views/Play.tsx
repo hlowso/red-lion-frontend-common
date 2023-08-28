@@ -31,7 +31,7 @@ const Play = ({
 }: AppProps) => {
   const ui = useUIContext()
   return (
-    <React.Fragment>
+    <ui.Div>
       <ui.Div
         style={{
           position: 'fixed',
@@ -99,7 +99,7 @@ const Play = ({
         goal={characterGoals.find((g) => g.goalId === openGoalId)!}
         close={() => setOpenGoalId(undefined)}
       />
-    </React.Fragment>
+    </ui.Div>
   )
 }
 
