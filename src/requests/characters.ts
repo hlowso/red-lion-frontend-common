@@ -7,7 +7,8 @@ import {
   CharacterGoal,
   CharacterListRow,
   CharacterList,
-  Requisite
+  Requisite,
+  ActivityStreak
 } from 'common'
 import { HTTPRequests } from '.'
 
@@ -38,6 +39,11 @@ const Characters = ({ GET, PATCH, POST }: HTTPRequests) => {
     id
   }: CharacterGetParams): Promise<CharacterListRow[]> =>
     GET(`/characters/${id}/lists`)
+
+  const getCharacterLongestStreaks = async ({
+    id
+  }: CharacterGetParams): Promise<ActivityStreak[]> =>
+    GET(`/characters/${id}/longest-streaks`)
 
   const createCharacterGoal = async (
     params: Omit<CharacterGoal, 'id' | 'goalId'>
@@ -87,6 +93,7 @@ const Characters = ({ GET, PATCH, POST }: HTTPRequests) => {
     getCharacterTallyTargets,
     getCharacterGoals,
     getCharacterLists,
+    getCharacterLongestStreaks,
     createCharacterGoal,
     completeActivityAsCharacter,
     purchaseItemAsCharacter,
