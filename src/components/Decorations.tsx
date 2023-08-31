@@ -52,7 +52,8 @@ const Decorations = ({ openGoalModal }: Props) => {
     .filter((s) => s.streak >= 50)
     .map((s) => ({
       id: `streak-${s.activityId}`,
-      name: s.antistreak ? `Don't ${s.activityName}` : s.activityName + ' x50',
+      name:
+        (s.antistreak ? `Don't ${s.activityName}` : s.activityName) + ' x50',
       icon: 'Trophy'
     }))
 
