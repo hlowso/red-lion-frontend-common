@@ -42,6 +42,6 @@ export const View = (props: AppProps) => {
     case 'play':
       return <Play {...props} />
     case 'journal':
-      return <Journal {...props} />
+      return <Journal />
   }
 }
