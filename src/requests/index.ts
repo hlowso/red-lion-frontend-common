@@ -8,6 +8,8 @@ import Items from './items'
 import Lists from './lists'
 import Goals from './goals'
 import { SOCKET_HEADER } from 'common'
+import Journals from './journals'
+import JournalEntries from './journal-entries'
 
 export interface HTTPRequests {
   GET: <T>(endpoint: string, query?: T) => Promise<any>
@@ -55,7 +57,9 @@ const RequestHelpers = (apiBaseUrl: string, socketId = '') => {
     ...Tallies(HTTP),
     ...Items(HTTP),
     ...Lists(HTTP),
-    ...Goals(HTTP)
+    ...Goals(HTTP),
+    ...Journals(HTTP),
+    ...JournalEntries(HTTP)
   }
 }
 
