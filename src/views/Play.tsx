@@ -15,6 +15,7 @@ import SelectUnplannedActivityModal from '../components/Lists/SelectUnplannedAct
 import { Util } from 'common'
 import { unplanned } from 'common/selectors'
 import { AppProps } from '../App'
+import TimeCard from '../components/TimeCards/TimeCard'
 
 const Play = ({
   lists,
@@ -42,7 +43,8 @@ const Play = ({
         }}
       >
         <ui.Div>
-          <TallyTargets />
+          {/* <TallyTargets /> */}
+          <TimeCard timeCardId={1} />
           <Decorations openGoalModal={setOpenGoalId} />
         </ui.Div>
         <ui.Div
