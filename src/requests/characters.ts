@@ -8,7 +8,9 @@ import {
   CharacterListRow,
   CharacterList,
   Requisite,
-  ActivityStreak
+  ActivityStreak,
+  TimeCard,
+  TimeCardPunchRow
 } from 'common'
 import { HTTPRequests } from '.'
 
@@ -45,10 +47,33 @@ const Characters = ({ GET, PATCH, POST }: HTTPRequests) => {
   }: CharacterGetParams): Promise<ActivityStreak[]> =>
     GET(`/characters/${id}/longest-streaks`)
 
+  const getTimeCardToday = async ({
+    id,
+    timeCardId
+  }: {
+    id: number
+    timeCardId: number
+  }): Promise<TimeCard> =>
+    GET(`/characters/${id}/time-cards/${timeCardId}/today`)
+
+  const getTimeCardStreak = async ({
+    id
+  }: CharacterGetParams): Promise<number> =>
+    GET(`/characters/${id}/time-card-streak`)
+
   const createCharacterGoal = async (
     params: Omit<CharacterGoal, 'id' | 'goalId'>
   ): Promise<CharacterListRow[]> =>
     POST(`/characters/${params.characterId}/goals`, params)
+
+  const punchTimeCard = async ({
+    id,
+    timeCardId
+  }: {
+    id: number
+    timeCardId: number
+  }): Promise<TimeCardPunchRow> =>
+    POST(`/characters/${id}/time-cards/${timeCardId}/today`)
 
   const completeActivityAsCharacter = async (
     { characterId, activityId }: CharacterActivityRequestParams,
@@ -94,7 +119,10 @@ const Characters = ({ GET, PATCH, POST }: HTTPRequests) => {
     getCharacterGoals,
     getCharacterLists,
     getCharacterLongestStreaks,
+    getTimeCardToday,
+    getTimeCardStreak,
     createCharacterGoal,
+    punchTimeCard,
     completeActivityAsCharacter,
     purchaseItemAsCharacter,
     utilizeItemAsCharacter,
