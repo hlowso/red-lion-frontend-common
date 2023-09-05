@@ -32,7 +32,8 @@ const TimeCard = ({ timeCardId }: Props) => {
         display: 'flex',
         alignItems: 'center',
         flexDirection: 'row',
-        padding: '8px'
+        padding: '8px',
+        margin: '0 0 10px 0'
       }}
     >
       <Timer timeCard={timeCard} />
