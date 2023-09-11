@@ -2,6 +2,7 @@ import React, { PropsWithChildren } from 'react'
 import { useUIContext } from '../contexts'
 import useCharacterTallyTargets from '../hooks/characters/useCharacterTallyTargets'
 import { CharacterTallyTarget } from 'common'
+import { Feature } from '../contexts/SettingsContext'
 
 const getZone = (current: number, value: number) => {
   if (current < 0) return 'danger'
@@ -48,23 +49,25 @@ const TallyTargets = () => {
   const { data: tallyTargets } = useCharacterTallyTargets()
 
   return (
-    <ui.Div style={{ width: '100%' }}>
-      {tallyTargets?.map((target) => (
-        <ProgressOverlayTrigger key={target.id} {...target}>
-          <ui.ProgressBar
-            key={target.id}
-            progress={
-              target.currentValue! < 2 * target.value
-                ? (100 * (target.currentValue! / target.value)) % 100
-                : 100
-            }
-            color={target.color || 'primary'}
-            zone={getZone(target.currentValue!, target.value)}
-            style={{ margin: '0 0 7px' }}
-          />
-        </ProgressOverlayTrigger>
-      ))}
-    </ui.Div>
+    <Feature name='tally-targets'>
+      <ui.Div style={{ width: '100%' }}>
+        {tallyTargets?.map((target) => (
+          <ProgressOverlayTrigger key={target.id} {...target}>
+            <ui.ProgressBar
+              key={target.id}
+              progress={
+                target.currentValue! < 2 * target.value
+                  ? (100 * (target.currentValue! / target.value)) % 100
+                  : 100
+              }
+              color={target.color || 'primary'}
+              zone={getZone(target.currentValue!, target.value)}
+              style={{ margin: '0 0 7px' }}
+            />
+          </ProgressOverlayTrigger>
+        ))}
+      </ui.Div>
+    </Feature>
   )
 }
 
