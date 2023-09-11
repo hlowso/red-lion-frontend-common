@@ -17,6 +17,7 @@ import { ListRow, Activity, CharacterGoal } from 'common'
 import useActivities from './hooks/activities/useActivities'
 import useCharacterGoals from './hooks/characters/useCharacterGoals'
 import { ViewsProvider, View } from './contexts/ViewsContext'
+import { SettingsProvider } from './contexts/SettingsContext'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -85,21 +86,23 @@ export default () => {
   return (
     <QueryClientProvider client={queryClient}>
       <DndProvider backend={dndBackend!}>
-        <UIProvider components={components!}>
-          <SocketProvider serverUrl={serverUrl!}>
-            <RequestsProvider apiBaseUrl={apiBaseUrl!}>
-              <EditingProvider>
-                <PlayProvider>
-                  <VendorProvider>
-                    <ViewsProvider>
-                      <App />
-                    </ViewsProvider>
-                  </VendorProvider>
-                </PlayProvider>
-              </EditingProvider>
-            </RequestsProvider>
-          </SocketProvider>
-        </UIProvider>
+        <SettingsProvider>
+          <UIProvider components={components!}>
+            <SocketProvider serverUrl={serverUrl!}>
+              <RequestsProvider apiBaseUrl={apiBaseUrl!}>
+                <EditingProvider>
+                  <PlayProvider>
+                    <VendorProvider>
+                      <ViewsProvider>
+                        <App />
+                      </ViewsProvider>
+                    </VendorProvider>
+                  </PlayProvider>
+                </EditingProvider>
+              </RequestsProvider>
+            </SocketProvider>
+          </UIProvider>
+        </SettingsProvider>
       </DndProvider>
     </QueryClientProvider>
   )
