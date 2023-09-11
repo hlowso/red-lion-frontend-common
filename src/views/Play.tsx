@@ -43,7 +43,7 @@ const Play = ({
         }}
       >
         <ui.Div>
-          {/* <TallyTargets /> */}
+          <TallyTargets />
           <TimeCard timeCardId={1} />
           <Decorations openGoalModal={setOpenGoalId} />
         </ui.Div>
