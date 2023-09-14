@@ -1,7 +1,13 @@
 import React, { useContext } from 'react'
 import { usePlayContext, useUIContext } from '../contexts'
 import useActivities from '../hooks/activities/useActivities'
-import { incomplete, dueToday, inList, toComplete } from 'common/selectors'
+import {
+  incomplete,
+  dueToday,
+  inList,
+  toComplete,
+  withIdIn
+} from 'common/selectors'
 import { EditingContext } from '../contexts/EditingContext'
 
 interface ListNavItem {
@@ -33,10 +39,21 @@ const ListNav = ({
   openUnplannedModal
 }: Props) => {
   const ui = useUIContext()
-  const { gameId } = usePlayContext()
+  const { gameId, commitmentActivityIds, committed } = usePlayContext()
   const { edit } = useContext(EditingContext)
   const { data: A, isLoading: ALoading } = useActivities()
   const todo = incomplete(toComplete(A || []))
+  const items = [
+    {
+      id: -2,
+      name: 'Commitment',
+      icon: `${committed ? 'Lock' : 'Unlock'}${
+        !!commitmentActivityIds?.length ? 'Fill' : ''
+      }`
+    },
+    { id: -1, name: 'Today', icon: 'BrightnessLowFill' },
+    ...lists
+  ]
 
   return (
     <ui.ListGroup className='list-nav' style={{ backgroundColor: '#eee' }}>
@@ -44,7 +61,7 @@ const ListNav = ({
         <Loading />
       ) : (
         [
-          ...lists.map(({ id, icon, name }) => (
+          ...items.map(({ id, icon, name }) => (
             <ui.ListGroupItem
               key={id}
               className='list'
@@ -77,6 +94,8 @@ const ListNav = ({
                   <ui.Spinner small />
                 ) : id === -1 ? (
                   dueToday(todo || []).length
+                ) : id === -2 ? (
+                  withIdIn(todo || [], commitmentActivityIds!).length
                 ) : (
                   inList(id, todo || []).length
                 )}
