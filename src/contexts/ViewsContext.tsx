@@ -4,7 +4,6 @@ import React, {
   useContext,
   useState
 } from 'react'
-import { Context as UIContext } from './UIContext'
 import Play from '../views/Play'
 import { AppProps } from '../App'
 import Journal from '../views/Journal'
@@ -36,7 +35,6 @@ export const ViewsProvider = ({ children }: Props) => {
 
 export const View = (props: AppProps) => {
   const { view } = useContext(ViewsContext)
-  const { isLoading } = usePlayContext()
 
   switch (view) {
     case 'play':
