@@ -10,6 +10,7 @@ interface Props {
   hide?: () => void
   reorder: (aboveId: number, belowId: number) => void
   activity: Activity
+  pseudoListId?: number
 }
 
 interface Schedule {
@@ -73,10 +74,22 @@ const Streak = ({ id, streak }: { id: number; streak: number }) => {
   )
 }
 
-const ActivityListItem = ({ activity, open, edit, hide, reorder }: Props) => {
+const ActivityListItem = ({
+  activity,
+  open,
+  edit,
+  hide,
+  reorder,
+  pseudoListId
+}: Props) => {
   const ref = useRef()
   const ui = useUIContext()
-  const { isFetching } = usePlayContext()
+  const {
+    isFetching,
+    commitmentActivityIds,
+    committed,
+    toggleCommittingActivityId
+  } = usePlayContext()
   const [isUpdating, setIsUpdating] = useState(false)
   const complete = Util.Activity.complete(activity)
   const scheduleInfo = getScheduleInfo(activity.schedule)
@@ -84,6 +97,14 @@ const ActivityListItem = ({ activity, open, edit, hide, reorder }: Props) => {
     (activity.count || 1) > 1
       ? Math.floor(((activity.status.countToday || 0) * 100) / activity.count)
       : undefined
+  const commitment = {
+    show:
+      pseudoListId !== -2 &&
+      (!committed || commitmentActivityIds?.includes(activity.id)),
+    icon: `${committed ? 'Lock' : 'Unlock'}${
+      commitmentActivityIds?.includes(activity.id) ? 'Fill' : ''
+    }`
+  }
 
   const [{ isOver }, drop] = useDrop<Activity, {}, { isOver: boolean }>({
     accept,
@@ -177,6 +198,20 @@ const ActivityListItem = ({ activity, open, edit, hide, reorder }: Props) => {
           </ui.Div>
           {!!activity.status?.streak && (
             <Streak id={activity.id} streak={activity.status.streak} />
+          )}
+          {commitment.show && (
+            <ui.Button
+              onClick={() => toggleCommittingActivityId!(activity.id)}
+              style={{
+                margin: '0 10px 0 0',
+                border: 'none',
+                background: 'none',
+                color: '#888'
+              }}
+              disabled={committed}
+            >
+              <ui.Icon name={commitment.icon} />
+            </ui.Button>
           )}
           {!!hide && (
             <ui.Button
