@@ -32,8 +32,9 @@ const ActivityList = ({
   openEditActivityModal
 }: Props) => {
   const { orientation } = useContext(FrontendContext)
-  const { characterId } = usePlayContext()
-  const { reorderCharacterActivities } = useContext(RequestsContext)
+  const { characterId, commitmentActivityIds, committed } = usePlayContext()
+  const { reorderCharacterActivities, commitCharacterActivities } =
+    useContext(RequestsContext)
   const { edit } = useContext(EditingContext)
   const queryClient = useQueryClient()
   const { value: hiddenIds, set: setHiddenIds } = useLocal('hidden-activities')
@@ -43,7 +44,7 @@ const ActivityList = ({
   const showing = activities.filter((a) => !hiddenIds.includes(a.id))
   const toDo = incomplete(showing)
   const done = complete(showing)
-  const showEditButton = listId !== -1
+  const showEditButton = listId > 0
 
   const reorder = async (aboveId: number, belowId: number) => {
     const ids: number[] = []
@@ -52,6 +53,14 @@ const ActivityList = ({
       else if (activity.id !== aboveId) ids.push(activity.id)
     }
     await reorderCharacterActivities(characterId!, listId, ids)
+    queryClient.invalidateQueries()
+  }
+
+  const onCommit = async () => {
+    await commitCharacterActivities({
+      characterId: characterId!,
+      activityIds: commitmentActivityIds!
+    })
     queryClient.invalidateQueries()
   }
 
@@ -155,6 +164,9 @@ const ActivityList = ({
               <ui.Icon name='Pencil' />
             </ui.Button>
           )}
+          {listId === -2 && !committed && (
+            <ui.Button onClick={onCommit}>Commit</ui.Button>
+          )}
         </ui.Div>
       </ui.CardHeader>
       <ui.Div
@@ -173,6 +185,7 @@ const ActivityList = ({
                 edit={() => openEditActivityModal(activity.id)}
                 hide={() => setHiddenIds([...hiddenIds, activity.id])}
                 reorder={reorder}
+                pseudoListId={listId < 0 ? listId : undefined}
               />
             ))}
           </ui.ListGroup>
@@ -188,6 +201,7 @@ const ActivityList = ({
                 open={() => openActivityModal(activity.id)}
                 edit={() => openEditActivityModal(activity.id)}
                 reorder={reorder}
+                pseudoListId={listId < 0 ? listId : undefined}
               />
             ))}
           </ui.ListGroup>
