@@ -2,13 +2,15 @@ import React, {
   PropsWithChildren,
   createContext,
   useContext,
-  useEffect
+  useEffect,
+  useState
 } from 'react'
 import useCurrentUser from '../hooks/useCurrentUser'
 import useG from '../hooks/useGames'
 import useC from '../hooks/characters/useCharacters'
-import { Character, Possessions } from 'common'
+import { Character, Possessions, Commitment } from 'common'
 import { useSocket } from './SocketContext'
+import useCharacterCommitment from '../hooks/characters/useCharacterCommitment'
 
 interface Context extends Omit<Character, 'id'> {
   isLoading: boolean
@@ -17,6 +19,9 @@ interface Context extends Omit<Character, 'id'> {
   characterId: number
   gameName: string
   possessions: Possessions
+  committed: boolean
+  commitmentActivityIds: number[]
+  toggleCommittingActivityId: (id: number) => void
 }
 
 const PlayContext = createContext<Partial<Context>>({})
@@ -30,18 +35,33 @@ export const PlayProvider = ({ children }: PropsWithChildren) => {
     isLoading: currentUserLoading,
     isFetching: currentUserFetching
   } = useCurrentUser(query.get('username') as string)
+
   const {
     data: games,
     isLoading: GLoading,
     isFetching: GFetching
   } = useG({ userId: user?.id }, !!user)
   const [game] = Array.isArray(games) ? games : []
+
   const {
     data: characters,
     isLoading: CLoading,
     isFetching: CFetching
   } = useC({ userId: user?.id, gameId: game?.id }, !!user?.id && !!game?.id)
   const [character] = Array.isArray(characters) ? characters : []
+
+  const { data: commitment } = useCharacterCommitment({
+    gameId: game?.id,
+    userId: user?.id,
+    characterId: character?.id
+  })
+  const [committingActivityIds, setCommittingActivityIds] = useState<number[]>(
+    []
+  )
+  const toggleCommittingActivityId = (id: number) =>
+    setCommittingActivityIds((ids) =>
+      ids.includes(id) ? ids.filter((i) => i !== id) : [...ids, id]
+    )
 
   useEffect(() => {
     if (user?.id) {
@@ -67,6 +87,9 @@ export const PlayProvider = ({ children }: PropsWithChildren) => {
     gameId: game?.id,
     gameName: game?.name,
     possessions,
+    commitmentActivityIds: commitment?.activityIds || committingActivityIds,
+    committed: !!commitment?.committed,
+    toggleCommittingActivityId,
     ...possessions
   }
 
