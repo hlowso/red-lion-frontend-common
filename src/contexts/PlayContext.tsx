@@ -11,6 +11,7 @@ import useC from '../hooks/characters/useCharacters'
 import { Character, Possessions, Commitment } from 'common'
 import { useSocket } from './SocketContext'
 import useCharacterCommitment from '../hooks/characters/useCharacterCommitment'
+import useLocal from '../hooks/useLocal'
 
 interface Context extends Omit<Character, 'id'> {
   isLoading: boolean
@@ -55,12 +56,14 @@ export const PlayProvider = ({ children }: PropsWithChildren) => {
     userId: user?.id,
     characterId: character?.id
   })
-  const [committingActivityIds, setCommittingActivityIds] = useState<number[]>(
-    []
-  )
+  const { value: committingActivityIds, set: setCommittingActivityIds } =
+    useLocal('committing-activities')
+
   const toggleCommittingActivityId = (id: number) =>
-    setCommittingActivityIds((ids) =>
-      ids.includes(id) ? ids.filter((i) => i !== id) : [...ids, id]
+    setCommittingActivityIds(
+      committingActivityIds.includes(id)
+        ? committingActivityIds.filter((i) => i !== id)
+        : [...committingActivityIds, id]
     )
 
   useEffect(() => {
