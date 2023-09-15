@@ -167,7 +167,9 @@ const ActivityList = ({
             </ui.Button>
           )}
           {listId === -2 && !committed && (
-            <ui.Button onClick={onCommit}>Commit</ui.Button>
+            <ui.Button onClick={onCommit} style={{ margin: '0 10px 0 0' }}>
+              Commit
+            </ui.Button>
           )}
           {listId === -2 && <Streak streak={commitmentStreak || 0} />}
         </ui.Div>

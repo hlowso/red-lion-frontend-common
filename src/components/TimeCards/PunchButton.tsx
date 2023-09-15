@@ -13,6 +13,7 @@ const PunchButton = ({ direction, onPunch }: Props) => {
     <ui.Button
       variant={direction === 'in' ? 'primary' : 'secondary'}
       onClick={onPunch}
+      style={{ margin: '0 10px 0 0' }}
     >
       {direction === 'in' ? 'Punch In' : 'Punch Out'}
     </ui.Button>
