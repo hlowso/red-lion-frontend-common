@@ -5,6 +5,8 @@ import { TimeCard } from 'common'
 import Timer from './Timer'
 import PunchButton from './PunchButton'
 import { useQueryClient } from '@tanstack/react-query'
+import useCharacterTimeCardStreak from '../../hooks/characters/useCharacterTimeCardStreak'
+import Streak from '../Streak'
 
 interface Props {
   timeCardId: number
@@ -15,6 +17,7 @@ const TimeCard = ({ timeCardId }: Props) => {
   const R = useContext(RequestsContext)
   const queryClient = useQueryClient()
   const { data: timeCard } = useCharacterTimeCard(timeCardId)
+  const { data: timeCardStreak } = useCharacterTimeCardStreak(timeCardId)
 
   if (!timeCard) {
     return <ui.Spinner />
@@ -41,6 +44,7 @@ const TimeCard = ({ timeCardId }: Props) => {
         direction={timeCard.status === 'in' ? 'out' : 'in'}
         onPunch={onPunch}
       />
+      <Streak streak={timeCardStreak || 0} />
     </ui.Card>
   )
 }
