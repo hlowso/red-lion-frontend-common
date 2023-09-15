@@ -12,6 +12,7 @@ import { Character, Possessions, Commitment } from 'common'
 import { useSocket } from './SocketContext'
 import useCharacterCommitment from '../hooks/characters/useCharacterCommitment'
 import useLocal from '../hooks/useLocal'
+import useCharacterCommitmentStreak from '../hooks/characters/useCharacterCommitmentStreak'
 
 interface Context extends Omit<Character, 'id'> {
   isLoading: boolean
@@ -22,6 +23,7 @@ interface Context extends Omit<Character, 'id'> {
   possessions: Possessions
   committed: boolean
   commitmentActivityIds: number[]
+  commitmentStreak: number
   toggleCommittingActivityId: (id: number) => void
 }
 
@@ -56,6 +58,12 @@ export const PlayProvider = ({ children }: PropsWithChildren) => {
     userId: user?.id,
     characterId: character?.id
   })
+  const { data: commitmentStreak } = useCharacterCommitmentStreak({
+    gameId: game?.id,
+    userId: user?.id,
+    characterId: character?.id
+  })
+
   const { value: committingActivityIds, set: setCommittingActivityIds } =
     useLocal('committing-activities')
 
@@ -92,6 +100,7 @@ export const PlayProvider = ({ children }: PropsWithChildren) => {
     possessions,
     commitmentActivityIds: commitment?.activityIds || committingActivityIds,
     committed: !!commitment?.committed,
+    commitmentStreak,
     toggleCommittingActivityId,
     ...possessions
   }
