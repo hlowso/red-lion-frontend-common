@@ -11,6 +11,7 @@ import {
 import useLocal from '../../hooks/useLocal'
 import { useQueryClient } from '@tanstack/react-query'
 import { EditingContext } from '../../contexts/EditingContext'
+import Streak from '../Streak'
 
 interface Props {
   listId: number
@@ -32,7 +33,8 @@ const ActivityList = ({
   openEditActivityModal
 }: Props) => {
   const { orientation } = useContext(FrontendContext)
-  const { characterId, commitmentActivityIds, committed } = usePlayContext()
+  const { characterId, commitmentActivityIds, committed, commitmentStreak } =
+    usePlayContext()
   const { reorderCharacterActivities, commitCharacterActivities } =
     useContext(RequestsContext)
   const { edit } = useContext(EditingContext)
@@ -167,6 +169,7 @@ const ActivityList = ({
           {listId === -2 && !committed && (
             <ui.Button onClick={onCommit}>Commit</ui.Button>
           )}
+          {listId === -2 && <Streak streak={commitmentStreak || 0} />}
         </ui.Div>
       </ui.CardHeader>
       <ui.Div
