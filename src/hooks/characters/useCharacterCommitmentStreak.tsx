@@ -3,25 +3,28 @@ import { useQuery } from '@tanstack/react-query'
 import { RequestsContext } from '../../contexts/RequestsContext'
 import { usePlayContext } from '../../contexts'
 
-const useCharacterCommitmentStreak = () => {
+const useCharacterCommitmentStreak = (params: {
+  gameId?: number
+  characterId?: number
+  userId?: number
+}) => {
   const Requests = useContext(RequestsContext)
-  const { gameId, characterId: id, userId, ...context } = usePlayContext()
 
   return useQuery<undefined, undefined, number, any>({
     queryKey: [
       'games',
-      gameId,
+      params.gameId,
       'users',
-      userId,
+      params.userId,
       'characters',
-      id,
+      params.characterId,
       'commitment-streak'
     ],
     queryFn: () =>
       Requests.getCommitmentStreak({
-        id: id!
+        id: params.characterId!
       }),
-    enabled: !!gameId && !!userId && !!id && !context.isLoading
+    enabled: !!params.gameId && !!params.userId && !!params.characterId
   })
 }
 
