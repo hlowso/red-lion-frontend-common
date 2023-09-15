@@ -57,15 +57,21 @@ const Characters = ({ GET, PATCH, POST }: HTTPRequests) => {
   }): Promise<TimeCard> =>
     GET(`/characters/${id}/time-cards/${timeCardId}/today`)
 
-  const getTimeCardStreak = async ({
-    id
-  }: CharacterGetParams): Promise<number> =>
-    GET(`/characters/${id}/time-card-streak`)
+  const getTimeCardStreak = async (params: {
+    id: number
+    timeCardId: number
+  }): Promise<number> =>
+    GET(`/characters/${params.id}/time-card-streaks/${params.timeCardId}`)
 
   const getCharacterCommitment = ({
     id
   }: CharacterGetParams): Promise<CommitmentRow> =>
     GET(`/characters/${id}/commitments/today`)
+
+  const getCommitmentStreak = ({
+    id
+  }: CharacterGetParams): Promise<CommitmentRow> =>
+    GET(`/characters/${id}/commitment-streak`)
 
   const createCharacterGoal = async (
     params: Omit<CharacterGoal, 'id' | 'goalId'>
@@ -133,6 +139,7 @@ const Characters = ({ GET, PATCH, POST }: HTTPRequests) => {
     getTimeCardToday,
     getTimeCardStreak,
     getCharacterCommitment,
+    getCommitmentStreak,
     createCharacterGoal,
     punchTimeCard,
     commitCharacterActivities,
