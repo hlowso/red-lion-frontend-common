@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
 import { Util, Activity } from 'common'
+import Streak from '../Streak'
 import { usePlayContext, useUIContext } from '../../contexts'
 import cronstrue from 'cronstrue'
 
@@ -36,7 +37,7 @@ const getScheduleInfo = (schedule?: string): Schedule | undefined => {
   }
 }
 
-const Streak = ({ id, streak }: { id: number; streak: number }) => {
+const ActivityStreak = ({ id, streak }: { id: number; streak: number }) => {
   const ui = useUIContext()
   const bonus =
     streak < 7 ? undefined : streak < 14 ? '25%' : streak < 30 ? '50%' : '75%'
@@ -53,23 +54,7 @@ const Streak = ({ id, streak }: { id: number; streak: number }) => {
 
   return (
     <ui.OverlayTrigger overlay={tooltip} placement='left' disabled={!bonus}>
-      <ui.Div
-        style={{
-          position: 'relative',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          margin: '0 10px 0 0',
-          cursor: 'default',
-          width: '30px',
-          height: '30px'
-        }}
-      >
-        <ui.Icon name='Trophy' size={30} style={{ position: 'absolute' }} />
-        <ui.Span style={{ fontSize: 'x-small', transform: 'translateY(-35%)' }}>
-          {streak}
-        </ui.Span>
-      </ui.Div>
+      <Streak streak={streak} />
     </ui.OverlayTrigger>
   )
 }
@@ -197,7 +182,7 @@ const ActivityListItem = ({
             )}
           </ui.Div>
           {!!activity.status?.streak && (
-            <Streak id={activity.id} streak={activity.status.streak} />
+            <ActivityStreak id={activity.id} streak={activity.status.streak} />
           )}
           {commitment.show && (
             <ui.Button
