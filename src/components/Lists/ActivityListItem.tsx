@@ -211,19 +211,21 @@ const ActivityListItem = ({
               <ui.Icon name='EyeSlash' />
             </ui.Button>
           )}
-          <ui.Button
-            variant='outline-secondary'
-            onClick={edit}
-            style={{
-              padding: '4px 8px',
-              margin: '0 10px 0 0',
-              border: 'none',
-              background: 'none',
-              color: '#888'
-            }}
-          >
-            <ui.Icon name='PencilSquare' />
-          </ui.Button>
+          {!pseudoListId && (
+            <ui.Button
+              variant='outline-secondary'
+              onClick={edit}
+              style={{
+                padding: '4px 8px',
+                margin: '0 10px 0 0',
+                border: 'none',
+                background: 'none',
+                color: '#888'
+              }}
+            >
+              <ui.Icon name='PencilSquare' />
+            </ui.Button>
+          )}
           <ui.Span
             style={{
               cursor: 'default',
