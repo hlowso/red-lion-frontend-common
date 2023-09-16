@@ -106,10 +106,10 @@ const ListNav = ({
           <ui.ListGroupItem
             key={'new-list'}
             onClick={() =>
-              edit(
-                'New List',
-                'list',
-                [
+              edit({
+                formName: 'New List',
+                resource: 'list',
+                fields: [
                   { name: 'name', kind: 'text', label: 'Name' },
                   {
                     name: 'description',
@@ -117,9 +117,9 @@ const ListNav = ({
                     label: 'Description'
                   }
                 ],
-                { gameId },
-                false
-              )
+                base: { gameId },
+                isUpdate: false
+              })
             }
             style={{ backgroundColor: '#eee', cursor: 'pointer' }}
           >

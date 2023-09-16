@@ -102,18 +102,18 @@ const GoalList = ({ goals, openGoalModal, style }: Props) => {
           className='rounded-circle'
           variant='outline-secondary'
           onClick={() =>
-            edit(
-              'New Goal',
-              'characterGoal',
-              [
+            edit({
+              formName: 'New Goal',
+              resource: 'character-goal',
+              fields: [
                 { name: 'name', kind: 'text', label: 'Name' },
                 { name: 'description', kind: 'textarea', label: 'Description' },
                 { name: 'icon', kind: 'text', label: 'Icon' },
                 { name: 'targetDate', kind: 'date', label: 'Target Date' }
               ],
-              { gameId, characterId },
-              false
-            )
+              base: { gameId, characterId },
+              isUpdate: false
+            })
           }
         >
           <ui.Icon name='PlusLg' />

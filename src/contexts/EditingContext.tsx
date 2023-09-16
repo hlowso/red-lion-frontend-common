@@ -16,13 +16,14 @@ interface Context {
   canSubmit: boolean
   submitLabel: string
   setValue: (name: string, value: any) => void
-  edit: (
-    formName: string,
-    resource: EditableResource,
-    fields: Field[],
-    base: any,
+  edit: (args: {
+    formName: string
+    resource: EditableResource
+    fields: Field[]
+    base: any
     isUpdate: boolean
-  ) => void
+    fieldsToPayload?: (fields: Field[]) => any
+  }) => void
   submit: () => Promise<void>
   clear: () => void
   fields: Field[]
@@ -60,9 +61,12 @@ const getRequestName = (
     case 'list':
       if (update) return 'updateCharacterList'
       else return 'createList'
-    case 'characterGoal':
+    case 'character-goal':
       if (update) return 'updateCharacterGoal'
       else return 'createCharacterGoal'
+    case 'activity':
+      if (update) return 'updateActivity'
+      else return 'createActivity'
   }
 }
 
@@ -88,24 +92,25 @@ export const EditingProvider = ({ children }: PropsWithChildren) => {
   const [isUpdate, setIsUpdate] = useState(!!base.id)
   const [fields, setFields] = useState<Field[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [fieldsToPayload, setFieldsToPayload] = useState<
+    (fields: Field[]) => any
+  >(
+    () => (fields: Field[]) =>
+      fields.reduce((p, f) => ({ ...p, [f.name]: f.value }), {} as any)
+  )
 
   const setValue = (name: string, value: any) =>
     setFields((fields) =>
       fields.map((f) => (f.name === name ? { ...f, value } : f))
     )
 
-  const edit: Context['edit'] = (
-    formName,
-    resource,
-    fields,
-    base,
-    isUpdate
-  ) => {
-    setFields(fields)
-    setFormName(formName)
-    setResource(resource)
-    setBase(base)
-    setIsUpdate(isUpdate)
+  const edit: Context['edit'] = (args) => {
+    setFields(args.fields)
+    setFormName(args.formName)
+    setResource(args.resource)
+    setBase(args.base)
+    setIsUpdate(args.isUpdate)
+    if (args.fieldsToPayload) setFieldsToPayload(() => args.fieldsToPayload)
   }
 
   const clear = () => {
@@ -121,10 +126,8 @@ export const EditingProvider = ({ children }: PropsWithChildren) => {
     const fn = Requests[getRequestName(resource!, isUpdate)] as (
       payload: any
     ) => Promise<void>
-    const payload: any = { id: base.id }
 
-    for (let field of fields) payload[field.name] = field.value
-    await fn({ ...base, ...payload })
+    await fn({ ...base, ...fieldsToPayload(fields) })
 
     setIsSubmitting(false)
     queryClient.invalidateQueries()

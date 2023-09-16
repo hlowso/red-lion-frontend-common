@@ -13,7 +13,7 @@ const GoalModal = ({ goal, close }: Props) => {
   const { edit, resource, isSubmitting } = useContext(EditingContext)
 
   useEffect(() => {
-    if (resource === 'characterGoal' && isSubmitting) close()
+    if (resource === 'character-goal' && isSubmitting) close()
   }, [resource, isSubmitting])
 
   return (
@@ -58,10 +58,10 @@ const GoalModal = ({ goal, close }: Props) => {
       <ui.ModalFooter>
         <ui.Button
           onClick={() =>
-            edit(
-              'Edit Goal',
-              'characterGoal',
-              [
+            edit({
+              formName: 'Edit Goal',
+              resource: 'character-goal',
+              fields: [
                 { name: 'name', kind: 'text', label: 'Name', value: goal.name },
                 {
                   name: 'description',
@@ -77,12 +77,12 @@ const GoalModal = ({ goal, close }: Props) => {
                   value: goal.targetDate
                 }
               ],
-              {
+              base: {
                 characterId: goal.characterId,
                 goalId: goal.goalId
               },
-              true
-            )
+              isUpdate: true
+            })
           }
         >
           <ui.Icon name='Pencil' />
