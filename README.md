@@ -1,4 +1,4 @@
-# RED LION FRONTEND COMMON
+# Red Lion Frontend Common
 
 All that can be shared between the web frontend and the ios frontend goes in here.
 
